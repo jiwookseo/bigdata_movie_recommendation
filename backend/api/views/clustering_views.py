@@ -127,3 +127,8 @@ def user_clustering(request, method, k):
     print(clustering_data)
     
     return Response(status=status.HTTP_201_CREATED)
+
+
+# test code
+if __name__ == '__main__':
+    pass
