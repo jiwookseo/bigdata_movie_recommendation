@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.utils import timezone
 
 
 class Profile(models.Model):
@@ -11,6 +12,10 @@ class Profile(models.Model):
 
     def str(self):
         return "{}: {}".format(self.id, self.user.username)
+
+    @property
+    def rating_cnt(self):
+        return len(self.user.ratings.all())
 
 
 #  wrapper for create user Profile
@@ -36,6 +41,7 @@ class Movie(models.Model):
     title = models.CharField(max_length=200)
     genres = models.CharField(max_length=500)
     avg_rating = models.FloatField(default=0)
+    total_rating = models.IntegerField(default=0)
     rating_count = models.IntegerField(default=0)
     story = models.TextField()
 
@@ -48,7 +54,9 @@ class Movie(models.Model):
 
 
 class Rating(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="ratings")
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="ratings")
+    user = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="ratings")
+    movie = models.ForeignKey(
+        Movie, on_delete=models.CASCADE, related_name="ratings")
     rating = models.IntegerField(default=0)
-    timestamp = models.DateTimeField(default=datetime.now())
+    timestamp = models.DateTimeField(default=timezone.now)
