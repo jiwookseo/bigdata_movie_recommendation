@@ -4,6 +4,7 @@ import json
 API_URL = 'http://localhost:8000/api/'
 headers = {'content-type': 'application/json'}
 
+
 def create_users(num_users):
     user_data = open('./users.dat', 'r', encoding='ISO-8859-1')
     request_data = {'profiles': []}
@@ -16,8 +17,8 @@ def create_users(num_users):
     }
 
     for line in user_data.readlines():
-        [userid, gender, age, occupation, zipcode] = line.split('::')
-        username = 'user' + userid
+        [user_id, gender, age, occupation, zipcode] = line.split('::')
+        username = 'user' + user_id
         age = int(age)
         occupation = occupation_map[int(occupation)]
 
@@ -32,8 +33,8 @@ def create_users(num_users):
         if len(request_data['profiles']) >= num_users:
             break
 
-    response = requests.post(API_URL + 'auth/signup-many/', data=json.dumps(request_data), headers=headers)
-    print(response.text)
+    requests.post(
+        API_URL + 'users/', data=json.dumps(request_data), headers=headers)
 
 
 def create_movies():
@@ -48,32 +49,26 @@ def create_movies():
             'genres': genres
         })
 
-    response = requests.post(API_URL + 'movies/', data=json.dumps(request_data), headers=headers)
-    print(response.text)
+    requests.post(
+        API_URL + 'movies/', data=json.dumps(request_data), headers=headers)
 
 
 def create_ratings(num_users):
-    i = 0
     rating_data = open("./ratings.dat", "r", encoding="ISO-8859-1")
     request_data = {"ratings": []}
     for line in rating_data.readlines():
         [user_id, movie_id, rating, timestamp] = line.split("::")
-        i += 1
-        if len(request_data["ratings"]) > 0 and int(user_id) > num_users:
-            print("끗")
+        if user_id > num_users:
             break
-        print(user_id)
-        print(i)
-        
         request_data["ratings"].append({
-            "user_id": user_id,
+            "username": 'user' + user_id,
             "movie_id": movie_id,
             "rating": rating,
             "timestamp": timestamp
         })
-        
-    response = requests.post(API_URL + "movies/", data=json.dumps(request_data), headers=headers)
-    print(response.text)
+
+    requests.post(
+        API_URL + "ratings/", data=json.dumps(request_data), headers=headers)
 
 
 def create_story(num_movies):
@@ -94,14 +89,15 @@ def create_story(num_movies):
             "movie_id": movie_id,
             "story": story
         })
-    response = requests.post(API_URL + "movies/", data=json.dumps(request_data), headers=headers)
-    print(response.text)
+    requests.post(
+        API_URL + "movies/", data=json.dumps(request_data), headers=headers)
 
 
 if __name__ == '__main__':
-    num_users = 6040
+    num_users = 200
     num_movies = 3952
     # create_movies()
     # create_users(num_users)
     create_ratings(num_users)
     # create_story(num_movies)
+    print('finish')
