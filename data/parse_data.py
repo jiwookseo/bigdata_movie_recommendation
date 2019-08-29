@@ -58,7 +58,7 @@ def create_ratings(num_users):
     request_data = {"ratings": []}
     for line in rating_data.readlines():
         [user_id, movie_id, rating, timestamp] = line.split("::")
-        if user_id > num_users:
+        if int(user_id) > num_users:
             break
         request_data["ratings"].append({
             "username": 'user' + user_id,
@@ -96,8 +96,8 @@ def create_story(num_movies):
 if __name__ == '__main__':
     num_users = 200
     num_movies = 3952
-    # create_movies()
-    # create_users(num_users)
+    create_movies()
+    create_users(num_users)
     create_ratings(num_users)
-    # create_story(num_movies)
+    create_story(num_movies)
     print('finish')
