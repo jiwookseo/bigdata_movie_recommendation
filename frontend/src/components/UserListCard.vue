@@ -12,7 +12,7 @@
                       <v-icon large>pageview</v-icon>
                     </v-btn>
                   </template>
-                  <UserDetailCard :username="username"></UserDetailCard>
+                  <UserDetailCard :username="username" :visible="dialog"></UserDetailCard>
                 </v-dialog>
 
                 <v-list-item class="list-item">

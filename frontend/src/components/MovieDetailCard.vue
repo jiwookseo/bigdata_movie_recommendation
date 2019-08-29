@@ -56,10 +56,8 @@ import UserDetailCard from "./UserDetailCard";
 export default {
   name: "MovieDetailCard",
   props: {
-    id: {
-      type: Number,
-      id: 1
-    }
+    id: { type: Number, default: 1 },
+    visible: { type: Boolean, default: false }
   },
   components: {
     UserDetailCard
@@ -69,6 +67,9 @@ export default {
   },
   watch: {
     id() {
+      this.setUser();
+    },
+    visible() {
       this.setMovie();
     }
   },
