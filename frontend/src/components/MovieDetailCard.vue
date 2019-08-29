@@ -65,9 +65,11 @@ export default {
     UserDetailCard
   },
   created() {
-    this.$store.dispatch("data/getMovieById", this.id);
-    for (let i = 0; i < this.audience.length; ++i) {
-      this.dialog[i] = false;
+    this.setMovie();
+  },
+  watch: {
+    id() {
+      this.setMovie();
     }
   },
   computed: {
@@ -84,7 +86,15 @@ export default {
   },
   data: () => ({
     dialog: []
-  })
+  }),
+  methods: {
+    setMovie() {
+      this.$store.dispatch("data/getMovieById", this.id);
+      for (let i = 0; i < this.audience.length; ++i) {
+        this.dialog[i] = false;
+      }
+    }
+  }
 };
 </script>
 
