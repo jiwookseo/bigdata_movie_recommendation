@@ -1,16 +1,17 @@
 from django.urls import path
-from api.views import movie_views
-from api.views import auth_views
-
-
+from .views import movie_views
+from accounts import views
 app_name = "api"
 
 urlpatterns = [
     # Auth
-    path('users/', auth_views.user_list, name='user_list'),
-    path('users/<str:username>/', auth_views.user_detail, name='user_detail'),
-    path('users/<str:username>/ratings/',
-         auth_views.user_ratings, name='user_ratings'),
+    path("users/", views.user_list, name="user_list"),
+    path("users/<str:username>/", views.user_detail, name="user_detail"),
+    path("users/<str:username>/selected", views.user_selected, name="user_selected"),
+    path('users/<str:username>/ratings/', views.user_ratings, name='user_ratings'),
+    path("login/", views.login, name="login"),
+    path("logout/", views.logout, name="logout"),
+
     # movies, ratings
     path('movies/', movie_views.movie_list, name='movie_list'),
     path('movies/<int:movie_id>/', movie_views.movie_detail,

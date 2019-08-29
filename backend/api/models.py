@@ -1,40 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
-from datetime import datetime
+from accounts.models import User
 from django.utils import timezone
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    gender = models.CharField(max_length=10, default='M')
-    age = models.IntegerField(default=25)
-    occupation = models.CharField(max_length=200)
-
-    def str(self):
-        return "{}: {}".format(self.id, self.user.username)
-
-    @property
-    def rating_cnt(self):
-        return len(self.user.ratings.all())
-
-
-#  wrapper for create user Profile
-def create_profile(**kwargs):
-
-    user = User.objects.create_user(
-        username=kwargs['username'],
-        password=kwargs['password'],
-        is_active=True,
-    )
-
-    profile = Profile.objects.create(
-        user=user,
-        gender=kwargs['gender'],
-        age=kwargs['age'],
-        occupation=kwargs['occupation']
-    )
-
-    return profile
 
 
 class Movie(models.Model):
@@ -55,7 +21,7 @@ class Movie(models.Model):
 
 class Rating(models.Model):
     user = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name="ratings")
+        User, on_delete=models.CASCADE, related_name="ratings")
     movie = models.ForeignKey(
         Movie, on_delete=models.CASCADE, related_name="ratings")
     rating = models.IntegerField(default=0)
