@@ -10,6 +10,25 @@ from .models import User
 from .forms import CustomUserAuthenticationForm, CustomUserCreateForm,  CustomUserChangeForm
 
 
+#회원가입
+@api_view(["POST"])
+def signup(request):
+    if request.method == "POST":
+        users = request.data.get('profiles', None)
+        if len(users) > 1:
+            for user in users:
+                form = CustomUserCreateForm(data=user)
+                if form.is_valid():
+                    form.save()
+        else:
+            form = CustomUserCreateForm(data=users)
+            if form.is_valid():
+                form.save()
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_201_CREATED)
+
+
 @api_view(["GET"])
 def user_list(request):
     username = request.GET.get("username", request.GET.get("username", None))

@@ -96,8 +96,8 @@ def create_story(num_movies):
 if __name__ == '__main__':
     num_users = 200
     num_movies = 3952
-    # create_movies()
-    # create_users(num_users)
+    create_movies()
+    create_users(num_users)
     create_ratings(num_users)
-    # create_story(num_movies)
+    create_story(num_movies)
     print('finish')
