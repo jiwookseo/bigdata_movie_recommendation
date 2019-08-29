@@ -41,6 +41,7 @@
 
 <script>
 import router from "./router";
+import { mapGetters } from "vuex";
 
 export default {
   data: () => ({
@@ -58,6 +59,19 @@ export default {
       }
     ]
   }),
+  computed: {
+    ...mapGetters("data", ["recommendation"])
+  },
+  watch: {
+    recommendation() {
+      console.log(this.recommendation);
+    }
+  },
+  mounted() {
+    this.$store.dispatch("data/getRecByAge", 18);
+    this.$store.dispatch("data/getRecByOccupation", "artist");
+    this.$store.dispatch("data/getRecByGender", "M");
+  },
   methods: {
     goTo: function(path) {
       router.push({ name: path });
