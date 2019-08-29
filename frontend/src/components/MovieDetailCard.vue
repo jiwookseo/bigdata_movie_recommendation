@@ -79,7 +79,7 @@ export default {
       return this.movie.rating ? this.movie.rating.toFixed(1) : 0;
     },
     check() {
-      return this.movie !== [];
+      return this.movie !== {};
     }
   },
   data: () => ({
