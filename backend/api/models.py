@@ -9,6 +9,7 @@ class Profile(models.Model):
     gender = models.CharField(max_length=10, default='M')
     age = models.IntegerField(default=25)
     occupation = models.CharField(max_length=200)
+    cluster = models.IntegerField(null=True)
 
     def str(self):
         return "{}: {}".format(self.id, self.user.username)
@@ -44,6 +45,7 @@ class Movie(models.Model):
     total_rating = models.IntegerField(default=0)
     rating_count = models.IntegerField(default=0)
     story = models.TextField()
+    cluster = models.IntegerField(null=True)
 
     @property
     def genres_array(self):

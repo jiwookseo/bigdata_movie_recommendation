@@ -12,7 +12,6 @@ from api.models import Movie, Profile, Rating
 
 # Data Processing Tools
 import numpy as np
-import pandas as pd
 
 # Clustering
 from sklearn.cluster import KMeans, AgglomerativeClustering
@@ -33,9 +32,11 @@ Clustering된 데이터를 가져오는 것은 모델별 views에서 시행.
 def data_preprocessing(table):
   movies = Movie.objects.all()
   users = User.objects.all()
+
+  print("number of movies: {}, users: {}".format(movies.count(), users.count()))
   
   if table == 'm':
-      movies_data = [[0]*users.count() for _ in range(movies.count())]
+      movies_data = np.zeros((movies.count(), users.count()))
       for movie in movies:
         for rating in movie.ratings.all():
           movies_data[movie.id-1][rating.user.id-1] += rating.rating
@@ -43,7 +44,7 @@ def data_preprocessing(table):
       return movies_data
 
   if table == 'u':
-      users_data = [[0]*movies.count() for _ in range(users.count())]
+      users_data = np.zeros((users.count(), movies.count()))
       for user in users:
           for rating in user.ratings.all():
               users_data[user.id-1][rating.movie.id-1] += rating.rating
@@ -76,25 +77,25 @@ def movie_clustering(request, method, k):
     movies_data = data_preprocessing('m')
     
     # K-Means
-    if method == 0:
+    if method == 'km':
         model = KMeans(n_clusters=k, init="random", random_state=0)
         model.fit(movies_data)
         clustering_data = model.predict(movies_data) 
 
     # Hierarchy
-    if method == 1:
+    if method == 'hr':
         model = AgglomerativeClustering(n_clusters=k, affinity="euclidean", linkage='ward')
         clustering_data = model.fit_predict(movies_data)
 
     # EM
-    if method == 2:
+    if method == 'em':
         model = GaussianMixture(n_components=k, init_params='random', random_state=0, max_iter=100)
         with ignore_warnings(category=ConvergenceWarning):
             model.fit(movies_data)
         clustering_data = model.predict(movies_data)
       
     update_movie_clustering_data('m', clustering_data)
-    print(clustering_data)
+    # print(clustering_data)
 
     return Response(status=status.HTTP_201_CREATED)
 
@@ -106,29 +107,25 @@ def user_clustering(request, method, k):
     users_data = data_preprocessing('u')
 
     # K-Means
-    if method == 0:
+    if method == 'km':
         model = KMeans(n_clusters=k, init="random", random_state=0)
         model.fit(users_data)
         clustering_data = model.predict(users_data)
 
     # Hierarchy
-    if method == 1:
+    if method == 'hr':
         model = AgglomerativeClustering(n_clusters=k, affinity="euclidean", linkage='ward')
         clustering_data = model.fit_predict(users_data)
 
     # EM
-    if method == 2:
+    if method == 'em':
         model = GaussianMixture(n_components=k, init_params='random', random_state=0, max_iter=100)
         with ignore_warnings(category=ConvergenceWarning):
             model.fit(users_data)
         clustering_data = model.predict(users_data)
 
     update_clustering_data('u', clustering_data)
-    print(clustering_data)
+    # print(clustering_data)
     
     return Response(status=status.HTTP_201_CREATED)
 
-
-# test code
-if __name__ == '__main__':
-    pass
