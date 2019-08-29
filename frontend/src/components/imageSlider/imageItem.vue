@@ -8,10 +8,14 @@
       <span>{{ title }}</span>
     </div>
     <div 
-      class="image-item--description"
       v-if="showDescription"
     >
-      <p>{{description}}</p>
+      <div class="image-item--description">
+        <p>{{description}}</p>
+      </div>
+      <div class="image-item--under-expand">
+        <span>아래</span>
+      </div>
     </div>
   </div>
 </template>
@@ -38,14 +42,16 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  width: 15.5vw;
+  min-width: 20%;
   height: 140px;
   background-size: cover;
   cursor: pointer;
   transition: all 0.4s ease-out;
-  transition-delay: 0.3s;
+  transition-delay: 0.1s;
   &:hover {
-    transform: scale(1.2);
+    transform: scale(1.4);
+    margin-left: 50px;
+    margin-right: 50px;
   }
 }
 
@@ -70,9 +76,22 @@ export default {
 
   color: #ddd;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 1.6;
-  letter-spacing: 1px;
-  
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.image-item--under-expand {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  span {
+    margin: auto;
+    text-align: center;
+    &:hover {
+      color: #F1AC1E;
+    }
+  }
 }
 </style>

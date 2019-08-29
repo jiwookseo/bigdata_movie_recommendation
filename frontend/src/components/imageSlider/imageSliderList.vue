@@ -1,29 +1,30 @@
 <template>
-  <div 
-    class="image-slider__box"
-    :style="{ transform: 'translateX(' + slideNum*16 +'vw)' }"
-  >
-    <ImageItem
-      v-for="movie in movieList"
-      :key="movie.id"
-      :id="movie.id"
-      :title="movie.title"
-      :img="movie.img"
-      :description="movie.description"
-    />
+  <div class="image-slider__list">
+    <div
+      class="image-slider__box"
+      :style="{ transform: 'translateX(' + slideNum*16 +'vw)' }"
+    >
+      <ImageItem
+        class="image-slider__item"
+        v-for="movie in movieList"
+        :key="movie.id"
+        :id="movie.id"
+        :title="movie.title"
+        :img="movie.img"
+        :description="movie.description"
+      />
+    </div>
     <div 
-      v-if="slideNum>0"
+      v-if="slideNum !=0"
       class="image-slider__arrow-left"
       @click="handleClick(1)"
-      :style="{ left: 'calc('-30 + slideNum*16+'vw)' }"
     >
       <span>&#60;</span>
     </div>
     <div 
-      v-if="slideNum<10"
+      v-if="slideNum>-5"
       class="image-slider__arrow-right"
       @click="handleClick(-1)"
-      :style="{ right: 'calc(0px'+ slideNum*16+'vw)' }"
     >
       <span>&#62;</span>
     </div>
@@ -114,22 +115,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.image-slider__list {
+  display: flex;
+  align-items: center;
+}
 .image-slider__box {
-  width: 80vw;
+  width: 80%;
   margin-left: 30px;
   display: flex;
   align-items: center;
-  & .image-item--box {
-    min-width: 16vw;
-  }
+  transition: all 0.4s ease-in-out;
   div + div {
-    margin-left: 2vw;
+    margin-left: 10px;
   }
 }
 
 .image-slider__arrow-left {
   position: absolute;
-  left: -33px;
+  left: 0px;
   width: 30px;
   height: 80px;
   display: flex;
@@ -156,4 +159,5 @@ export default {
     cursor: pointer;
   }
 }
+
 </style>

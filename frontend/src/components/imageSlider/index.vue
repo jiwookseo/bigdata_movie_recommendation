@@ -1,6 +1,6 @@
 <template>
   <section class="image-slider">
-    <h1>HEllo slider</h1>
+    <ImageSliderList />
     <ImageSliderList />
   </section>
 </template>
@@ -18,7 +18,11 @@ export default {
 <style lang="scss" scoped>
 .image-slider {
   margin-top: calc(100vh - 64px);
+  padding-top: 40px;
   height: 100vh;
-  background-color: blue;
+  background-color: #333;
+  div + div {
+    margin-top: 60px;
+  }
 }
 </style>
