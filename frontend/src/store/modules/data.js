@@ -36,8 +36,7 @@ const actions = {
     };
     commit("setMovie", movie);
     const res = await api.getAudience(id);
-    const audience = res.data.map(d => d.username);
-    commit("setAudience", audience);
+    commit("setAudience", res.data);
   },
   async searchMovies({ commit }, params) {
     const resp = await api.searchMovies(params);

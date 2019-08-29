@@ -30,15 +30,15 @@
     <v-card-text>
       <span class="modal-title">이 영화를 본 사람</span>
       <div class="user-list">
-        <div class="dialog" v-for="(username, i) in audience" :key="username">
+        <div class="dialog" v-for="(rating, i) in audience" :key="rating.id">
           <v-dialog v-model="dialog[i]" width="40%" :key="i">
             <template v-slot:activator="{ on }">
               <v-btn text v-on="on" class="movie-button">
                 <v-icon color="green" class="user-icon">people</v-icon>
-                {{ username }}
+                {{ rating.username }}
               </v-btn>
             </template>
-            <UserDetailCard :username="username"></UserDetailCard>
+            <UserDetailCard :username="rating.username"></UserDetailCard>
           </v-dialog>
         </div>
       </div>
@@ -81,7 +81,7 @@ export default {
       return this.movie.rating ? this.movie.rating.toFixed(1) : 0;
     },
     check() {
-      return this.movie !== {};
+      return this.audience[0] ? this.audience[0].movie_id === this.id : false;
     }
   },
   data: () => ({
