@@ -5,6 +5,7 @@ app_name = "api"
 
 urlpatterns = [
     # Auth
+    path("signup/", views.signup, name="signup"),
     path("users/", views.user_list, name="user_list"),
     path("users/<str:username>/", views.user_detail, name="user_detail"),
     path("users/<str:username>/selected", views.user_selected, name="user_selected"),
