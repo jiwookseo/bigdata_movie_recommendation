@@ -10,10 +10,30 @@
         <v-btn text small color="blue" @click="sortRatings">평점 순</v-btn>
       </div>
     </v-col>
-    <v-text-field class="search_input" v-model="title" @keydown.enter="onSubmit" label="영화 제목" v-if="btn === 'title'"></v-text-field>
+    <v-text-field
+      class="search_input"
+      v-model="title"
+      @keydown.enter="onSubmit"
+      label="영화 제목"
+      v-if="btn === 'title'"
+    ></v-text-field>
     <v-container v-else>
-      <v-btn v-for="(genre, i) of genreItems" v-if="genre.state === false" :key="i" text class="genre_button" @click="changeState(i)">{{ genre.genre }}</v-btn>
-      <v-btn v-else :key="i" text color="blue" class="genre_button" @click="changeState(i)">{{ genre.genre }}</v-btn>
+      <v-btn
+        v-for="(genre, i) of genreItems"
+        v-if="genre.state === false"
+        :key="i"
+        text
+        class="genre_button"
+        @click="changeState(i)"
+      >{{ genre.genre }}</v-btn>
+      <v-btn
+        v-else
+        :key="i"
+        text
+        color="blue"
+        class="genre_button"
+        @click="changeState(i)"
+      >{{ genre.genre }}</v-btn>
     </v-container>
     <v-layout justify-center pa-10>
       <v-btn large color="indigo white--text" @click="onSubmit">Search</v-btn>
@@ -22,13 +42,12 @@
 </template>
 
 <script>
-
 export default {
   props: {
     submit: {
       type: Function,
       default: () => {}
-    },
+    }
   },
   data: () => ({
     title: "",
@@ -36,30 +55,30 @@ export default {
       title: "",
       genres: "",
       sort_ratings: "",
-      sort_views: "",
+      sort_views: ""
     },
     btn: "title",
     genre: [],
     genreItems: [
-      {genre: "Action", state: false},
-      {genre: "Adventure", state: false},
-      {genre: "Animation", state: false},
-      {genre: "Children's", state: false},
-      {genre: "Comedy", state: false},
-      {genre: "Crime", state: false},
-      {genre: "Documentary", state: false},
-      {genre: "Drama", state: false},
-      {genre: "Fantasy", state: false},
-      {genre: "Film-Noir", state: false},
-      {genre: "Horror", state: false},
-      {genre: "Musical", state: false},
-      {genre: "Mystery", state: false},
-      {genre: "Romance", state: false},
-      {genre: "Sci-Fi", state: false},
-      {genre: "Thriller", state: false},
-      {genre: "War", state: false},
-      {genre: "Western", state: false},
-    ],
+      { genre: "Action", state: false },
+      { genre: "Adventure", state: false },
+      { genre: "Animation", state: false },
+      { genre: "Children's", state: false },
+      { genre: "Comedy", state: false },
+      { genre: "Crime", state: false },
+      { genre: "Documentary", state: false },
+      { genre: "Drama", state: false },
+      { genre: "Fantasy", state: false },
+      { genre: "Film-Noir", state: false },
+      { genre: "Horror", state: false },
+      { genre: "Musical", state: false },
+      { genre: "Mystery", state: false },
+      { genre: "Romance", state: false },
+      { genre: "Sci-Fi", state: false },
+      { genre: "Thriller", state: false },
+      { genre: "War", state: false },
+      { genre: "Western", state: false }
+    ]
   }),
   watch: {
     title: function() {

@@ -13,24 +13,31 @@ from django.shortcuts import get_object_or_404
 def movie_list(request):
 
     if request.method == 'GET':
-        # recommend by age, occupation
+        # recommend by age, occupation, gender
         age = request.GET.get("age", None)
         occupation = request.GET.get("occupation", None)
+        gender = request.GET.get("gender", None)
         if age:
             movies = Movie.objects.annotate(
                 age_count=Count(
-                    'ratings', filter=Q(ratings__profile__age=age))
-            ).order_by('-age_count')[:20]
+                    'ratings', filter=Q(ratings__user__age=age))
+            ).order_by('-age_count')
             serializer = MovieSerializer(movies, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         elif occupation:
             movies = Movie.objects.annotate(
                 occupation_count=Count(
-                    'ratings', filter=Q(ratings__profile__occupation=occupation))
-            ).order_by('-occupation_count')[:20]
+                    'ratings', filter=Q(ratings__user__occupation=occupation))
+            ).order_by('-occupation_count')
             serializer = MovieSerializer(movies, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
-
+        elif gender:
+            movies = Movie.objects.annotate(
+                gender_count=Count(
+                    'ratings', filter=Q(ratings__user__gender=gender))
+            ).order_by('-gender_count')
+            serializer = MovieSerializer(movies, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
             movies = Movie.objects.all()
 
