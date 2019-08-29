@@ -38,3 +38,6 @@ table {
 .txt-orange {
   color: rgb(255, 177, 1)
 }
+div {
+	box-sizing: border-box;
+}
