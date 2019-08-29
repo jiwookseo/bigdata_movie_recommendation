@@ -153,6 +153,9 @@ def rating_list(request):
             movie.save()
         return Response(status=status.HTTP_200_OK)
 
+@api_view(['GET', 'PUT', 'DELETE'])
+def rating_detail(request, rating_id):
+    rating = get_object_or_404(Rating, id=rating_id)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def rating_detail(request, rating_id):
