@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
-from api.models import Movie, Profile, Rating
-from django.contrib.auth.models import User
+from api.models import Movie, Rating
+from accounts.models import User
 from api.serializers import MovieSerializer, RatingSerializer
 from rest_framework.response import Response
 from datetime import datetime
@@ -13,24 +13,31 @@ from django.shortcuts import get_object_or_404
 def movie_list(request):
 
     if request.method == 'GET':
-        # recommend by age, occupation
+        # recommend by age, occupation, gender
         age = request.GET.get("age", None)
         occupation = request.GET.get("occupation", None)
+        gender = request.GET.get("gender", None)
         if age:
             movies = Movie.objects.annotate(
                 age_count=Count(
-                    'ratings', filter=Q(ratings__profile__age=age))
-            ).order_by('-age_count')[:20]
+                    'ratings', filter=Q(ratings__user__age=age))
+            ).order_by('-age_count')
             serializer = MovieSerializer(movies, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         elif occupation:
             movies = Movie.objects.annotate(
                 occupation_count=Count(
-                    'ratings', filter=Q(ratings__profile__occupation=occupation))
-            ).order_by('-occupation_count')[:20]
+                    'ratings', filter=Q(ratings__user__occupation=occupation))
+            ).order_by('-occupation_count')
             serializer = MovieSerializer(movies, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
-
+        elif gender:
+            movies = Movie.objects.annotate(
+                gender_count=Count(
+                    'ratings', filter=Q(ratings__user__gender=gender))
+            ).order_by('-gender_count')
+            serializer = MovieSerializer(movies, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
             movies = Movie.objects.all()
 
@@ -125,6 +132,7 @@ def rating_list(request):
 
     if request.method == 'POST':
         ratings = request.data.get('ratings', None)
+
         for item in ratings:
             username = item.get('username', None)
             user = get_object_or_404(User, username=username)
@@ -137,7 +145,7 @@ def rating_list(request):
             time = datetime.utcfromtimestamp(
                 int(timestamp)).strftime("%Y-%m-%d %H:%M:%S")
             Rating.objects.create(
-                user=user.profile, movie_id=movie_id, rating=rating, timestamp=time)
+                user=user, movie_id=movie_id, rating=rating, timestamp=time)
             movie.total_rating += int(rating)
             movie.rating_count += 1
             movie.avg_rating = round(
@@ -145,6 +153,9 @@ def rating_list(request):
             movie.save()
         return Response(status=status.HTTP_200_OK)
 
+@api_view(['GET', 'PUT', 'DELETE'])
+def rating_detail(request, rating_id):
+    rating = get_object_or_404(Rating, id=rating_id)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def rating_detail(request, rating_id):

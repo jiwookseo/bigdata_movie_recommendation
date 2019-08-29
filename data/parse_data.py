@@ -24,7 +24,8 @@ def create_users(num_users):
 
         request_data['profiles'].append({
             'username': username,
-            'password': username,
+            'password1': "uvuvuvuv",
+            'password2': "uvuvuvuv",
             'age': age,
             'gender': gender,
             'occupation': occupation
@@ -33,8 +34,8 @@ def create_users(num_users):
         if len(request_data['profiles']) >= num_users:
             break
 
-    requests.post(
-        API_URL + 'users/', data=json.dumps(request_data), headers=headers)
+    response = requests.post(API_URL + 'signup/', data=json.dumps(request_data), headers=headers)
+    print(response.text)
 
 
 def create_movies():
@@ -67,8 +68,7 @@ def create_ratings(num_users):
             "timestamp": timestamp
         })
 
-    requests.post(
-        API_URL + "ratings/", data=json.dumps(request_data), headers=headers)
+    requests.post(API_URL + "ratings/", data=json.dumps(request_data), headers=headers)
 
 
 def create_story(num_movies):
