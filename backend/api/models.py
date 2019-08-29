@@ -15,7 +15,7 @@ class Profile(models.Model):
 
     @property
     def rating_cnt(self):
-        return len(self.user.ratings.all())
+        return len(self.ratings.all())
 
 
 #  wrapper for create user Profile
