@@ -4,20 +4,20 @@ import api from "../../api";
 const state = {
   // shape: [{ id, title, genres, viewCnt, rating }]
   movieSearchList: [],
-  movieSelected: [],
+  movie: {},
   audience: [],
   userSearchList: [],
-  userSelected: [],
+  user: {},
   ratings: []
 };
 
 // getters
 const getters = {
   movieSearchList: state => state.movieSearchList,
-  movieSelected: state => state.movieSelected,
+  movie: state => state.movie,
   audience: state => state.audience,
   userSearchList: state => state.userSearchList,
-  userSelected: state => state.userSelected,
+  user: state => state.user,
   ratings: state => state.ratings
 };
 
@@ -31,10 +31,11 @@ const actions = {
       title: resp.data.title,
       genres: resp.data.genres_array,
       viewCnt: resp.data.rating_count,
-      rating: resp.data.avg_rating
+      rating: resp.data.avg_rating,
+      story: resp.data.story
     };
     commit("setMovie", movie);
-    const res = await api.getPeople(id);
+    const res = await api.getAudience(id);
     const audience = res.data.map(d => d.username);
     commit("setAudience", audience);
   },
@@ -45,7 +46,8 @@ const actions = {
       title: d.title,
       genres: d.genres_array,
       viewCnt: d.rating_count,
-      rating: d.avg_rating
+      rating: d.avg_rating,
+      story: resp.data.story
     }));
 
     commit("setMovieSearchList", movies);
@@ -63,7 +65,7 @@ const actions = {
   async getUserByUsername({ commit }, username) {
     const res1 = await api.getUser(username);
     const user = res1.data;
-    commit("setUserSelected", user);
+    commit("setUser", user);
     const res2 = await api.getRatings(username);
     commit("setRatings", res2.data);
   },
@@ -75,9 +77,9 @@ const actions = {
 // mutations
 const mutations = {
   setMovieSearchList: (state, payload) => (state.movieSearchList = payload),
-  setMovieSelected: (state, payload) => (state.movieSelected = payload),
+  setMovie: (state, payload) => (state.movie = payload),
   setUserSearchList: (state, payload) => (state.userSearchList = payload),
-  setUserSelected: (state, payload) => (state.userSelected = payload),
+  setUser: (state, payload) => (state.user = payload),
   setRatings: (state, payload) => (state.ratings = payload),
   setAudience: (state, payload) => (state.audience = payload)
 };
