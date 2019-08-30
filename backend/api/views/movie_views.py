@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
-from api.models import Movie, Profile, Rating
-from django.contrib.auth.models import User
+from api.models import Movie, Rating
+from accounts.models import User
 from api.serializers import MovieSerializer, RatingSerializer
 from rest_framework.response import Response
 from datetime import datetime
@@ -132,6 +132,7 @@ def rating_list(request):
 
     if request.method == 'POST':
         ratings = request.data.get('ratings', None)
+
         for item in ratings:
             username = item.get('username', None)
             user = get_object_or_404(User, username=username)
@@ -144,7 +145,7 @@ def rating_list(request):
             time = datetime.utcfromtimestamp(
                 int(timestamp)).strftime("%Y-%m-%d %H:%M:%S")
             Rating.objects.create(
-                user=user.profile, movie_id=movie_id, rating=rating, timestamp=time)
+                user=user, movie_id=movie_id, rating=rating, timestamp=time)
             movie.total_rating += int(rating)
             movie.rating_count += 1
             movie.avg_rating = round(
@@ -152,6 +153,9 @@ def rating_list(request):
             movie.save()
         return Response(status=status.HTTP_200_OK)
 
+@api_view(['GET', 'PUT', 'DELETE'])
+def rating_detail(request, rating_id):
+    rating = get_object_or_404(Rating, id=rating_id)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def rating_detail(request, rating_id):
