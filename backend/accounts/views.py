@@ -5,10 +5,10 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from api.serializers import RatingSerializer
-from .jwt import create_token, verify_token, refresh_token
+from .jwt import create_token, verify_token
 from .serializers import UserSerializer
 from .models import User
-from .forms import CustomUserAuthenticationForm, CustomUserCreateForm,  CustomUserChangeForm
+from .forms import CustomUserAuthenticationForm, CustomUserCreateForm, CustomUserChangeForm, CustomUserChangePwForm
 
 
 # 회원가입
@@ -36,23 +36,21 @@ def user_list(request):
 @api_view(["GET", "PUT", "DELETE"])
 def user_detail(request, username):
     user = get_object_or_404(User, username=username)
-    serializer = UserSerializer(user)
 
     if request.method == "GET":
+        serializer = UserSerializer(user)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-
     if request.method == "PUT":
-        token = request.get.data("token", None)
-        name = request.get.data("username", None)
+        token = request.data.get("token", None)
+        name = request.data.get("username", None)
 
         if name != None:
-            user = User.objects.get(username=name)
+            check = User.objects.get(username=name)
             response = verify_token(token)
-            if response.status_code == 200 and username == name or user.is_staff:
-                user = get_object_or_404(User, username=username)
-                change = request.get.data("changeInfo", None)
-                pw = request.get.data("pw", None)
+            if response.status_code == 200 and username == name or response.status_code == 200 and check.is_staff:
+                change = request.data.get("changeInfo", None)
+                pw = request.data.get("pw", None)
                 if change:
                     form = CustomUserChangeForm(instance=user, data=change)
                     if form.is_valid():
@@ -65,14 +63,14 @@ def user_detail(request, username):
                         form.save()
                     else:
                         return Response(status=status.HTTP_401_UNAUTHORIZED)
-                user = get_object_or_404(User, username=username)
-                serializer = UserSerializer(user)
-                return Response(data=serializer.data, status=status.HTTP_200_OK)
+                else:
+                    return Response(status=status.HTTP_204_NO_CONTENT)
+                return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "DELETE":
-        token = request.get.data("token", None)
-        name = request.get.data("username", None)
+        token = request.data.get("token", None)
+        name = request.data.get("username", None)
 
         if name != None:
             user = User.objects.get(username=name)
