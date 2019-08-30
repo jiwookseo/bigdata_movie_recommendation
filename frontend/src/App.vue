@@ -8,11 +8,10 @@
 
 <script>
 import router from "./router";
-import './reset.css';
-import Header from "./components/header/index"
-import Jumbotron from "./components/header/Jumbotron"
-import ImageSlider from "./components/imageSlider/index"
-import { mapGetters } from "vuex";
+import "./reset.css";
+import Header from "./components/header/index";
+import Jumbotron from "./components/header/Jumbotron";
+import ImageSlider from "./components/imageSlider/index";
 
 export default {
   components: {
@@ -35,14 +34,6 @@ export default {
       }
     ]
   }),
-  computed: {
-    ...mapGetters("data", ["recommendation"])
-  },
-  mounted() {
-    this.$store.dispatch("data/getRecByAge", 18);
-    this.$store.dispatch("data/getRecByOccupation", "artist");
-    this.$store.dispatch("data/getRecByGender", "M");
-  },
   methods: {
     goTo: function(path) {
       router.push({ name: path });
@@ -52,10 +43,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .app {
-    width: 100vw;
-    overflow-x: hidden;
-  }
-
-  
+.app {
+  width: 100vw;
+  overflow-x: hidden;
+}
 </style>
