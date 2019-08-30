@@ -17,3 +17,9 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm):
         model = User
         fields = ["age", "occupation", "gender"]
+
+
+class CustomUserChangePwForm(UserChangeForm):
+    class Meta(UserChangeForm):
+        model = User
+        fields = ["password"]
