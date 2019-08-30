@@ -62,11 +62,6 @@ export default {
   computed: {
     ...mapGetters("data", ["recommendation"])
   },
-  watch: {
-    recommendation() {
-      console.log(this.recommendation);
-    }
-  },
   mounted() {
     this.$store.dispatch("data/getRecByAge", 18);
     this.$store.dispatch("data/getRecByOccupation", "artist");

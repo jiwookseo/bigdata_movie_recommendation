@@ -1,10 +1,15 @@
 <template>
   <v-container>
-    <v-text-field class="search_input" v-model="params.username" @keydown.enter="onSubmit" label="유저 이름"></v-text-field>
+    <v-text-field
+      v-model="params.username"
+      label="유저 이름"
+      class="search_input"
+      @keydown.enter="onSubmit"
+    />
     <v-layout justify-center pa-10>
       <v-btn large color="indigo white--text" @click="onSubmit">Search</v-btn>
     </v-layout>
-    </v-container>
+  </v-container>
 </template>
 
 <script>
@@ -13,13 +18,13 @@ export default {
     submit: {
       type: Function,
       default: () => {}
-    },
+    }
   },
   data: () => ({
     params: {
-      username: "",
+      username: ""
     },
-    btn: "title",
+    btn: "title"
   }),
   created() {
     this.onSubmit();
@@ -27,7 +32,7 @@ export default {
   methods: {
     onSubmit() {
       this.submit(this.params);
-    },
+    }
   }
 };
 </script>
