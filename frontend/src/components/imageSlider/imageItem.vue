@@ -19,7 +19,10 @@
         <span
           @click="handleToggle"
         >
-          <font-awesome-icon icon="sort-down" size="2x" />
+          <font-awesome-icon 
+            icon="sort-down" 
+            size="2x" 
+          />
         </span>
       </div>
     </div>
@@ -65,9 +68,12 @@ export default {
         return ''
       } 
     },
-    genre: {type: Array, default: function(){
-      return []
-    } }
+    genre: {
+      type: Array, 
+      default: function(){
+        return []
+      } 
+    }
   }
     ,
   data(){

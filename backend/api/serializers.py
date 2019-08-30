@@ -8,7 +8,7 @@ class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = ('id', 'title', 'genres_array',
-                  'avg_rating', 'rating_count', 'story')
+                  'avg_rating', 'rating_count', 'story', 'still_cut', 'poster')
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -17,7 +17,8 @@ class RatingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Rating
-        fields = ('id', 'rating', 'username', 'movie_title', 'movie_id', 'timestamp')
+        fields = ('id', 'rating', 'username',
+                  'movie_title', 'movie_id', 'timestamp')
 
     def get_movie_title(self, obj):
         return obj.movie.title

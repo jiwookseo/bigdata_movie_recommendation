@@ -20,7 +20,9 @@ const getMovieStucture = item => ({
   genres: item.genres_array,
   viewCnt: item.rating_count,
   rating: item.avg_rating,
-  story: item.story
+  story: item.story,
+  poster: item.poster,
+  stillCut: item.still_cut
 });
 
 // getters

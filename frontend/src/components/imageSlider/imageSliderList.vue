@@ -4,49 +4,34 @@
       <h2>{{ listTitle }}</h2>
     </div>
     <div class="image-slider__wrapper">
-      <div
-        class="image-slider__box"
-        :style="{ transform: 'translateX(' + slideNum*16 +'vw)' }"
-      >
+      <div class="image-slider__box" :style="{ transform: 'translateX(' + slideNum*16 +'vw)' }">
         <ImageItem
           v-for="movie in movieList"
           :id="movie.id"
           :key="movie.id"
           class="image-slider__item"
           :title="movie.title"
-          :img="movie.img"
-          :description="movie.description"
-          :genre="movie.genre"
+          :img="movie.stillCut || movie.poster || 'https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg'"
+          :description="movie.story.slice(0, 500)"
+          :genre="movie.genres"
           @activateMovieDetail="handleMovieData"
         />
       </div>
-      <div 
-        v-if="slideNum !=0"
-        class="image-slider__arrow-left"
-        @click="handleClick(1)"
-      >
+      <div v-if="slideNum !=0" class="image-slider__arrow-left" @click="handleClick(1)">
         <span>&#60;</span>
       </div>
-      <div 
-        v-if="slideNum>-5"
-        class="image-slider__arrow-right"
-        @click="handleClick(-1)"
-      >
+      <div v-if="slideNum>-5" class="image-slider__arrow-right" @click="handleClick(-1)">
         <span>&#62;</span>
       </div>
     </div>
-    
-    <ImageItemDetail 
-      v-if="toggleDetail"
-      toggle="detailToggle"
-      @closeDetail="handleDetailToggler"
-    />
+
+    <ImageItemDetail v-if="toggleDetail" toggle="detailToggle" @closeDetail="handleDetailToggler" />
   </div>
 </template>
 
 <script>
-import ImageItem from './imageItem'
-import ImageItemDetail from './imageItemDetail'
+import ImageItem from "./imageItem";
+import ImageItemDetail from "./imageItemDetail";
 
 export default {
   name: "ImageSliderList",
@@ -54,46 +39,33 @@ export default {
     ImageItem,
     ImageItemDetail
   },
-  props: {
-    movieList: {
-      type: Array,
-      default: function(){
-        return []
-      }
-    }, 
-    listTitle: {
-      type: String,
-      default: function(){
-        return ''
-      }
-    }
-  },
-  data(){
+  props: ["movieList", "listTitle"],
+  data() {
     return {
       slideNum: 0,
-      detailToggle: false,
-    }
+      detailToggle: false
+    };
   },
   computed: {
-    toggleDetail(){
-      return this.$store.state.mvUi.detailToggler && this.detailToggle
+    toggleDetail() {
+      return this.$store.state.mvUi.detailToggler && this.detailToggle;
     }
   },
+  mounted() {},
   methods: {
-    handleClick: function (n){
-      const s = this.slideNum + n
-      this.slideNum = s
+    handleClick: function(n) {
+      const s = this.slideNum + n;
+      this.slideNum = s;
     },
-    handleDetailToggler: function(){
-      this.detailToggle = !this.detailToggle
-      
+    handleDetailToggler: function() {
+      this.detailToggle = !this.detailToggle;
     },
-    handleMovieData: function(movie){
-      this.handleDetailToggler()
-      this.$store.commit('mvUi/setActivateMovie', movie)
+    handleMovieData: function(movie) {
+      this.handleDetailToggler();
+      this.$store.commit("mvUi/setActivateMovie", movie);
     }
-  },
-}
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -157,5 +129,4 @@ export default {
     cursor: pointer;
   }
 }
-
 </style>
