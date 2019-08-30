@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import movie_views, scrap_views, rating_views, clustering_views
+from .views import movie_views, scrap_views, clustering_views
 from accounts import views
+from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
 
 app_name = "api"
 
@@ -9,12 +10,13 @@ urlpatterns = [
     path("signup/", views.signup, name="signup"),
     path("users/", views.user_list, name="user_list"),
     path("users/<str:username>/", views.user_detail, name="user_detail"),
-    path("users/<str:username>/selected",
-         views.user_selected, name="user_selected"),
-    path('users/<str:username>/ratings/',
-         views.user_ratings, name='user_ratings'),
+    path('users/<str:username>/ratings/', views.user_ratings, name='user_ratings'),
     path("login/", views.login, name="login"),
     path("logout/", views.logout, name="logout"),
+    # jwt
+    path("token/create/", obtain_jwt_token),
+    path("token/verify/", verify_jwt_token),
+    path("token/refresh/", refresh_jwt_token),
 
     # movies, ratings
     path('movies/', movie_views.movie_list, name='movie_list'),

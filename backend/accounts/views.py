@@ -4,26 +4,25 @@ from django.contrib.auth.decorators import login_required
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import UserSerializer
 from api.serializers import RatingSerializer
+from .serializers import UserSerializer
 from .models import User
 from .forms import CustomUserAuthenticationForm, CustomUserCreateForm,  CustomUserChangeForm
+import requests, json
 
+BASE_URL = "http://localhost:8000/api/token/"
+headers = {'content-type': 'application/json'}
 
-#회원가입
+# 회원가입
 @api_view(["POST"])
 def signup(request):
     if request.method == "POST":
         users = request.data.get('profiles', None)
-        if len(users) > 1:
-            for user in users:
-                form = CustomUserCreateForm(data=user)
-                if form.is_valid():
-                    form.save()
-        else:
-            form = CustomUserCreateForm(data=users)
+        for user in users:
+            form = CustomUserCreateForm(data=user)
             if form.is_valid():
                 form.save()
+
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_201_CREATED)
@@ -77,9 +76,16 @@ def login(request):
     user = request.data.get("login", None)
     form = CustomUserAuthenticationForm(request, data=user)
     if form.is_valid():
-        auth_login(request, form.get_user())
+        response = requests.post(BASE_URL + "create/", data=json.dumps(user), headers=headers)
+        token = response.json()["token"]
 
-        return Response(status=status.HTTP_200_OK)
+        user = form.get_user()
+        user.refresh_token = token
+        user.save()
+
+        auth_login(request, user)
+
+        return Response(data=response.json(), status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
