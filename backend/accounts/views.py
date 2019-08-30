@@ -31,10 +31,7 @@ def signup(request):
 
 @api_view(["GET"])
 def user_list(request):
-    username = request.GET.get("username", request.GET.get("username", None))
     users = User.objects.all()
-    if username:
-        users = users.filter(username__icontains=username)
     serializer = UserSerializer(users, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -47,7 +44,7 @@ def user_detail(request, username):
 
 
 @login_required
-@api_view(["GET", "PUT", "DELETE"])
+@api_view(["PUT", "DELETE"])
 def user_selected(request, username):
     if request.method == "PUT":
         change = request.get.data("changeInfo", None)
@@ -60,13 +57,12 @@ def user_selected(request, username):
 
         user = get_object_or_404(User, username=username)
         serializer = UserSerializer(user)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == "DELETE":
         user = get_object_or_404(User, username=username)
         user.delete()
         return Response(status=status.HTTP_202_ACCEPTED)
-
-    return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
