@@ -1,7 +1,0 @@
-from django.contrib.auth.models import User
-from api.models import Profile
-user=User.objects.create_user('admin', password='admin', is_active=True)
-user.is_superuser=True
-user.is_staff=True
-user.save()
-profile = Profile.objects.create(user=user, gender='M', age=20, occupation='admin')

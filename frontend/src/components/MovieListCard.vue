@@ -12,7 +12,7 @@
                       <v-icon large>pageview</v-icon>
                     </v-btn>
                   </template>
-                  <MovieDetailCard :id="id"></MovieDetailCard>
+                  <MovieDetailCard :id="id" :visible="dialog"></MovieDetailCard>
                 </v-dialog>
 
                 <v-list-item class="list-item">

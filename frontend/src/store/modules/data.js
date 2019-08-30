@@ -2,14 +2,26 @@ import api from "../../api";
 
 // initial state
 const state = {
-  // shape: [{ id, title, genres, viewCnt, rating }]
   movieSearchList: [],
   movie: {},
   audience: [],
   userSearchList: [],
   user: {},
-  ratings: []
+  ratings: [],
+  recAge: [],
+  recOccupation: [],
+  recGender: []
 };
+
+// movie shape
+const getMovieStucture = item => ({
+  id: item.id,
+  title: item.title,
+  genres: item.genres_array,
+  viewCnt: item.rating_count,
+  rating: item.avg_rating,
+  story: item.story
+});
 
 // getters
 const getters = {
@@ -18,39 +30,28 @@ const getters = {
   audience: state => state.audience,
   userSearchList: state => state.userSearchList,
   user: state => state.user,
-  ratings: state => state.ratings
+  ratings: state => state.ratings,
+  recommendation: state => ({
+    age: state.recAge,
+    occupation: state.recOccupation,
+    gender: state.recGender
+  })
 };
 
 // actions
 const actions = {
   // Movie
-  async getMovieById({ commit }, id) {
-    const resp = await api.getMovie(id);
-    const movie = {
-      id: resp.data.id,
-      title: resp.data.title,
-      genres: resp.data.genres_array,
-      viewCnt: resp.data.rating_count,
-      rating: resp.data.avg_rating,
-      story: resp.data.story
-    };
-    commit("setMovie", movie);
-    const res = await api.getAudience(id);
-    const audience = res.data.map(d => d.username);
-    commit("setAudience", audience);
-  },
   async searchMovies({ commit }, params) {
     const resp = await api.searchMovies(params);
-    const movies = resp.data.map(d => ({
-      id: d.id,
-      title: d.title,
-      genres: d.genres_array,
-      viewCnt: d.rating_count,
-      rating: d.avg_rating,
-      story: resp.data.story
-    }));
-
+    const movies = resp.data.map(d => getMovieStucture(d));
     commit("setMovieSearchList", movies);
+  },
+  async getMovieById({ commit }, id) {
+    const resp = await api.getMovie(id);
+    const movie = getMovieStucture(resp.data);
+    commit("setMovie", movie);
+    const res = await api.getAudience(id);
+    commit("setAudience", res.data);
   },
   setEmptyMovieList({ commit }) {
     commit("setMovieSearchList", []);
@@ -71,6 +72,23 @@ const actions = {
   },
   setEmptyUserList({ commit }) {
     commit("setUserSearchList", []);
+  },
+
+  // Recommendation
+  async getRecByAge({ commit }, age) {
+    const resp = await api.searchMovies({ age });
+    const movies = resp.data.map(item => getMovieStucture(item));
+    commit("setRecAge", movies);
+  },
+  async getRecByOccupation({ commit }, occupation) {
+    const resp = await api.searchMovies({ occupation });
+    const movies = resp.data.map(item => getMovieStucture(item));
+    commit("setRecOccupation", movies);
+  },
+  async getRecByGender({ commit }, gender) {
+    const resp = await api.searchMovies({ gender });
+    const movies = resp.data.map(item => getMovieStucture(item));
+    commit("setRecGender", movies);
   }
 };
 
@@ -81,7 +99,10 @@ const mutations = {
   setUserSearchList: (state, payload) => (state.userSearchList = payload),
   setUser: (state, payload) => (state.user = payload),
   setRatings: (state, payload) => (state.ratings = payload),
-  setAudience: (state, payload) => (state.audience = payload)
+  setAudience: (state, payload) => (state.audience = payload),
+  setRecAge: (state, payload) => (state.recAge = payload),
+  setRecOccupation: (state, payload) => (state.recOccupation = payload),
+  setRecGender: (state, payload) => (state.recGender = payload)
 };
 
 export default {
