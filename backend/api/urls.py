@@ -1,6 +1,5 @@
 from django.urls import path
-from api.views import movie_views
-from api.views import auth_views
+from api.views import movie_views, auth_views, scrap_views
 
 
 app_name = "api"
@@ -20,4 +19,5 @@ urlpatterns = [
     path('ratings/', movie_views.rating_list, name='rating_list'),
     path('ratings/<int:rating_id>/',
          movie_views.rating_detail, name='rating_detail'),
+    path('scrap/', scrap_views.scrap_poster),
 ]
