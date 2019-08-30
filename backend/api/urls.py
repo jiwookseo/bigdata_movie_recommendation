@@ -1,8 +1,6 @@
 from django.urls import path
 from api.views import movie_views, rating_views, clustering_views
 
-
-
 from .views import movie_views
 from accounts import views
 app_name = "api"
