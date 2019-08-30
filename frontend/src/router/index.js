@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+
+// Pages
 import EmptyPage from '../components/pages/EmptyPage'
 import MovieSearchPage from '../components/pages/MovieSearchPage'
 import UserSearchPage from '../components/pages/UserSearchPage'

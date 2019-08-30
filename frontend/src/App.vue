@@ -56,7 +56,7 @@ export default {
         icon: "people",
         text: "유저 검색",
         path: "user-search"
-      }
+      },
     ]
   }),
   computed: {
