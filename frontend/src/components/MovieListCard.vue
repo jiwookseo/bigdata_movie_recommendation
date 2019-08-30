@@ -8,11 +8,11 @@
               <div class="icon-title">
                 <v-dialog v-model="dialog" width="40%">
                   <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on" class="modal-button">
+                    <v-btn class="modal-button" icon v-on="on">
                       <v-icon large>pageview</v-icon>
                     </v-btn>
                   </template>
-                  <MovieDetailCard :id="id" :visible="dialog"></MovieDetailCard>
+                  <MovieDetailCard :id="id" :visible="dialog" />
                 </v-dialog>
 
                 <v-list-item class="list-item">
@@ -49,6 +49,9 @@
 import MovieDetailCard from "./MovieDetailCard";
 
 export default {
+  components: {
+    MovieDetailCard
+  },
   props: {
     id: {
       type: Number,
@@ -75,17 +78,14 @@ export default {
       default: 0
     }
   },
-  components: {
-    MovieDetailCard
-  },
+  data: () => ({
+    dialog: false
+  }),
   computed: {
     genresStr: function() {
       return this.genres.join(" / ");
     }
-  },
-  data: () => ({
-    dialog: false
-  })
+  }
 };
 </script>
 
