@@ -10,6 +10,7 @@ class Movie(models.Model):
     total_rating = models.IntegerField(default=0)
     rating_count = models.IntegerField(default=0)
     story = models.TextField()
+    cluster = models.IntegerField(null=True)
     poster = models.URLField(default="")
     still_cut = models.URLField(default="")
 

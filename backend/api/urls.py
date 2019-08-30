@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import movie_views, scrap_views
+from .views import movie_views, scrap_views, rating_views, clustering_views
 from accounts import views
+
 app_name = "api"
 
 urlpatterns = [
@@ -24,5 +25,9 @@ urlpatterns = [
     path('ratings/', movie_views.rating_list, name='rating_list'),
     path('ratings/<int:rating_id>/',
          movie_views.rating_detail, name='rating_detail'),
+
+    # clustering
+    path('clustering/movies/<str:method>/<int:k>', clustering_views.movie_clustering, name="movie_clustering"),
+    path('clustering/users/<str:method>/<int:k>', clustering_views.user_clustering, name="user_clustering"),
     path('scrap/', scrap_views.scrap_poster),
 ]
