@@ -3,7 +3,7 @@
     class="image-item--box"
     :style="{'backgroundImage':'url('+img+')'}"
     @mouseenter="handleMouseOver"
-    @mouseleave="handleMouseOver"
+    @mouseleave="handleMouseLeave"
   >
 
     <div class="image-item--title">
@@ -19,9 +19,9 @@
       <!-- 아래 화살표 -->
       <div class="image-item--under-expand">
         <span
-          @click="handleExpand"
+          @click="handleToggle"
         >
-            <font-awesome-icon icon="sort-down" size="2x"/>
+          <font-awesome-icon icon="sort-down" size="2x"/>
         </span>
       </div>
     </div>
@@ -30,6 +30,7 @@
 
 <script>
 
+// font-awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faSortDown } from '@fortawesome/free-solid-svg-icons'
@@ -38,20 +39,35 @@ library.add(faSortDown)
 
 export default {
   name: "ImageItem",
-  props: ["id", "title", "img", "description"],
+  props: ["id", "title", "img", "description", "genre"],
   components: {
     FontAwesomeIcon,
   },
   methods: {
     handleMouseOver: function(){
       this.showDescription = !this.showDescription
+      const movie = {id: this.id, title: this.title, img: this.img, description: this.description, genre: this.genre }
+      this.$store.commit("mvUi/setActivateMovie", movie)
     },
+    handleMouseLeave: function(){
+      this.showDescription = !this.showDescription
+    },
+
+    handleToggle: function(){
+      if (this.$store.state.mvUi.detailToggler){
+        this.$store.commit("mvUi/setDetailToggler")
+      }
+      const movie = {id: this.id, title: this.title, img: this.img, description: this.description, genre: this.genre }
+      this.$store.commit("mvUi/setDetailToggler")
+      this.$emit("activateMovieDetail", movie)
+    }
   },
   data(){
     return {
       showDescription: false,
+      detailToggler: false,
     }
-  }
+  },
 }
 </script>
 

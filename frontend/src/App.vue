@@ -1,6 +1,7 @@
 <template>
   <div class="app">
     <Header />
+    <Jumbotron />
     <ImageSlider />
   </div>
 </template>
@@ -9,11 +10,13 @@
 import router from "./router";
 import './reset.css';
 import Header from "./components/header/index"
+import Jumbotron from "./components/header/Jumbotron"
 import ImageSlider from "./components/imageSlider/index"
 import { mapGetters } from "vuex";
 
 export default {
   components: {
+    Jumbotron,
     Header,
     ImageSlider
   },
