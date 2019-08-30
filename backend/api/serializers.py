@@ -21,3 +21,6 @@ class RatingSerializer(serializers.ModelSerializer):
 
     def get_movie_title(self, obj):
         return obj.movie.title
+
+    def get_username(self, obj):
+        return obj.user.username
