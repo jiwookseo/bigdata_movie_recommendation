@@ -11,19 +11,19 @@
         <div class="grey--text point">직업 : {{ user.occupation }}</div>
       </v-layout>
     </v-card-text>
-    <hr />
+    <hr>
     <v-card-text>
       <span class="user-movie">{{ username }} 님이 본 영화</span>
       <div class="user-list">
-        <div class="movie-dialog" v-for="(rating, i) in ratings" :key="rating.id">
-          <v-dialog v-model="dialog[i]" width="40%" :key="i">
+        <div v-for="(rating, i) in ratings" :key="rating.id" class="movie-dialog">
+          <v-dialog :key="i" v-model="dialog[i]" width="40%">
             <template v-slot:activator="{ on }">
-              <v-btn text v-on="on" class="user-button">
-                <v-icon color="red" class="movie-icon">movie</v-icon>
+              <v-btn class="user-button" text v-on="on">
+                <v-icon class="movie-icon" color="red">movie</v-icon>
                 {{ rating.movie_title }}
               </v-btn>
             </template>
-            <MovieDetailCard :id="rating.movie_id"></MovieDetailCard>
+            <MovieDetailCard :id="rating.movie_id" />
           </v-dialog>
         </div>
       </div>
@@ -39,17 +39,25 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "UserDetailCard",
+  components: {
+    MovieDetailCard: () => import("./MovieDetailCard.vue")
+  },
   props: {
     username: {
       type: String,
       default: ""
     }
   },
-  components: {
-    MovieDetailCard: () => import("./MovieDetailCard.vue")
-  },
-  created() {
-    this.setUser();
+  data: () => ({
+    dialog: []
+  }),
+  computed: {
+    ...mapGetters("data", ["user", "ratings"]),
+    check() {
+      return this.ratings[0]
+        ? this.ratings[0].username === this.username
+        : false;
+    }
   },
   watch: {
     username() {
@@ -59,17 +67,9 @@ export default {
       this.setUser();
     }
   },
-  computed: {
-    ...mapGetters("data", ["user", "ratings"]),
-    check() {
-      return this.ratings[0]
-        ? this.ratings[0].username === this.username
-        : false;
-    }
+  created() {
+    this.setUser();
   },
-  data: () => ({
-    dialog: []
-  }),
   methods: {
     setUser() {
       this.$store.dispatch("data/getUserByUsername", this.username);
