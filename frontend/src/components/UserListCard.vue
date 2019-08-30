@@ -8,24 +8,29 @@
               <div class="icon-title">
                 <v-dialog v-model="dialog" width="40%">
                   <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on" class="modal-button"><v-icon large>pageview</v-icon></v-btn>
+                    <v-btn icon v-on="on" class="modal-button">
+                      <v-icon large>pageview</v-icon>
+                    </v-btn>
                   </template>
-                  <UserDetailCard :username="username"></UserDetailCard>
+                  <UserDetailCard :username="username" :visible="dialog"></UserDetailCard>
                 </v-dialog>
-
 
                 <v-list-item class="list-item">
                   <v-list-item-content>
-                    <v-list-item-title class="headline user-title">
-                      {{ username }}
-                    </v-list-item-title>
-                    <v-list-item-subtitle class="user-title">성별 : {{ gender }} 나이 : {{ age }}</v-list-item-subtitle>
+                    <v-list-item-title class="headline user-title">{{ username }}</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </div>
               <v-card-text>
                 <v-layout justify-center>
-                  <div class="grey--text point">직업 : {{ occupation }}</div>
+                  <div class="grey--text point">
+                    성별 : {{ gender === "M" ? "남" : "여" }}
+                    <br />
+                    나이 : {{ age }}
+                    <br />
+                    직업 : {{ occupation }}
+                    <br />
+                  </div>
                 </v-layout>
               </v-card-text>
             </v-layout>
@@ -37,7 +42,7 @@
 </template>
 
 <script>
-import UserDetailCard from "./UserDetailCard"
+import UserDetailCard from "./UserDetailCard";
 
 export default {
   props: {
@@ -64,14 +69,14 @@ export default {
     occupation: {
       type: String,
       default: ""
-    },
+    }
   },
   components: {
-    UserDetailCard,
+    UserDetailCard
   },
   data: () => ({
-    dialog: false,
-  }),
+    dialog: false
+  })
 };
 </script>
 

@@ -3,35 +3,53 @@
     class="image-item--box"
     :style="{'backgroundImage':'url('+img+')'}"
     @mouseenter="handleMouseOver"
-    @mouseleave="handleMouseOver">
+    @mouseleave="handleMouseOver"
+  >
+
     <div class="image-item--title">
       <span>{{ title }}</span>
     </div>
     <div 
       v-if="showDescription"
     >
+
       <div class="image-item--description">
         <p>{{description}}</p>
       </div>
+      <!-- 아래 화살표 -->
       <div class="image-item--under-expand">
-        <span>아래</span>
+        <span
+          @click="handleExpand"
+        >
+            <font-awesome-icon icon="sort-down" size="2x"/>
+        </span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faSortDown } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faSortDown)
+
 export default {
   name: "ImageItem",
   props: ["id", "title", "img", "description"],
+  components: {
+    FontAwesomeIcon,
+  },
   methods: {
     handleMouseOver: function(){
       this.showDescription = !this.showDescription
-    }
+    },
   },
   data(){
     return {
-      showDescription: false
+      showDescription: false,
     }
   }
 }
@@ -72,6 +90,7 @@ export default {
 
   height: 55px;
   padding: 10px;
+  margin-bottom: -20px;
   background-color: rgba(33, 33, 33, 0.7);
 
   color: #ddd;
@@ -86,6 +105,8 @@ export default {
   font-weight: 700;
   display: flex;
   justify-content: center;
+
+
   span {
     margin: auto;
     text-align: center;

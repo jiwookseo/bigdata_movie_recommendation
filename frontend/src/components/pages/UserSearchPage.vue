@@ -4,7 +4,7 @@
       <!-- 검색 폼 -->
       <v-flex xs8>
         <div class="display-2 pa-10">유저 검색</div>
-        <UserSearchForm :submit="get_usersKey" />
+        <UserSearchForm :submit="searchUsers" />
       </v-flex>
       <!-- 검색 결과 -->
       <v-flex xs8>
@@ -31,7 +31,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions("data", ["get_usersKey"]),
+    ...mapActions("data", ["searchUsers"]),
   }
 };
 </script>
