@@ -54,6 +54,9 @@ export default {
   watch: {
     username() {
       this.setUser();
+    },
+    visible() {
+      this.setUser();
     }
   },
   computed: {
