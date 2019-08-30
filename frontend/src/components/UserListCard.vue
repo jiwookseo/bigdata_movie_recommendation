@@ -8,11 +8,11 @@
               <div class="icon-title">
                 <v-dialog v-model="dialog" width="40%">
                   <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on" class="modal-button">
+                    <v-btn class="modal-button" icon v-on="on">
                       <v-icon large>pageview</v-icon>
                     </v-btn>
                   </template>
-                  <UserDetailCard :username="username" :visible="dialog"></UserDetailCard>
+                  <UserDetailCard :username="username" :visible="dialog" />
                 </v-dialog>
 
                 <v-list-item class="list-item">
@@ -25,11 +25,11 @@
                 <v-layout justify-center>
                   <div class="grey--text point">
                     성별 : {{ gender === "M" ? "남" : "여" }}
-                    <br />
+                    <br>
                     나이 : {{ age }}
-                    <br />
+                    <br>
                     직업 : {{ occupation }}
-                    <br />
+                    <br>
                   </div>
                 </v-layout>
               </v-card-text>
@@ -45,6 +45,9 @@
 import UserDetailCard from "./UserDetailCard";
 
 export default {
+  components: {
+    UserDetailCard
+  },
   props: {
     id: {
       type: Number,
@@ -54,7 +57,7 @@ export default {
       type: String,
       default: ""
     },
-    is_staff: {
+    isStaff: {
       type: Boolean,
       default: false
     },
@@ -70,9 +73,6 @@ export default {
       type: String,
       default: ""
     }
-  },
-  components: {
-    UserDetailCard
   },
   data: () => ({
     dialog: false

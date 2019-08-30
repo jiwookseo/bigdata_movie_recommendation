@@ -11,29 +11,23 @@
       </div>
     </v-col>
     <v-text-field
-      class="search_input"
-      v-model="title"
-      @keydown.enter="onSubmit"
-      label="영화 제목"
       v-if="btn === 'title'"
-    ></v-text-field>
+      v-model="title"
+      label="영화 제목"
+      class="search_input"
+      @keydown.enter="onSubmit"
+    />
     <v-container v-else>
       <v-btn
-        v-for="(genre, i) of genreItems"
-        v-if="genre.state === false"
+        v-for="(genre, i) in genreItems"
         :key="i"
         text
         class="genre_button"
+        :class="{ 'blue--text' : genre.state }"
         @click="changeState(i)"
-      >{{ genre.genre }}</v-btn>
-      <v-btn
-        v-else
-        :key="i"
-        text
-        color="blue"
-        class="genre_button"
-        @click="changeState(i)"
-      >{{ genre.genre }}</v-btn>
+      >
+        {{ genre.genre }}
+      </v-btn>
     </v-container>
     <v-layout justify-center pa-10>
       <v-btn large color="indigo white--text" @click="onSubmit">Search</v-btn>
