@@ -1,0 +1,134 @@
+<template>
+  <div 
+    class="image-item--box"
+    :style="{'backgroundImage':'url('+img+')'}"
+    @mouseenter="handleMouseOver"
+    @mouseleave="handleMouseLeave"
+  >
+
+    <div class="image-item--title">
+      <span>{{ title }}</span>
+    </div>
+    <div 
+      v-if="showDescription"
+    >
+
+      <div class="image-item--description">
+        <p>{{description}}</p>
+      </div>
+      <!-- 아래 화살표 -->
+      <div class="image-item--under-expand">
+        <span
+          @click="handleToggle"
+        >
+          <font-awesome-icon icon="sort-down" size="2x"/>
+        </span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+
+// font-awesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faSortDown } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faSortDown)
+
+export default {
+  name: "ImageItem",
+  props: ["id", "title", "img", "description", "genre"],
+  components: {
+    FontAwesomeIcon,
+  },
+  methods: {
+    handleMouseOver: function(){
+      this.showDescription = !this.showDescription
+      const movie = {id: this.id, title: this.title, img: this.img, description: this.description, genre: this.genre }
+      this.$store.commit("mvUi/setActivateMovie", movie)
+    },
+    handleMouseLeave: function(){
+      this.showDescription = !this.showDescription
+    },
+
+    handleToggle: function(){
+      if (this.$store.state.mvUi.detailToggler){
+        this.$store.commit("mvUi/setDetailToggler")
+      }
+      const movie = {id: this.id, title: this.title, img: this.img, description: this.description, genre: this.genre }
+      this.$store.commit("mvUi/setDetailToggler")
+      this.$emit("activateMovieDetail", movie)
+    }
+  },
+  data(){
+    return {
+      showDescription: false,
+      detailToggler: false,
+    }
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+.image-item--box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 20%;
+  height: 140px;
+  background-size: cover;
+  cursor: pointer;
+  transition: all 0.4s ease-out;
+  transition-delay: 0.1s;
+  &:hover {
+    transform: scale(1.4);
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+}
+
+.image-item--title {
+  span {
+    color: #fff;
+    font-weight: 500;
+    font-size: 18px;
+  }
+}
+
+.image-item--description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  height: 55px;
+  padding: 10px;
+  margin-bottom: -20px;
+  background-color: rgba(33, 33, 33, 0.7);
+
+  color: #ddd;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.image-item--under-expand {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+
+
+  span {
+    margin: auto;
+    text-align: center;
+    &:hover {
+      color: #F1AC1E;
+    }
+  }
+}
+</style>

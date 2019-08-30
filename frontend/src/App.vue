@@ -1,49 +1,24 @@
 <template>
-  <v-app id="app">
-    <v-app-bar app clipped-left color="indigo">
-      <v-app-bar-nav-icon class="white--text" @click="drawer = !drawer" />
-      <span class="title ml-3 mr-5 white--text">영화 추천 서비스</span>
-
-      <v-spacer />
-    </v-app-bar>
-    <v-navigation-drawer v-model="drawer" app clipped color="grey lighten-4">
-      <v-list dense class="grey lighten-4">
-        <template v-for="(choice, i) in choices">
-          <v-list-item
-            :key="i"
-            @click="() => {
-              if (choice.path) {
-                goTo(choice.path)
-              }
-            }"
-          >
-            <v-list-item-action>
-              <v-icon>{{ choice.icon }}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title class="subtitle-2 font-weight-bold black--text">{{ choice.text }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-content>
-      <v-container fluid fill-height class="grey lighten-4">
-        <v-layout justify-center align-center>
-          <!-- each pages will be placed here -->
-          <router-view />
-        </v-layout>
-      </v-container>
-    </v-content>
-  </v-app>
+  <div class="app">
+    <Header />
+    <Jumbotron />
+    <ImageSlider />
+  </div>
 </template>
 
 <script>
 import router from "./router";
-import { mapGetters } from "vuex";
+import "./reset.css";
+import Header from "./components/header/index";
+import Jumbotron from "./components/header/Jumbotron";
+import ImageSlider from "./components/imageSlider/index";
 
 export default {
+  components: {
+    Jumbotron,
+    Header,
+    ImageSlider
+  },
   data: () => ({
     drawer: null,
     choices: [
@@ -59,19 +34,6 @@ export default {
       },
     ]
   }),
-  computed: {
-    ...mapGetters("data", ["recommendation"])
-  },
-  watch: {
-    recommendation() {
-      console.log(this.recommendation);
-    }
-  },
-  mounted() {
-    this.$store.dispatch("data/getRecByAge", 18);
-    this.$store.dispatch("data/getRecByOccupation", "artist");
-    this.$store.dispatch("data/getRecByGender", "M");
-  },
   methods: {
     goTo: function(path) {
       router.push({ name: path });
@@ -80,15 +42,9 @@ export default {
 };
 </script>
 
-<style>
-#keep .v-navigation-drawer__border {
-  display: none;
-}
-.obj-center {
-  display: flex;
-  justify-content: center;
-}
-.headline {
-  white-space: normal;
+<style lang="scss" scoped>
+.app {
+  width: 100vw;
+  overflow-x: hidden;
 }
 </style>

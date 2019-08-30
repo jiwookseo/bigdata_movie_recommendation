@@ -21,24 +21,24 @@
         <div class="grey--text ml-3 point">{{ movie.viewCnt }}</div>
       </v-layout>
     </v-card-text>
-    <hr />
+    <hr>
     <v-card-text>
       <span class="modal-title">줄거리</span>
       {{ movie.story }}
     </v-card-text>
-    <hr />
+    <hr>
     <v-card-text>
       <span class="modal-title">이 영화를 본 사람</span>
       <div class="user-list">
-        <div class="dialog" v-for="(rating, i) in audience" :key="rating.id">
-          <v-dialog v-model="dialog[i]" width="40%" :key="i">
+        <div v-for="(rating, i) in audience" :key="rating.id" class="dialog">
+          <v-dialog :key="i" v-model="dialog[i]" width="40%">
             <template v-slot:activator="{ on }">
-              <v-btn text v-on="on" class="movie-button">
-                <v-icon color="green" class="user-icon">people</v-icon>
+              <v-btn class="movie-button" text v-on="on">
+                <v-icon class="user-icon" color="green">people</v-icon>
                 {{ rating.username }}
               </v-btn>
             </template>
-            <UserDetailCard :username="rating.username"></UserDetailCard>
+            <UserDetailCard :username="rating.username" />
           </v-dialog>
         </div>
       </div>
@@ -55,24 +55,16 @@ import UserDetailCard from "./UserDetailCard";
 
 export default {
   name: "MovieDetailCard",
+  components: {
+    UserDetailCard
+  },
   props: {
     id: { type: Number, default: 1 },
     visible: { type: Boolean, default: false }
   },
-  components: {
-    UserDetailCard
-  },
-  created() {
-    this.setMovie();
-  },
-  watch: {
-    id() {
-      this.setUser();
-    },
-    visible() {
-      this.setMovie();
-    }
-  },
+  data: () => ({
+    dialog: []
+  }),
   computed: {
     ...mapGetters("data", ["movie", "audience"]),
     genresStr: function() {
@@ -85,9 +77,17 @@ export default {
       return this.audience[0] ? this.audience[0].movie_id === this.id : false;
     }
   },
-  data: () => ({
-    dialog: []
-  }),
+  watch: {
+    id() {
+      this.setUser();
+    },
+    visible() {
+      this.setMovie();
+    }
+  },
+  created() {
+    this.setMovie();
+  },
   methods: {
     setMovie() {
       this.$store.dispatch("data/getMovieById", this.id);
