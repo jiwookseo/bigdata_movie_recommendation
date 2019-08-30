@@ -10,6 +10,8 @@ class Movie(models.Model):
     total_rating = models.IntegerField(default=0)
     rating_count = models.IntegerField(default=0)
     story = models.TextField()
+    poster = models.URLField(default="")
+    still_cut = models.URLField(default="")
 
     @property
     def genres_array(self):
