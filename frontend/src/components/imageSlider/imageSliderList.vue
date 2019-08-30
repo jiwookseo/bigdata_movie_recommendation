@@ -5,14 +5,14 @@
     </div>
     <div class="image-slider__wrapper">
       <div
-      class="image-slider__box"
-      :style="{ transform: 'translateX(' + slideNum*16 +'vw)' }"
+        class="image-slider__box"
+        :style="{ transform: 'translateX(' + slideNum*16 +'vw)' }"
       >
         <ImageItem
-          class="image-slider__item"
           v-for="movie in movieList"
-          :key="movie.id"
           :id="movie.id"
+          :key="movie.id"
+          class="image-slider__item"
           :title="movie.title"
           :img="movie.img"
           :description="movie.description"
@@ -21,19 +21,19 @@
         />
       </div>
       <div 
-      v-if="slideNum !=0"
-      class="image-slider__arrow-left"
-      @click="handleClick(1)"
-    >
-      <span>&#60;</span>
-    </div>
-    <div 
-      v-if="slideNum>-5"
-      class="image-slider__arrow-right"
-      @click="handleClick(-1)"
-    >
-      <span>&#62;</span>
-    </div>
+        v-if="slideNum !=0"
+        class="image-slider__arrow-left"
+        @click="handleClick(1)"
+      >
+        <span>&#60;</span>
+      </div>
+      <div 
+        v-if="slideNum>-5"
+        class="image-slider__arrow-right"
+        @click="handleClick(-1)"
+      >
+        <span>&#62;</span>
+      </div>
     </div>
     
     <ImageItemDetail 
@@ -54,7 +54,31 @@ export default {
     ImageItem,
     ImageItemDetail
   },
-  props: ["movieList", "listTitle"],
+  props: {
+    movieList: {
+      type: Array,
+      default: function(){
+        return []
+      }
+    }, 
+    listTitle: {
+      type: String,
+      default: function(){
+        return ''
+      }
+    }
+  },
+  data(){
+    return {
+      slideNum: 0,
+      detailToggle: false,
+    }
+  },
+  computed: {
+    toggleDetail(){
+      return this.$store.state.mvUi.detailToggler && this.detailToggle
+    }
+  },
   methods: {
     handleClick: function (n){
       const s = this.slideNum + n
@@ -69,17 +93,6 @@ export default {
       this.$store.commit('mvUi/setActivateMovie', movie)
     }
   },
-  data(){
-    return {
-      slideNum: 0,
-      detailToggle: false,
-    }
-  },
-  computed: {
-    toggleDetail(){
-      return this.$store.state.mvUi.detailToggler && this.detailToggle
-    }
-  }
 }
 </script>
 

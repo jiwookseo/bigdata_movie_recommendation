@@ -5,23 +5,21 @@
     @mouseenter="handleMouseOver"
     @mouseleave="handleMouseLeave"
   >
-
     <div class="image-item--title">
       <span>{{ title }}</span>
     </div>
     <div 
       v-if="showDescription"
     >
-
       <div class="image-item--description">
-        <p>{{description}}</p>
+        <p>{{ description }}</p>
       </div>
       <!-- 아래 화살표 -->
       <div class="image-item--under-expand">
         <span
           @click="handleToggle"
         >
-          <font-awesome-icon icon="sort-down" size="2x"/>
+          <font-awesome-icon icon="sort-down" size="2x" />
         </span>
       </div>
     </div>
@@ -39,9 +37,44 @@ library.add(faSortDown)
 
 export default {
   name: "ImageItem",
-  props: ["id", "title", "img", "description", "genre"],
   components: {
     FontAwesomeIcon,
+  },
+  props: {
+    id: {
+      type: [String, Number],
+      default: function(){
+        return ''
+      }
+    }, 
+    title: {
+      type: String, 
+      default: function(){
+        return ''
+      }
+    }, 
+    img: {
+      type: String, 
+      default: function(){
+        return '' 
+      }
+    }, 
+    description: { 
+      type: String, 
+      default: function(){
+        return ''
+      } 
+    },
+    genre: {type: Array, default: function(){
+      return []
+    } }
+  }
+    ,
+  data(){
+    return {
+      showDescription: false,
+      detailToggler: false,
+    }
   },
   methods: {
     handleMouseOver: function(){
@@ -62,12 +95,7 @@ export default {
       this.$emit("activateMovieDetail", movie)
     }
   },
-  data(){
-    return {
-      showDescription: false,
-      detailToggler: false,
-    }
-  },
+  
 }
 </script>
 
