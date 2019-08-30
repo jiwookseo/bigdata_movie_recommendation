@@ -1,6 +1,7 @@
 <template>
   <section class="image-slider">
     <ImageSliderList :list-title="'10대가 좋아하는 영화쓰'" :movie-list="recommendation.age" />
+    <ImageSliderList :list-title="'아티스트들이 애정하는 무비즈'" :movie-list="recommendation.occupation" />
     <ImageSliderList :list-title="'남성이 사랑하는 영화들'" :movie-list="recommendation.gender" />
   </section>
 </template>
