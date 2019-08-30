@@ -155,7 +155,7 @@ def movie_clustering(request, method, k):
         print("method를 정확히 표기해주세요.")
 
       
-    update_movie_clustering_data('m', clustering_data)
+    update_clustering_data('m', clustering_data)
     # print(clustering_data)
 
     return Response(status=status.HTTP_201_CREATED)
