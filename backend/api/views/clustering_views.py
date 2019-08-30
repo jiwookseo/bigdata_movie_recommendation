@@ -24,12 +24,6 @@ from sklearn.exceptions import ConvergenceWarning
 
 
 
-'''
-클러스터링 및 클러스터링의 Data를 DB에 저장하기.
-Clustering된 데이터를 가져오는 것은 모델별 views에서 시행.
-'''
-
-
 
 # Data Preprocessing
 def data_preprocessing(table):
