@@ -21,21 +21,21 @@ def movie_list(request):
             movies = Movie.objects.annotate(
                 age_count=Count(
                     'ratings', filter=Q(ratings__user__age=age))
-            ).order_by('-age_count')
+            ).order_by('-age_count')[:10]
             serializer = MovieSerializer(movies, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         elif occupation:
             movies = Movie.objects.annotate(
                 occupation_count=Count(
                     'ratings', filter=Q(ratings__user__occupation=occupation))
-            ).order_by('-occupation_count')
+            ).order_by('-occupation_count')[:10]
             serializer = MovieSerializer(movies, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         elif gender:
             movies = Movie.objects.annotate(
                 gender_count=Count(
                     'ratings', filter=Q(ratings__user__gender=gender))
-            ).order_by('-gender_count')
+            ).order_by('-gender_count')[:10]
             serializer = MovieSerializer(movies, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
@@ -154,7 +154,7 @@ def rating_list(request):
         return Response(status=status.HTTP_200_OK)
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def rating_detail(request, rating_id):
+def rating_detaicl(request, rating_id):
     rating = get_object_or_404(Rating, id=rating_id)
 
 @api_view(['GET', 'PUT', 'DELETE'])
