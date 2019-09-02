@@ -3,9 +3,9 @@
     <div class="image-slider__title">
       <h2>
         <select v-model="selected" name="target">
-          <option value>{{ data.type }} 선택</option>
-          <option v-for="(key, value) in data.selectObject" :key="key" :value="value">{{ key }}</option>
-        </select>이(가) 좋아하는 영화
+          <option class="movie-option" value>{{ data.type }} 선택</option>
+          <option class="movie-option" v-for="(key, value) in data.selectObject" :key="key" :value="value">{{ key }}</option>
+        </select> 좋아하는 영화
       </h2>
     </div>
     <div class="image-slider__wrapper">
@@ -111,6 +111,7 @@ export default {
 
 .image-slider__title {
   padding: 20px 0 20px 30px;
+  display: flex;
   h2 {
     display: inline-block;
     margin-right: 14px;
@@ -119,11 +120,39 @@ export default {
     font-weight: 700;
   }
   select {
-    color: #fff;
+    outline: none;
+    border: none;
+    color: rgb(255, 177, 1);
+    padding: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    &:hover {
+      background-color: rgba(255, 177, 1);      
+      color: #111;
+      border: none;
+      outline: none;
+    }
   }
-  select option {
-    background: #111;
-    color: #fff;
+
+  .movie-option {
+    outline: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+
+    &:first-child {
+      color: #111;
+      font-size: 18px;
+    }
+    &:active, &:focus {
+      border: none;
+      outline: none;
+      background-color: #111;
+      font-weight: 700;
+      color: rgba(255, 177, 1);
+    }
   }
 }
 .image-slider__box {
