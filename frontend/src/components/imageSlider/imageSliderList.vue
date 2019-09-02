@@ -1,7 +1,12 @@
 <template>
   <div class="image-slider__list">
     <div class="image-slider__title">
-      <h2>{{ listTitle }}</h2>
+      <h2>
+        <select v-model="selected" name="target">
+          <option value>{{ data.type }} 선택</option>
+          <option v-for="(key, value) in data.selectObject" :key="key" :value="value">{{ key }}</option>
+        </select>이(가) 좋아하는 영화
+      </h2>
     </div>
     <div class="image-slider__wrapper">
       <div class="image-slider__box" :style="{ transform: 'translateX(' + slideNum*16 +'vw)' }">
@@ -39,19 +44,44 @@ export default {
     ImageItem,
     ImageItemDetail
   },
-  props: ["movieList", "listTitle"],
+  props: { data: { type: Object, default: () => ({ type: "연령대" }) } },
   data() {
     return {
       slideNum: 0,
-      detailToggle: false
+      detailToggle: false,
+      selected: 18
     };
   },
   computed: {
+    type() {
+      if (this.data.type === "연령대") {
+        return "Age";
+      } else if (this.data.type === "직업") {
+        return "Occupation";
+      } else {
+        return "Gender";
+      }
+    },
+    movieList() {
+      return this.$store.getters[`data/rec${this.type}`];
+    },
     toggleDetail() {
       return this.$store.state.mvUi.detailToggler && this.detailToggle;
     }
   },
-  mounted() {},
+  watch: {
+    selected() {
+      if (this.selected !== "")
+        this.$store.dispatch(`data/getRecBy${this.type}`, this.selected);
+    }
+  },
+  mounted() {
+    if (this.type === "Age") {
+      this.selected = "1";
+    } else {
+      this.selected = this.type === "Occupation" ? "programmer" : "M";
+    }
+  },
   methods: {
     handleClick: function(n) {
       const s = this.slideNum + n;
@@ -82,9 +112,18 @@ export default {
 .image-slider__title {
   padding: 20px 0 20px 30px;
   h2 {
+    display: inline-block;
+    margin-right: 14px;
     color: #fff;
     font-size: 28px;
     font-weight: 700;
+  }
+  select {
+    color: #fff;
+  }
+  select option {
+    background: #111;
+    color: #fff;
   }
 }
 .image-slider__box {
