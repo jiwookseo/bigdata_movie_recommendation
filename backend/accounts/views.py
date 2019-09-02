@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from api.serializers import RatingSerializer
+from api.serializers import MovieSerializer, RatingSerializer
 from .jwt import create_token, verify_token
 from .serializers import UserSerializer
 from .models import User
@@ -85,6 +85,13 @@ def user_detail(request, username):
 def user_ratings(request, username):
     user = get_object_or_404(User, username=username)
     serializer = RatingSerializer(user.ratings, many=True)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def user_followings(request, username):
+    user = get_object_or_404(User, username=username)
+    serializer = MovieSerializer(user.followings, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
