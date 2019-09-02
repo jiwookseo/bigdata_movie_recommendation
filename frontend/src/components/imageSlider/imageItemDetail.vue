@@ -5,13 +5,13 @@
       :class="classChanger">
       <img :src="movie.img" />
     </div>
-    <div class="detail--close-box">
-      <span @click="handleToggle">&times;</span>
-    </div>
     <div 
       class="detail--content-box" 
       :class="classChanger"
     >
+      <div class="detail--close-box">
+        <span @click="handleToggle">&times;</span>
+      </div>
       <h2 class="detail--title">{{ movie.title }} </h2>
       <div class="detail--score">
         <span>평균별점</span>
@@ -22,11 +22,8 @@
       </div>
       <div class="detail--info">
         <div class="detail--info-genre">
-          <span> 개요 </span>
-          <span
-            v-for="(name, idx) in movie.genre"
-            :key="movie.id+idx"
-          >{{ name }}</span>
+          <span>개요</span>
+          <span v-for="(name, idx) in movie.genres" :key="movie.id+idx">{{ name }}</span>
         </div>
       </div>
     </div>
@@ -46,20 +43,6 @@
 <script>
 export default {
   name: "ImageItemDetail",
-  methods: {
-    handleToggle: function(){
-      this.$emit("closeDetail")
-    },
-    handleActive: function(state){
-      if (state === 'base'){
-        this.active.base = true
-        this.active.cluster = false
-      } else {
-        this.active.cluster = true
-        this.active.base = false
-      }
-    }
-  },
   data(){
     return {
       active: {
@@ -77,20 +60,36 @@ export default {
         base: this.active.base,
         cluster: this.active.cluster
       }
+    },
+  },
+  methods: {
+    handleToggle: function() {
+      this.$store.dispatch("mvUi/setDetailToggler");
+    },
+    handleActive: function(state){
+      if (state === 'base'){
+        this.active.base = true
+        this.active.cluster = false
+      } else {
+        this.active.cluster = true
+        this.active.base = false
+      }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
 .image-item-detail {
-  margin-top: 20px;
+  margin-top: 30px;
   width: 100vw;
   height: 100vh;
   background-color: red;
+  transition: all 0.4s ease-in-out;
 }
 
 .image-item--img-canvas {
+  position: absolute;
   width: 100vw;
   height: 100vh;
   img {
@@ -104,41 +103,29 @@ export default {
   }
 }
 
-
 .detail--close-box {
+  position: absolute;
   display: flex;
   justify-content: flex-end;
   width: 100vw;
-  height: 30px;
-  padding-right: 20px;
-  margin-top: -100vh;
+  padding-right: 40px;
 
   span {
-    background-color: rgba(33, 33, 33, 0.5);
     color: #fff;
     font-size: 36px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.4s ease-in;
-
-    &:hover {
-      transform: rotateY('90deg');
-    }
   }
 }
 
 .detail--content-box {
-  
-  
+  position: relative;
   display: flex;
   flex-direction: column;
   
   width: 30vw;
-  height: 100vh;
 
-  margin-top: -30px;
-  padding: 50px;
-  overflow: hidden;
+  height: 100vh;  
 
   background-color: rgba(33, 33, 33, 0.6);
 
@@ -153,8 +140,13 @@ export default {
   }
 }
 
+.detail--title {
+  padding: 30px 0 0 40px;
+}
+
 .detail--score {
   padding-top: 30px;
+  padding-left: 40px;
 
   span {
     font-weight: 700;
@@ -175,9 +167,8 @@ export default {
   }
 }
 
-
 .detail--description {
-  padding-top: 30px;
+  padding: 30px 20px 0 40px;
   p {
     font-size: 18px;
     color: #ddd;
@@ -188,6 +179,7 @@ export default {
 
 .detail--info-genre {
   margin-top: 20px;
+  padding-left: 40px;
   span {
     color: #aaa;
     font-size: 18px;
@@ -203,6 +195,7 @@ export default {
 }
 
 .detail--movie-menu {
+  position: absolute;
   margin-top: -70px;
   padding-bottom: 20px;
   color: white;
