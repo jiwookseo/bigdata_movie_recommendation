@@ -1,12 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-<<<<<<< HEAD
-
-// Pages
-import EmptyPage from '../components/pages/EmptyPage'
-=======
 import BoardingPage from '../components/pages/BoardingPage.vue'
->>>>>>> dee5dbd7e4e215749d2085c01445885ed350e79b
 import MovieSearchPage from '../components/pages/MovieSearchPage'
 import UserSearchPage from '../components/pages/UserSearchPage'
 
