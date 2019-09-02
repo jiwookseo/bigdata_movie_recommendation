@@ -33,11 +33,10 @@ const getters = {
   userSearchList: state => state.userSearchList,
   user: state => state.user,
   ratings: state => state.ratings,
-  recommendation: state => ({
-    age: state.recAge,
-    occupation: state.recOccupation,
-    gender: state.recGender
-  })
+  recAge: state => state.recAge,
+  recOccupation: state => state.recOccupation,
+  recGender: state => state.recGender
+
 };
 
 // actions
@@ -58,6 +57,16 @@ const actions = {
   setEmptyMovieList({ commit }) {
     commit("setMovieSearchList", []);
   },
+  async setLogin({commit}) {
+    if (sessionStorage.jwt) {
+      commit('setIsLogin', true);
+    }
+    // commit('setId', await RestService.getuserIdByJWT());
+  }, logout({commit}) {
+    commit('setIsLogin", false');
+    commit('setId', null);
+  },
+
 
   // User
   async searchUsers({ commit }, params) {
