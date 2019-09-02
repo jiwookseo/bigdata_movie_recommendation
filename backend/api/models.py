@@ -13,6 +13,8 @@ class Movie(models.Model):
     cluster = models.IntegerField(null=True)
     poster = models.URLField(default="")
     still_cut = models.URLField(default="")
+    followers = models.ManyToManyField(
+        User, related_name="followings")
 
     @property
     def genres_array(self):
