@@ -108,7 +108,7 @@ def login(request):
 
 
 @login_required
-@api_view(["POST"])
+@api_view(["GET"])
 def logout(request):
     auth_logout(request)
     return Response(status=status.HTTP_200_OK)
