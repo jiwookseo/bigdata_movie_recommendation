@@ -24,5 +24,8 @@ export default {
   },
   getRatings(username) {
     return axios.get(`${BASE_URL}/users/${username}/ratings/`);
+  },
+  login(params) {
+    return axios.get(`${BASE_URL}/login/`, {params});
   }
 };
