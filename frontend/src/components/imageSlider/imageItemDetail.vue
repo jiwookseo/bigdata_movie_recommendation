@@ -7,7 +7,7 @@
       <span @click="handleToggle">&times;</span>
     </div>
     <div class="detail--content-box">
-      <h2 class="detail--title">{{ movie.title }} </h2>
+      <h2 class="detail--title">{{ movie.title }}</h2>
       <div class="detail--score">
         <span>평균별점</span>
         <span>4.0</span>
@@ -17,11 +17,8 @@
       </div>
       <div class="detail--info">
         <div class="detail--info-genre">
-          <span> 개요 </span>
-          <span
-            v-for="(name, idx) in movie.genre"
-            :key="movie.id+idx"
-          >{{ name }}</span>
+          <span>개요</span>
+          <span v-for="(name, idx) in movie.genres" :key="movie.id+idx">{{ name }}</span>
         </div>
       </div>
     </div>
@@ -31,17 +28,17 @@
 <script>
 export default {
   name: "ImageItemDetail",
-  methods: {
-    handleToggle: function(){
-      this.$emit("closeDetail")
+  computed: {
+    movie: function() {
+      return this.$store.state.mvUi.activateMovie;
     }
   },
-  computed: {
-    movie: function(){
-      return this.$store.state.mvUi.activateMovie
+  methods: {
+    handleToggle: function() {
+      this.$store.dispatch("mvUi/setDetailToggler");
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -62,7 +59,6 @@ export default {
   }
 }
 
-
 .detail--close-box {
   display: flex;
   justify-content: flex-end;
@@ -78,17 +74,18 @@ export default {
     cursor: pointer;
     transition: all 0.4s ease-in;
     &:hover {
-      transform: rotateY('90deg');
+      transform: rotateY("90deg");
     }
   }
 }
 
 .detail--content-box {
   position: relative;
-  
+
   display: flex;
   flex-direction: column;
-  
+
+  opacity: 0.85;
   width: 40vw;
   height: 100vh;
 
@@ -124,7 +121,6 @@ export default {
   }
 }
 
-
 .detail--description {
   padding-top: 30px;
   p {
@@ -150,5 +146,4 @@ export default {
     margin-right: 10px;
   }
 }
-
 </style>

@@ -12,14 +12,10 @@
       <div class="image-slider__box" :style="{ transform: 'translateX(' + slideNum*16 +'vw)' }">
         <ImageItem
           v-for="movie in movieList"
-          :id="movie.id"
           :key="movie.id"
+          :movie="movie"
+          :type="type"
           class="image-slider__item"
-          :title="movie.title"
-          :img="movie.stillCut || movie.poster || 'https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg'"
-          :description="movie.story.slice(0, 500)"
-          :genre="movie.genres"
-          @activateMovieDetail="handleMovieData"
         />
       </div>
       <div v-if="slideNum !=0" class="image-slider__arrow-left" @click="handleClick(1)">
@@ -30,13 +26,14 @@
       </div>
     </div>
 
-    <ImageItemDetail v-if="toggleDetail" toggle="detailToggle" @closeDetail="handleDetailToggler" />
+    <ImageItemDetail v-if="toggleDetail" toggle="detailToggle" />
   </div>
 </template>
 
 <script>
 import ImageItem from "./imageItem";
 import ImageItemDetail from "./imageItemDetail";
+import { mapGetters } from "vuex";
 
 export default {
   name: "ImageSliderList",
@@ -53,6 +50,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters("mvUi", ["detailToggler", "detailType"]),
     type() {
       if (this.data.type === "연령대") {
         return "Age";
@@ -63,10 +61,17 @@ export default {
       }
     },
     movieList() {
-      return this.$store.getters[`data/rec${this.type}`];
+      return this.$store.getters[`data/rec${this.type}`].map(movie => ({
+        ...movie,
+        description: movie.story.slice(0, 500),
+        img:
+          movie.stillCut ||
+          movie.poster ||
+          "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
+      }));
     },
     toggleDetail() {
-      return this.$store.state.mvUi.detailToggler && this.detailToggle;
+      return this.detailToggler && this.detailType === this.type;
     }
   },
   watch: {
@@ -88,11 +93,7 @@ export default {
       this.slideNum = s;
     },
     handleDetailToggler: function() {
-      this.detailToggle = !this.detailToggle;
-    },
-    handleMovieData: function(movie) {
-      this.handleDetailToggler();
-      this.$store.commit("mvUi/setActivateMovie", movie);
+      this.$store.dispatch("mvUi/setDetailToggler");
     }
   }
 };
