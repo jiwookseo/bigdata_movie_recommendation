@@ -10,7 +10,7 @@
             <input type="password" id="insert_pw" class="insert_pw" v-model="insertPw" required>
             <label for="insert_pw" class="label_pw">Password</label>
           </div>
-          <button class="signin_button">Login</button>
+          <button class="signin_button" @click="login" @keydown.enter="login">Login</button>
           <div class="pw_reg">
             <button class="password">Forget password?</button>
             <button class="register">Register</button>
@@ -23,13 +23,42 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "Sign",
   data: () => ({
     insertId: "",
     insertPw: "",
-  })
+    username: "",
+  }),
+  mounted() {
+    this.closeModal();
+  },
+  computed: {
+    ...mapState({getUsername: state => state.data.username})
+  },
+  methods: {
+    closeModal() {
+      const modal = document.getElementsByClassName("sign_modal")[0];
+      window.onclick = function(e) {
+        if (e.target === modal) {
+          modal.style.display = "none";
+        }
+      };
+    },
+    ...mapActions("data", ["setLogin"]),
+    async login() {
+      const params = {
+        "login": {
+          "username": this.insertId,
+          "password": this.insertPw,
+        }
+      };
+      await this.setLogin(params);
+      this.username = this.getUsername;
+    }
+  }
 }
 </script>
 
@@ -52,6 +81,7 @@ export default {
   width: 70%;
   height: 60%;
   display: flex;
+  border-radius: 15px;
 }
 
 .sign {
@@ -75,6 +105,7 @@ export default {
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
+  border-radius: 0px 15px 15px 0px;
 }
 
 #insert_id {
