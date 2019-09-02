@@ -14,8 +14,11 @@
       </div>
       <!-- 아래 화살표 -->
       <div class="image-item--under-expand">
-        <span @click="handleToggle">
+        <span v-show="!toggle" @click="handleToggle">
           <font-awesome-icon icon="sort-down" size="2x" />
+        </span>
+        <span v-show="toggle" @click="handleToggle">
+          <font-awesome-icon icon="sort-up" size="2x" />
         </span>
       </div>
     </div>
@@ -26,10 +29,10 @@
 // font-awesome
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faSortDown } from "@fortawesome/free-solid-svg-icons";
+import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { mapGetters } from "vuex";
 
-library.add(faSortDown);
+library.add(faSortDown, faSortUp);
 
 export default {
   name: "ImageItem",
@@ -49,11 +52,13 @@ export default {
   data() {
     return {
       showDescription: false,
-      detailToggler: false
     };
   },
   computed: {
-    ...mapGetters("mvUi", ["detailType"])
+    ...mapGetters("mvUi", ["detailToggler", "detailType"]),
+      toggle() {
+      return this.detailToggler && this.detailType === this.type;
+    }
   },
   methods: {
     handleMouseOver: function() {
@@ -124,12 +129,17 @@ export default {
   font-weight: 700;
   display: flex;
   justify-content: center;
+  align-items: flex-end;
 
   span {
-    margin: auto;
     text-align: center;
+    bottom: 0;
     &:hover {
       color: #f1ac1e;
+    }
+    &:nth-child(2){
+      padding-top: 20px;
+      margin-bottom: -20px;
     }
   }
 }

@@ -19,43 +19,43 @@ export default {
         {
           type: "연령대",
           selectObject: {
-            1: "18세 미만",
-            18: "18-24세",
-            25: "25-34세",
-            35: "35-44세",
-            45: "45-49세",
-            50: "50-55세",
-            56: "56세 이상"
+            1: "18세 미만이",
+            18: "18-24세가",
+            25: "25-34세가",
+            35: "35-44세가",
+            45: "45-49세가",
+            50: "50-55세가",
+            56: "56세 이상이"
           }
         },
         {
           type: "직업",
           selectObject: {
-            "academic/educator": "교육인",
-            artist: "예술가",
-            "clerical/admin": "사무직",
-            "college/grad student": "대학생",
-            "K-12 student": "학생",
-            "customer service": "고객서비스",
-            "doctor/health care": "의료인",
-            "executive/managerial": "관리직",
-            farmer: "농장주",
-            homemaker: "가정부",
-            lawyer: "법조인",
-            programmer: "프로그래머",
-            "sales/marketing": "판매원",
-            scientist: "과학자",
-            "self-employed": "자영업",
-            "technician/engineer": "기술자",
-            "tradesman/craftsman": "수공업자",
-            writer: "작가"
+            "academic/educator": "교육인이",
+            artist: "예술가가",
+            "clerical/admin": "사무직이",
+            "college/grad student": "대학생이",
+            "K-12 student": "학생이",
+            "customer service": "서비스직이",
+            "doctor/health care": "의료인이",
+            "executive/managerial": "관리직이",
+            farmer: "농업인이",
+            homemaker: "가정주부가",
+            lawyer: "법조인이",
+            programmer: "프로그래머가",
+            "sales/marketing": "마케터가",
+            scientist: "과학자가",
+            "self-employed": "자영업자가",
+            "technician/engineer": "기술자가",
+            "tradesman/craftsman": "수공업자가",
+            writer: "작가가"
           }
         },
         {
           type: "성별",
           selectObject: {
-            M: "남성",
-            F: "여성"
+            M: "남성이",
+            F: "여성이"
           }
         }
       ]

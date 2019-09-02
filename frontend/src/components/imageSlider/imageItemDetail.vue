@@ -1,18 +1,23 @@
 <template>
   <div class="image-item-detail">
-    <div class="image-item--img-canvas">
+    <div 
+      class="image-item--img-canvas"
+      :class="classChanger">
       <img :src="movie.img" />
     </div>
-    <div class="detail--close-box">
-      <span @click="handleToggle">&times;</span>
-    </div>
-    <div class="detail--content-box">
-      <h2 class="detail--title">{{ movie.title }}</h2>
+    <div 
+      class="detail--content-box" 
+      :class="classChanger"
+    >
+      <div class="detail--close-box">
+        <span @click="handleToggle">&times;</span>
+      </div>
+      <h2 class="detail--title">{{ movie.title }} </h2>
       <div class="detail--score">
         <span>평균별점</span>
         <span>4.0</span>
       </div>
-      <div class="detail--description">
+      <div class="detail--description" v-if="active.base">
         <p>{{ movie.description }}</p>
       </div>
       <div class="detail--info">
@@ -22,20 +27,53 @@
         </div>
       </div>
     </div>
+    <div class="detail--movie-menu">
+      <span 
+        :class="{ active: active.base }"
+        @click="handleActive('base')">기본 정보
+      </span>
+      <span 
+        :class="{ active: active.cluster }"
+        @click="handleActive('cluster')">비슷한 작품
+      </span>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "ImageItemDetail",
-  computed: {
-    movie: function() {
-      return this.$store.state.mvUi.activateMovie;
+  data(){
+    return {
+      active: {
+        base: true,
+        cluster: false
+      }
     }
+  },
+  computed: {
+    movie: function(){
+      return this.$store.state.mvUi.activateMovie
+    },
+    classChanger: function(){
+      return {
+        base: this.active.base,
+        cluster: this.active.cluster
+      }
+    },
   },
   methods: {
     handleToggle: function() {
       this.$store.dispatch("mvUi/setDetailToggler");
+    },
+    handleActive: function(state){
+      if (state === 'base'){
+        this.active.base = true
+        this.active.cluster = false
+      } else {
+        this.active.cluster = true
+        this.active.base = false
+      }
     }
   }
 };
@@ -43,12 +81,15 @@ export default {
 
 <style lang="scss" scoped>
 .image-item-detail {
-  margin-top: 20px;
+  margin-top: 30px;
   width: 100vw;
   height: 100vh;
   background-color: red;
+  transition: all 0.4s ease-in-out;
 }
+
 .image-item--img-canvas {
+  position: absolute;
   width: 100vw;
   height: 100vh;
   img {
@@ -56,42 +97,41 @@ export default {
     height: 100%;
     object-fit: cover;
     z-index: -1;
+    &.cluster {
+      filter: blur(8px);
+    }
   }
 }
 
 .detail--close-box {
+  position: absolute;
   display: flex;
   justify-content: flex-end;
   width: 100vw;
-  height: 30px;
-  padding-right: 20px;
-  margin-top: -100vh;
+  padding-right: 40px;
+
   span {
-    background-color: rgba(33, 33, 33, 0.5);
     color: #fff;
     font-size: 36px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.4s ease-in;
-    &:hover {
-      transform: rotateY("90deg");
-    }
   }
 }
 
 .detail--content-box {
   position: relative;
-
   display: flex;
   flex-direction: column;
+  
+  width: 30vw;
 
-  opacity: 0.85;
-  width: 40vw;
-  height: 100vh;
+  height: 100vh;  
 
-  margin-top: -30px;
-  padding: 50px;
-  background-color: #333;
+  background-color: rgba(33, 33, 33, 0.6);
+
+  &.cluster {
+    width: 100vw;
+  }
 
   h2 {
     color: #fff;
@@ -100,8 +140,14 @@ export default {
   }
 }
 
+.detail--title {
+  padding: 30px 0 0 40px;
+}
+
 .detail--score {
   padding-top: 30px;
+  padding-left: 40px;
+
   span {
     font-weight: 700;
     font-size: 18px;
@@ -122,7 +168,7 @@ export default {
 }
 
 .detail--description {
-  padding-top: 30px;
+  padding: 30px 20px 0 40px;
   p {
     font-size: 18px;
     color: #ddd;
@@ -133,10 +179,11 @@ export default {
 
 .detail--info-genre {
   margin-top: 20px;
+  padding-left: 40px;
   span {
     color: #aaa;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 700;
     &:first-child {
       font-weight: 700;
       margin-right: 20px;
@@ -144,6 +191,37 @@ export default {
   }
   span + span {
     margin-right: 10px;
+  }
+}
+
+.detail--movie-menu {
+  position: absolute;
+  margin-top: -70px;
+  padding-bottom: 20px;
+  color: white;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 12;
+  
+  span {
+    font-size: 18px;
+    color: #aaa;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 2.5;
+    margin-bottom: 10px;
+    cursor: pointer;
+    &:hover {
+      border-bottom: 5px solid #aaa;
+    }
+    &.active {
+      color: #fff;
+      border-bottom: 5px solid #fff;
+    }
+  }
+  span + span {
+    margin-left: 50px;
   }
 }
 </style>
