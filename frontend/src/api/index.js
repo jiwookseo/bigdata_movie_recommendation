@@ -39,5 +39,8 @@ export default {
   },
   register(params) {
     return axios.post("http://localhost:8000/api/signup/", params);
-  }
+  },
+  getRelatedMovies(params) {
+    return axios.get(`${BASE_URL}/movies/related_movies/`, { params});
+  },
 };

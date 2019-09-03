@@ -58,7 +58,7 @@ export default {
     ...mapGetters("mvUi", ["detailToggler", "detailType"]),
       toggle() {
       return this.detailToggler && this.detailType === this.type;
-    }
+    },
   },
   methods: {
     handleMouseOver: function() {
@@ -74,6 +74,7 @@ export default {
     handleToggle: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
       this.$store.commit("mvUi/setActivateMovie", this.movie);
+      this.$store.dispatch("mvUi/setRelatedMovies", {movieId: this.movie.id})
     }
   }
 };
