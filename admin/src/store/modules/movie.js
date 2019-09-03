@@ -15,16 +15,16 @@ const mutations = {
 
 // actions
 const actions = {
-  async searchMovies({ commit }, params) {
-    const resp = await api.searchMovies(params)
-    const movies = resp.data.map(d => ({
+  async getMovieList({ commit }) {
+    const response = await api.getMovieList()
+    const movies = response.data.map(d => ({
       id: d.id,
       title: d.title,
       genres: d.genres_array,
       viewCnt: d.view_cnt,
       rating: d.average_rating,
     }))
-
+    console.log("check")
     commit('setMovieList', movies)
   },
 
@@ -36,15 +36,6 @@ const actions = {
       console.log(error);
     }
   },
-
-  async getRelatedMovies({ commit }, params) {
-    try {
-      const response = await api.getRelatedMovies(params);
-      console.log(response.data);
-    } catch(error) {
-      console.log(error);
-    }
-  }
 }
 
 export default {
