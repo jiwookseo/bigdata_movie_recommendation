@@ -209,9 +209,12 @@ export default {
 
 .signin_title {
   margin: 0;
-  font-size: 24px;
-  font-weight: bold;
   color: rgba(255, 183, 0, 1.0);
+  font: {
+    family: consolas;
+    size: 30px;
+    weight: bold;
+  }
 }
 
 .signin {
@@ -224,18 +227,22 @@ export default {
 
 .signin_button {
   background-color: rgba(255, 183, 0, 1.0);
-  font-size: 25px;
-  font-weight: bold;
   color: rgb(255, 255, 255);
   padding: 5px 10px 10px 10px;
   line-height: 1.2em;
   border-radius: 15px;
   margin-bottom: 30px;
+  font: {
+    family: consolas;
+    size: 25px;
+    weight: bold;
+  }
 }
 
 .pw_reg {
   display: flex;
   flex-direction: column;
+  font-family: consolas;
 }
 
 .password, .register {
