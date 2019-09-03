@@ -69,19 +69,19 @@ const actions = {
       commit("setIsLogin", true);
       const data = JSON.parse(res.config.data);
       commit("setUsername", data.login.username);
-      const res = await api.getFollowings(state.username);
-      commit("setUserFollowings", res.data);
+      const res2 = await api.getFollowings(state.username);
+      commit("setUserFollowings", res2.data);
     } else {
       commit("setIsLogin", false);
     }
   },
   async logout({ commit }) {
-    commit('setIsLogin", false');
+    commit('setIsLogin', false);
     commit("setId", null);
   },
   async setRegister({ commit }, params) {
     const res = await api.register(params);
-    if (res.status === 200) {
+    if (res.status === 201) {
       commit("setRegister", "sign");
     }
   },
