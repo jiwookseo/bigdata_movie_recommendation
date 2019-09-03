@@ -34,6 +34,9 @@ urlpatterns = [
     path('ratings/<int:rating_id>/',
          movie_views.rating_detail, name='rating_detail'),
 
+    path('movies/related_movies/', 
+         movie_views.related_movies, name="related_movies"),
+
     # clustering
     path('clustering/movies/', clustering_views.movie_clustering, 
           name="movie_clustering"),

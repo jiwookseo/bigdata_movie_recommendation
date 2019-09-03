@@ -201,3 +201,17 @@ def movie_followers(request, movie_id):
             return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+@api_view(['GET'])
+def related_movies(request):
+    movie_id = request.GET.get('movieId')
+    movie = get_object_or_404(Movie, id=movie_id)
+
+    related_movies = Movie.objects.filter(cluster__exact=movie.cluster).order_by("-avg_rating")[:10]
+    serializer = MovieSerializer(related_movies, many=True)
+    return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
+
+    
+

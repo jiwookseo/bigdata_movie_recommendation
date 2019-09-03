@@ -60,17 +60,14 @@ def update_clustering_data(table, clustering_data):
 
     if table == 'm':
         movies = Movie.objects.all()
-        try:
-            for movie in movies:
-                movie.cluster = clustering_data[movie.id-1]
-                movie.save()
-        except:
-            print(movie.id, clustering_data[movie.id-1])
+        for movie in movies:
+            movie.cluster = clustering_data[movie.id-1]
+            movie.save()
 
     if table == 'u':
         users = User.objects.all()
         for user in users:
-            user.cluster = clustering_data[user.id]
+            user.cluster = clustering_data[user.id-1]
             user.save()
 
 
@@ -128,7 +125,7 @@ def movie_clustering(request):
     try:
         movies_data = data_preprocessing('m')
         print("data preprocessing is completed")
-        method = request.data.get('mehtod', 'km')
+        method = request.data.get('method')
         k = request.data.get('k', 7)
         
         # K-Means
@@ -222,7 +219,8 @@ def kmeans_custom_clustering_users(k, iters):
 @api_view(['POST'])
 def user_clustering(request):
     users_data = data_preprocessing('u')
-    method = request.data.get('mehtod', 'km')
+    print("data preprocessing is completed")
+    method = request.data.get('method')
     k = request.data.get('k', 7)
 
     # K-Means
@@ -232,12 +230,12 @@ def user_clustering(request):
         clustering_data = model.predict(users_data)
 
     # Hierarchy
-    if method == 'hr':
+    elif method == 'hr':
         model = AgglomerativeClustering(n_clusters=k, affinity="euclidean", linkage='ward')
         clustering_data = model.fit_predict(users_data)
 
     # EM
-    if method == 'em':
+    elif method == 'em':
         model = GaussianMixture(n_components=k, init_params='random', random_state=0, max_iter=100)
         with ignore_warnings(category=ConvergenceWarning):
             model.fit(users_data)
@@ -250,8 +248,9 @@ def user_clustering(request):
     else:
         print("method를 정확히 표기해주세요.")
 
-    update_clustering_data('u', clustering_data)
-    # print(clustering_data)
+    print("clustering is completed")
+    update_clustering_data('u', clustering_data)        
+    print("to update clustering data is completed")
     
     return Response(status=status.HTTP_201_CREATED)
 
