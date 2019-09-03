@@ -27,5 +27,8 @@ export default {
   },
   login(params) {
     return axios.post("http://localhost:8000/api/login/", params);
+  },
+  register(params) {
+    return axios.post("http://localhost:8000/api/signup/", params);
   }
 };
