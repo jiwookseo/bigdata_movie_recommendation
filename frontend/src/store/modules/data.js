@@ -69,8 +69,8 @@ const actions = {
       commit("setIsLogin", true);
       const data = JSON.parse(res.config.data);
       commit("setUsername", data.login.username);
-      const res = await api.getFollowings(state.username);
-      commit("setUserFollowings", res.data);
+      const res2 = await api.getFollowings(state.username);
+      commit("setUserFollowings", res2.data);
     } else {
       commit("setIsLogin", false);
     }

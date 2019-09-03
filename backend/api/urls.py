@@ -34,12 +34,15 @@ urlpatterns = [
     path('ratings/<int:rating_id>/',
          movie_views.rating_detail, name='rating_detail'),
 
-    # clustering
-    path('clustering/movies/<str:method>/<int:k>/', clustering_views.movie_clustering,
-         name="movie_clustering"),
-    path('clustering/users/<str:method>/<int:k>/', clustering_views.user_clustering,
-         name="user_clustering"),
+    path('movies/related_movies/', 
+         movie_views.related_movies, name="related_movies"),
 
+    # clustering
+    path('clustering/movies/', clustering_views.movie_clustering, 
+          name="movie_clustering"),
+    path('clustering/users/', clustering_views.user_clustering, 
+          name="user_clustering"),
+    
     # scrap
     path('scrap/', scrap_views.scrap_poster),
 ]

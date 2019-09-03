@@ -1,8 +1,8 @@
 <template>
   <div class="app">
     <Header />
-    <Jumbotron />
-    <ImageSlider />
+    <router-view />
+    
   </div>
 </template>
 
@@ -10,14 +10,10 @@
 import router from "./router";
 import "./reset.css";
 import Header from "./components/header/index";
-import Jumbotron from "./components/header/Jumbotron";
-import ImageSlider from "./components/imageSlider/index";
 
 export default {
   components: {
-    Jumbotron,
     Header,
-    ImageSlider
   },
   data: () => ({
     drawer: null,
@@ -31,7 +27,7 @@ export default {
         icon: "people",
         text: "유저 검색",
         path: "user-search"
-      }
+      },
     ]
   }),
   methods: {
