@@ -119,16 +119,26 @@
     top: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
+    background: {
+      color: rgba(0, 0, 0, 0.5);
+    };
+    justify: {
+      content: center;
+    };
+    align: {
+      items: center;
+    }
   }
   .sign_contents {
-    background-color: rgb(255, 255, 255);
+    background: {
+      color: rgb(255, 255, 255);
+    };
     width: 70%;
     height: 60%;
     display: flex;
-    border-radius: 15px;
+    border: {
+      radius: 15px;
+    };
   }
   .sign, .register {
     margin: {
@@ -139,8 +149,12 @@
   .sign_div {
     min-width: 380px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex: {
+      direction: column;
+    };
+    align: {
+      items: center;
+    };
     padding: 20px;
   }
   .sign_image {
@@ -153,13 +167,17 @@
       position: center center;
       repeat: no-repeat;
     }
-    border-radius: 0px 15px 15px 0px;
+    border: {
+      radius: 0px 15px 15px 0px;
+    };
   }
   #insert_id, #insert_pw, #username, #password1, #password2, #occupation {
     position: relative;
     z-index: 2;
     top: 20px;
-    border-bottom: rgba(117, 117, 117, 0.68) 1.5px solid;
+    border: {
+      bottom: rgba(117, 117, 117, 0.68) 1.5px solid;
+    };
     min-height: 16px;
     max-height: 16px;
   }
@@ -176,25 +194,37 @@
   }
   #insert_id:focus + label, #insert_pw:focus + label, #username:focus + label, #password1:focus + label, #password2:focus + label, #occupation:focus + label {
     top: -20px;
-    font-size: 12px;
-    text-align: left;
+    font: {
+      size: 12px;
+    };
+    text: {
+      align: left;
+    };
     min-height: 16px;
     max-height: 16px;
   }
   #insert_id:valid + label, #insert_pw:valid + label, #username:valid + label, #password1:valid + label, #password2:valid + label, #occupation:valid + label {
     top: -20px;
-    font-size: 12px;
-    text-align: left;
+    font: {
+      size: 12px;
+    };
+    text: {
+      align: left;
+    };
   }
   #insert_id:focus, #insert_pw:focus, #username:focus, #password1:focus, #password2:focus, #occupation:focus {
-    border-bottom: rgba(255, 183, 0, 1.0) 2px solid;
+    border: {
+      bottom: rgba(255, 183, 0, 1.0) 2px solid;
+    };
     transition: all .5s ease;
     outline: none;
     min-height: 16px;
     max-height: 16px;
   }
   .mt-30 {
-    margin-top: 30px;
+    margin: {
+      top: 30px;
+    };
   }
   @media screen and (max-width: 600px) {
     .sign_image {
@@ -218,12 +248,16 @@
     margin: {
       top: 30px;
       bottom: 30px;
-    }
+    };
     display: flex;
-    flex-direction: column;
+    flex: {
+      direction: column;
+    };
   }
   .sign_button {
-    background-color: rgba(255, 183, 0, 1.0);
+    background: {
+      color: rgba(255, 183, 0, 1.0);
+    }
     font: {
       family: Consolas;
       size: 25px;
@@ -231,21 +265,37 @@
     }
     color: rgb(255, 255, 255);
     padding: 5px 10px 10px 10px;
-    line-height: 1.2em;
-    border-radius: 15px;
-    margin-bottom: 30px;
+    line: {
+      height: 1.2em;
+    };
+    border: {
+      radius: 15px;
+    };
+    margin: {
+      bottom: 30px;
+    };
     outline: none;
   }
   .pw_reg {
-    font-family: Consolas;
+    font: {
+      family: Consolas;
+    };
     display: flex;
-    flex-direction: column;
+    flex: {
+      direction: column;
+    };
   }
   .password_button, .register_button {
     color: rgba(255, 183, 0, 1.0);
-    font-size: 20px;
-    text-align: center;
-    margin-top: 20px;
+    font: {
+      size: 20px;
+    };
+    text: {
+      align: center;
+    };
+    margin: {
+      top: 20px;
+    };
     outline: none;
   }
   .register_form {
@@ -253,17 +303,23 @@
     margin: {
       top: 30px;
       bottom: 30px;
-    }
+    };
     display: flex;
-    flex-direction: column;
+    flex: {
+      direction: column;
+    };
   }
   .age, .gender {
     display: flex;
-    justify-content: space-between;
+    justify: {
+      content: space-between;
+    }
     color: rgba(117, 117, 117, 0.68);
   }
   #age {
-    border-bottom: rgba(117, 117, 117, 0.68) 1.5px solid;
+    border: {
+      bottom: rgba(117, 117, 117, 0.68) 1.5px solid;
+    }
     outline: none;
   }
 </style>
