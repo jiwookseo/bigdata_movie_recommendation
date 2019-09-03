@@ -35,19 +35,11 @@ urlpatterns = [
          movie_views.rating_detail, name='rating_detail'),
 
     # clustering
-<<<<<<< HEAD
     path('clustering/movies/', clustering_views.movie_clustering, 
           name="movie_clustering"),
     path('clustering/users/', clustering_views.user_clustering, 
           name="user_clustering"),
     
-=======
-    path('clustering/movies/<str:method>/<int:k>/', clustering_views.movie_clustering,
-         name="movie_clustering"),
-    path('clustering/users/<str:method>/<int:k>/', clustering_views.user_clustering,
-         name="user_clustering"),
-
->>>>>>> c17bc2d78bfbbbfd0273fff9e48882e7e161441b
     # scrap
     path('scrap/', scrap_views.scrap_poster),
 ]
