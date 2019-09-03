@@ -61,62 +61,61 @@ const actions = {
     commit("setMovieSearchList", []);
   },
 
-  // Login, Register
-  async setLogin({ commit }, params) {
-    const res = await api.login(params);
-    if (res.status === 200) {
-      commit('setIsLogin', true);
-      const data = JSON.parse(res.config.data);
-      commit("setUsername", data.login.username);
-    } else {
-      commit("setIsLogin", false);
-    }
-  },
-  async logout({commit}) {
-    commit('setIsLogin", false');
-    commit('setId', null);
-  },
-  async setRegister({ commit }, params) {
-    const res = await api.register(params);
-    if (res.status === 200) {
-      commit("setRegister", "sign");
-    }
-  },
-
-
-  // User
-  async searchUsers({ commit }, params) {
-    const resp = await api.searchUsers(params);
-    const users = resp.data;
-    commit("setUserSearchList", users);
-  },
-  async getUserByUsername({ commit }, username) {
-    const res1 = await api.getUser(username);
-    const user = res1.data;
-    commit("setUser", user);
-    const res2 = await api.getRatings(username);
-    commit("setRatings", res2.data);
-  },
-  setEmptyUserList({ commit }) {
-    commit("setUserSearchList", []);
-  },
-
-  // Recommendation
-  async getRecByAge({ commit }, age) {
-    const resp = await api.searchMovies({ age });
-    const movies = resp.data.map(item => getMovieStucture(item));
-    commit("setRecAge", movies);
-  },
-  async getRecByOccupation({ commit }, occupation) {
-    const resp = await api.searchMovies({ occupation });
-    const movies = resp.data.map(item => getMovieStucture(item));
-    commit("setRecOccupation", movies);
-  },
-  async getRecByGender({ commit }, gender) {
-    const resp = await api.searchMovies({ gender });
-    const movies = resp.data.map(item => getMovieStucture(item));
-    commit("setRecGender", movies);
+// Login, Register
+async setLogin({ commit }, params) {
+  const res = await api.login(params);
+  if (res.status === 200) {
+    commit('setIsLogin', true);
+    const data = JSON.parse(res.config.data);
+    commit("setUsername", data.login.username);
+  } else {
+    commit("setIsLogin", false);
   }
+},
+async logout({commit}) {
+  commit('setIsLogin", false');
+  commit('setId', null);
+},
+async setRegister({ commit }, params) {
+  const res = await api.register(params);
+  if (res.status === 200) {
+    commit("setRegister", "sign");
+  }
+},
+
+// User
+async searchUsers({ commit }, params) {
+  const resp = await api.searchUsers(params);
+  const users = resp.data;
+  commit("setUserSearchList", users);
+},
+async getUserByUsername({ commit }, username) {
+  const res1 = await api.getUser(username);
+  const user = res1.data;
+  commit("setUser", user);
+  const res2 = await api.getRatings(username);
+  commit("setRatings", res2.data);
+},
+setEmptyUserList({ commit }) {
+  commit("setUserSearchList", []);
+},
+
+// Recommendation
+async getRecByAge({ commit }, age) {
+  const resp = await api.searchMovies({ age });
+  const movies = resp.data.map(item => getMovieStucture(item));
+  commit("setRecAge", movies);
+},
+async getRecByOccupation({ commit }, occupation) {
+  const resp = await api.searchMovies({ occupation });
+  const movies = resp.data.map(item => getMovieStucture(item));
+  commit("setRecOccupation", movies);
+},
+async getRecByGender({ commit }, gender) {
+  const resp = await api.searchMovies({ gender });
+  const movies = resp.data.map(item => getMovieStucture(item));
+  commit("setRecGender", movies);
+},
 };
 
 // mutations
