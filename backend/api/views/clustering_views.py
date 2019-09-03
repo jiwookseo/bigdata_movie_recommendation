@@ -24,6 +24,7 @@ from sklearn.exceptions import ConvergenceWarning
 
 
 
+movies_count = 3952
 
 # Data Preprocessing
 def data_preprocessing(table):
@@ -33,17 +34,15 @@ def data_preprocessing(table):
     print("number of movies: {}, users: {}".format(movies.count(), users.count()))
 
     if table == 'm':
-        movies_data = np.zeros((movies.count(), users.count()))
+        movies_data = np.zeros((movies_count, users.count()))
         for movie in movies:
-            if movie.id > 3883:
-                break
             for rating in movie.ratings.all():
                 movies_data[movie.id-1][rating.user.id-1] += rating.rating
         
         return movies_data
 
     elif table == 'u':
-        users_data = np.zeros((users.count(), movies.count()))
+        users_data = np.zeros((users.count(), movies_count))
         for user in users:
             for rating in user.ratings.all():
                 users_data[user.id-1][rating.movie.id-1] += rating.rating
@@ -63,8 +62,6 @@ def update_clustering_data(table, clustering_data):
         movies = Movie.objects.all()
         try:
             for movie in movies:
-                if movie.id > 3883:
-                    break
                 movie.cluster = clustering_data[movie.id-1]
                 movie.save()
         except:
@@ -82,7 +79,7 @@ def update_clustering_data(table, clustering_data):
 def kmeans_custom_clustering_movies(k, iters):
    
     # define variables, data, and function
-    ml = movies.count()
+    ml = movies_count
     ul = users.count()
     clustering_data = np.full((1, ml), -1)[0]
     div = np.vectorize(lambda a, b: round(a/b, 4))
@@ -177,7 +174,7 @@ def movie_clustering(request):
 def kmeans_custom_clustering_users(k, iters):
     
     # define variables and data
-    ml = movies.count()
+    ml = movies_count
     ul = users.count()
     clustering_data = np.full((1, ul), -1)[0]
     div = np.vectorize(lambda a, b: round(a/b, 4))
