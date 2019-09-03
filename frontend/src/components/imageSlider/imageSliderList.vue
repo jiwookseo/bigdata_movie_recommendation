@@ -3,23 +3,19 @@
     <div class="image-slider__title">
       <h2>
         <select v-model="selected" name="target">
-          <option value>{{ data.type }} 선택</option>
-          <option v-for="(key, value) in data.selectObject" :key="key" :value="value">{{ key }}</option>
-        </select>이(가) 좋아하는 영화
+          <option class="movie-option" value>{{ data.type }} 선택</option>
+          <option class="movie-option" v-for="(key, value) in data.selectObject" :key="key" :value="value">{{ key }}</option>
+        </select> 좋아하는 영화
       </h2>
     </div>
     <div class="image-slider__wrapper">
       <div class="image-slider__box" :style="{ transform: 'translateX(' + slideNum*16 +'vw)' }">
         <ImageItem
           v-for="movie in movieList"
-          :id="movie.id"
           :key="movie.id"
+          :movie="movie"
+          :type="type"
           class="image-slider__item"
-          :title="movie.title"
-          :img="movie.stillCut || movie.poster || 'https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg'"
-          :description="movie.story.slice(0, 500)"
-          :genre="movie.genres"
-          @activateMovieDetail="handleMovieData"
         />
       </div>
       <div v-if="slideNum !=0" class="image-slider__arrow-left" @click="handleClick(1)">
@@ -29,14 +25,16 @@
         <span>&#62;</span>
       </div>
     </div>
-
-    <ImageItemDetail v-if="toggleDetail" toggle="detailToggle" @closeDetail="handleDetailToggler" />
+    <transition name="bounce">
+      <ImageItemDetail v-if="toggleDetail" />
+    </transition>
   </div>
 </template>
 
 <script>
 import ImageItem from "./imageItem";
 import ImageItemDetail from "./imageItemDetail";
+import { mapGetters } from "vuex";
 
 export default {
   name: "ImageSliderList",
@@ -53,6 +51,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters("mvUi", ["detailToggler", "detailType"]),
     type() {
       if (this.data.type === "연령대") {
         return "Age";
@@ -63,10 +62,17 @@ export default {
       }
     },
     movieList() {
-      return this.$store.getters[`data/rec${this.type}`];
+      return this.$store.getters[`data/rec${this.type}`].map(movie => ({
+        ...movie,
+        description: movie.story.slice(0, 500),
+        img:
+          movie.stillCut ||
+          movie.poster ||
+          "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
+      }));
     },
     toggleDetail() {
-      return this.$store.state.mvUi.detailToggler && this.detailToggle;
+      return this.detailToggler && this.detailType === this.type;
     }
   },
   watch: {
@@ -88,11 +94,7 @@ export default {
       this.slideNum = s;
     },
     handleDetailToggler: function() {
-      this.detailToggle = !this.detailToggle;
-    },
-    handleMovieData: function(movie) {
-      this.handleDetailToggler();
-      this.$store.commit("mvUi/setActivateMovie", movie);
+      this.$store.dispatch("mvUi/setDetailToggler");
     }
   }
 };
@@ -111,6 +113,7 @@ export default {
 
 .image-slider__title {
   padding: 20px 0 20px 30px;
+  display: flex;
   h2 {
     display: inline-block;
     margin-right: 14px;
@@ -119,11 +122,39 @@ export default {
     font-weight: 700;
   }
   select {
-    color: #fff;
+    outline: none;
+    border: none;
+    color: rgb(255, 177, 1);
+    padding: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    &:hover {
+      background-color: rgba(255, 177, 1);      
+      color: #111;
+      border: none;
+      outline: none;
+    }
   }
-  select option {
-    background: #111;
-    color: #fff;
+
+  .movie-option {
+    outline: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+
+    &:first-child {
+      color: #111;
+      font-size: 18px;
+    }
+    &:active, &:focus {
+      border: none;
+      outline: none;
+      background-color: #111;
+      font-weight: 700;
+      color: rgba(255, 177, 1);
+    }
   }
 }
 .image-slider__box {
@@ -166,6 +197,24 @@ export default {
     font-weight: 700;
     color: #aaa;
     cursor: pointer;
+  }
+}
+
+.bounce-enter-active {
+  animation: bounce-in 1s;
+}
+.bounce-leave-active {
+  animation: bounce-in 1s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>

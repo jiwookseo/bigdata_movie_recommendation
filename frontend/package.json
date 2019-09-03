@@ -13,6 +13,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.6",
     "axios": "^0.19.0",
     "core-js": "^2.6.5",
+    "packagename": "^2.0.1",
     "vue": "^2.6.10",
     "vue-router": "^3.0.7",
     "vue-wait": "^1.4.6",

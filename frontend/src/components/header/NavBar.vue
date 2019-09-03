@@ -10,7 +10,7 @@
         <font-awesome-icon icon="search" size="2x"/>
       </span>
       <span>
-        <font-awesome-icon icon="user" size="2x"/>
+        <font-awesome-icon icon="user" size="2x" @click="sign"/>
       </span>
     </div>
   </nav>  
@@ -37,6 +37,12 @@ export default {
   components: {
     FontAwesomeIcon,
   },
+  data: () => ({
+    sign() {
+      const modal = document.getElementsByClassName("sign_modal")[0];
+      modal.style.display = "flex";
+    }
+  })
 }
 </script>
 

@@ -10,7 +10,9 @@ const state = {
   ratings: [],
   recAge: [],
   recOccupation: [],
-  recGender: []
+  recGender: [],
+  isLogin: false,
+  username: "",
 };
 
 // movie shape
@@ -36,6 +38,7 @@ const getters = {
   recAge: state => state.recAge,
   recOccupation: state => state.recOccupation,
   recGender: state => state.recGender
+
 };
 
 // actions
@@ -56,6 +59,23 @@ const actions = {
   setEmptyMovieList({ commit }) {
     commit("setMovieSearchList", []);
   },
+
+  // Login
+  async setLogin({ commit }, params) {
+    const res = await api.login(params);
+    if (res.status === 200) {
+      commit('setIsLogin', true);
+      const data = JSON.parse(res.config.data);
+      commit("setUsername", data.login.username);
+    } else {
+      commit("setIsLogin", false);
+    }
+  },
+  async logout({commit}) {
+    commit('setIsLogin", false');
+    commit('setId', null);
+  },
+
 
   // User
   async searchUsers({ commit }, params) {
@@ -102,7 +122,9 @@ const mutations = {
   setAudience: (state, payload) => (state.audience = payload),
   setRecAge: (state, payload) => (state.recAge = payload),
   setRecOccupation: (state, payload) => (state.recOccupation = payload),
-  setRecGender: (state, payload) => (state.recGender = payload)
+  setRecGender: (state, payload) => (state.recGender = payload),
+  setIsLogin: (state, payload) => (state.isLogin = payload),
+  setUsername: (state, payload) => (state.username = payload)
 };
 
 export default {

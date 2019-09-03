@@ -8,16 +8,15 @@ import webbrowser
 from api.models import Movie
 from rest_framework.response import Response
 
-NAVER_CLIENT_ID = 'TjoxSSxO5nPtDRB1_IZL'
-NAVER_CLIENT_SECRET = 'rUotaitzSK'
-
-
 def scrap_poster(request):
     movies = Movie.objects.filter(poster="")
     print(len(movies), "개 스크래핑 해야합니다.")
-    headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID,
-               "X-Naver-Client-Secret": NAVER_CLIENT_SECRET }
+    print("입력한 아이디", os.getenv("NAVER_ID"))
+    
+    headers = {"X-Naver-Client-Id": os.getenv("NAVER_ID"),
+               "X-Naver-Client-Secret": os.getenv("NAVER_SECRET")}
     info_url = "https://openapi.naver.com/v1/search/movie.json"
+    
     for movie in movies:
         end = movie.title.index("(")
         year = movie.title[end + 1: -1]

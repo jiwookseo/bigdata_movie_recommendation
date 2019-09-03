@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from api.models import Movie, Rating
 from accounts.models import User
+from accounts.serializers import UserSerializer
 from api.serializers import MovieSerializer, RatingSerializer
 from rest_framework.response import Response
 from datetime import datetime
@@ -153,6 +154,7 @@ def rating_list(request):
             movie.save()
         return Response(status=status.HTTP_200_OK)
 
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def rating_detail(request, rating_id):
     rating = get_object_or_404(Rating, id=rating_id)
@@ -183,3 +185,19 @@ def movie_ratings(request, movie_id):
         raitings = movie.ratings.all()
         serializer = RatingSerializer(raitings, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET', 'POST'])
+def movie_followers(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    if request.method == 'GET':
+        serializer = UserSerializer(movie.followers, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            movie.followers.add(request.user)
+            movie.save()
+            serializer = UserSerializer(movie.followers, many=True)
+            return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)

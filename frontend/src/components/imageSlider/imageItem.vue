@@ -1,27 +1,24 @@
 <template>
-  <div 
+  <div
     class="image-item--box"
-    :style="{'backgroundImage':'url('+img+')'}"
+    :style="{'backgroundImage':`url('${movie.img}')`}"
     @mouseenter="handleMouseOver"
     @mouseleave="handleMouseLeave"
   >
-
     <div class="image-item--title">
-      <span>{{ title }}</span>
+      <span>{{ movie.title }}</span>
     </div>
-    <div 
-      v-if="showDescription"
-    >
-
+    <div v-if="showDescription">
       <div class="image-item--description">
-        <p>{{description}}</p>
+        <p>{{ movie.description }}</p>
       </div>
       <!-- 아래 화살표 -->
       <div class="image-item--under-expand">
-        <span
-          @click="handleToggle"
-        >
-          <font-awesome-icon icon="sort-down" size="2x"/>
+        <span v-show="!toggle" @click="handleToggle">
+          <font-awesome-icon icon="sort-down" size="2x" />
+        </span>
+        <span v-show="toggle" @click="handleToggle">
+          <font-awesome-icon icon="sort-up" size="2x" />
         </span>
       </div>
     </div>
@@ -29,46 +26,57 @@
 </template>
 
 <script>
-
 // font-awesome
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faSortDown } from '@fortawesome/free-solid-svg-icons'
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
+import { mapGetters } from "vuex";
 
-library.add(faSortDown)
+library.add(faSortDown, faSortUp);
 
 export default {
   name: "ImageItem",
-  props: ["id", "title", "img", "description", "genre"],
   components: {
-    FontAwesomeIcon,
+    FontAwesomeIcon
   },
-  methods: {
-    handleMouseOver: function(){
-      this.showDescription = !this.showDescription
-      const movie = {id: this.id, title: this.title, img: this.img, description: this.description, genre: this.genre }
-      this.$store.commit("mvUi/setActivateMovie", movie)
+  props: {
+    movie: {
+      type: Object,
+      default: () => ({ id: 0, title: "", img: "", description: "", genre: "" })
     },
-    handleMouseLeave: function(){
-      this.showDescription = !this.showDescription
-    },
-
-    handleToggle: function(){
-      if (this.$store.state.mvUi.detailToggler){
-        this.$store.commit("mvUi/setDetailToggler")
-      }
-      const movie = {id: this.id, title: this.title, img: this.img, description: this.description, genre: this.genre }
-      this.$store.commit("mvUi/setDetailToggler")
-      this.$emit("activateMovieDetail", movie)
+    type: {
+      type: String,
+      default: "Age"
     }
   },
-  data(){
+  data() {
     return {
       showDescription: false,
-      detailToggler: false,
+    };
+  },
+  computed: {
+    ...mapGetters("mvUi", ["detailToggler", "detailType"]),
+      toggle() {
+      return this.detailToggler && this.detailType === this.type;
     }
   },
-}
+  methods: {
+    handleMouseOver: function() {
+      this.showDescription = !this.showDescription;
+      if (this.detailType === this.type) {
+        this.$store.commit("mvUi/setActivateMovie", this.movie);
+      }
+    },
+    handleMouseLeave: function() {
+      this.showDescription = !this.showDescription;
+    },
+
+    handleToggle: function() {
+      this.$store.dispatch("mvUi/setDetailToggler", this.type);
+      this.$store.commit("mvUi/setActivateMovie", this.movie);
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -121,13 +129,17 @@ export default {
   font-weight: 700;
   display: flex;
   justify-content: center;
-
+  align-items: flex-end;
 
   span {
-    margin: auto;
     text-align: center;
+    bottom: 0;
     &:hover {
-      color: #F1AC1E;
+      color: #f1ac1e;
+    }
+    &:nth-child(2){
+      padding-top: 20px;
+      margin-bottom: -20px;
     }
   }
 }

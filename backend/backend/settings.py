@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     # apps
     'api',
     "accounts",
+
+    # cors
+    "corsheaders"
 ]
 
 MIDDLEWARE = [
@@ -58,6 +61,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'api.disable.DisableCSRF',
+    # cors
+    "corsheaders.middleware.CorsMiddleware"
 ]
 
 
@@ -92,6 +97,14 @@ DATABASES = {
     }
 }
 
+# cors
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+# 배포시
+# CORS_ORIGIN_WHITELIST = [
+#     "localhost:8080",
+#     "127.0.0.1:8080"
+# ]
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

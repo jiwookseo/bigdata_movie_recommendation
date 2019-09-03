@@ -10,7 +10,10 @@ urlpatterns = [
     path("signup/", views.signup, name="signup"),
     path("users/", views.user_list, name="user_list"),
     path("users/<str:username>/", views.user_detail, name="user_detail"),
-    path('users/<str:username>/ratings/', views.user_ratings, name='user_ratings'),
+    path('users/<str:username>/ratings/',
+         views.user_ratings, name='user_ratings'),
+    path('users/<str:username>/followings/',
+         views.user_followings, name='user_followings'),
     path("login/", views.login, name="login"),
     path("logout/", views.logout, name="logout"),
     # jwt
@@ -23,17 +26,28 @@ urlpatterns = [
     path('movies/<int:movie_id>/', movie_views.movie_detail,
          name='movie_detail'),
     path('movies/<int:movie_id>/ratings/',
-         movie_views.movie_ratings, name='movie_rating_list'),
+         movie_views.movie_ratings, name='movie_ratings'),
+    path('movies/<int:movie_id>/followers/',
+         movie_views.movie_followers, name='movie_followers'),
+
     path('ratings/', movie_views.rating_list, name='rating_list'),
     path('ratings/<int:rating_id>/',
          movie_views.rating_detail, name='rating_detail'),
 
     # clustering
+<<<<<<< HEAD
     path('clustering/movies/', clustering_views.movie_clustering, 
           name="movie_clustering"),
     path('clustering/users/', clustering_views.user_clustering, 
           name="user_clustering"),
     
+=======
+    path('clustering/movies/<str:method>/<int:k>/', clustering_views.movie_clustering,
+         name="movie_clustering"),
+    path('clustering/users/<str:method>/<int:k>/', clustering_views.user_clustering,
+         name="user_clustering"),
+
+>>>>>>> c17bc2d78bfbbbfd0273fff9e48882e7e161441b
     # scrap
     path('scrap/', scrap_views.scrap_poster),
 ]

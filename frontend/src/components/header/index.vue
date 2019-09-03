@@ -1,17 +1,19 @@
 <template>
   <header class="header">
     <NavBar />
-    <div class="test" />
+    <Sign/>
   </header>
 </template>
 
 <script>
   import NavBar from "./NavBar"
+  import Sign from "./Sign"
 
   export default {
     name: "Header",
     components: {
-      NavBar
+      NavBar,
+      Sign
     }
   }
 </script>
