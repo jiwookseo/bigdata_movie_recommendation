@@ -14,7 +14,8 @@ const state = {
   recGender: [],
   isLogin: false,
   username: "",
-  userFollowings: []
+  userFollowings: [],
+  register: "register"
 };
 
 // movie shape
@@ -61,7 +62,7 @@ const actions = {
     commit("setMovieSearchList", []);
   },
 
-  // Login
+  // Login, Register
   async setLogin({ commit }, params) {
     const res = await api.login(params);
     if (res.status === 200) {
@@ -77,6 +78,12 @@ const actions = {
   async logout({ commit }) {
     commit('setIsLogin", false');
     commit("setId", null);
+  },
+  async setRegister({ commit }, params) {
+    const res = await api.register(params);
+    if (res.status === 200) {
+      commit("setRegister", "sign");
+    }
   },
 
   // User
@@ -139,7 +146,8 @@ const mutations = {
   setRecOccupation: (state, payload) => (state.recOccupation = payload),
   setRecGender: (state, payload) => (state.recGender = payload),
   setIsLogin: (state, payload) => (state.isLogin = payload),
-  setUsername: (state, payload) => (state.username = payload)
+  setUsername: (state, payload) => (state.username = payload),
+  setRegister: (state, payload) => (state.register = payload)
 };
 
 export default {
