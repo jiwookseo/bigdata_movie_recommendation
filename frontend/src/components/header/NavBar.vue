@@ -1,9 +1,11 @@
 <template>
   <nav class="nav">
     <div class="nav__title">
-      <span class="txt-orange">
-        HONEY BEE
-      </span>
+      <router-link to="/">
+        <span class="txt-orange">
+          HONEY BEE
+        </span>
+      </router-link>
     </div>
     <div class="nav__icon-bar">
       <span>
@@ -62,6 +64,10 @@ export default {
     font-size: 24px;
     font-weight: 700;
     cursor: pointer;
+
+    a {
+      text-decoration: none;
+    }
   }
   
   .nav__icon-bar {

@@ -16,6 +16,7 @@ def scrap_poster(request):
     headers = {"X-Naver-Client-Id": os.getenv("NAVER_ID"),
                "X-Naver-Client-Secret": os.getenv("NAVER_SECRET")}
     info_url = "https://openapi.naver.com/v1/search/movie.json"
+    
     for movie in movies:
         end = movie.title.index("(")
         year = movie.title[end + 1: -1]
