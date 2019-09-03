@@ -21,6 +21,25 @@
           <span v-for="(name, idx) in movie.genres" :key="movie.id+idx">{{ name }}</span>
         </div>
       </div>
+      <div class="detail--related-movie" v-if="active.cluster">
+        <div class="cluster--wrapper" :style="{ transform: 'translateX(' + -slideIndex*20 +'vw)' }">
+          <ImageRelated 
+            v-for="movie in relativeMovie"
+            :key="movie.id"
+            :movie="movie"
+          />
+        </div>
+        <div class="cluster--arrow-left" v-if="slideIndex >= 1">
+          <span @click="handleClick(-1)">
+            <font-awesome-icon icon="arrow-left" size="2x" />
+          </span>
+        </div>
+        <div class="cluster--arrow-right" v-if="slideIndex < 7">
+          <span @click="handleClick(1)">
+            <font-awesome-icon icon="arrow-right" size="2x" />
+          </span>
+        </div>
+      </div>
     </div>
     <div class="detail--movie-menu">
       <span :class="{ active: active.base }" @click="handleActive('base')">기본 정보</span>
@@ -30,14 +49,23 @@
 </template>
 
 <script>
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+library.add(faArrowLeft, faArrowRight);
+
+import ImageRelated from "./imageRelated"
+import { mapGetters } from 'vuex';
 export default {
   name: "ImageItemDetail",
+  components: { ImageRelated, FontAwesomeIcon },
   data() {
     return {
       active: {
         base: true,
         cluster: false
-      }
+      },
+      slideIndex: 0
     };
   },
   computed: {
@@ -54,6 +82,16 @@ export default {
       const temp = this.movie.description.split(" ");
       temp.splice(temp.length - 1, temp.length);
       return temp.join(" ") + "...";
+    },
+    relativeMovie(){
+      return this.$store.getters[`mvUi/relatedMovie`].map(movie => ({
+        ...movie,
+        description: movie.story.slice(0, 100),
+        img:
+          movie.stillCut ||
+          movie.poster ||
+          "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
+      }));
     }
   },
   methods: {
@@ -68,6 +106,9 @@ export default {
         this.active.cluster = true;
         this.active.base = false;
       }
+    },
+    handleClick: function(n) {
+      this.slideIndex = this.slideIndex + n;
     }
   }
 };
@@ -186,6 +227,48 @@ export default {
   span + span {
     margin-right: 10px;
   }
+}
+
+.detail--related-movie {
+  margin-top: 80px;
+  width: 100%;
+  height: 300px;
+}
+
+.cluster--wrapper {
+  width: 80%;
+  margin-left: 50px;
+  display: flex;
+  height: 50vh;
+  transition: all 0.4s ease-in;
+}
+
+.cluster--arrow-left {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(33, 33, 33, 0.6);
+  color: white;
+  top: calc(50% - 25px);
+  left: 0;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.cluster--arrow-right {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(33, 33, 33, 0.6);
+  color: white;
+  top: calc(50% - 25px);
+  right: 20px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .detail--movie-menu {

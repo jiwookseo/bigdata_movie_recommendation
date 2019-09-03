@@ -3,13 +3,15 @@ import api from '../../api'
 
 // state
 const state = {
-
+  userList : []
 }
 
 
 // mutations
 const mutations = {
-
+  setUserList(state, users) {
+    state.userList = users
+  }
 }
 
 

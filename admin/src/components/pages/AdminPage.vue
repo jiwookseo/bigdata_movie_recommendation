@@ -5,11 +5,10 @@
     </v-flex>
     <div>
       <v-btn @click="clustering">clustering</v-btn>
-      <v-btn @click="check">check</v-btn>
     </div>
     <div>
-      <span @click="showItemList">Movie</span> |
-      <span @click="showItemList">User</span>
+      <span @click="selectTable">Movie</span> |
+      <span @click="selectTable">User</span>
     </div>
     <router-view />
   </v-flex>
@@ -26,7 +25,7 @@ export default {
   methods: {
     ...mapActions('movie', ['searchMovies', 'clusteringMovies']),
     ...mapActions('user', ['clusteringUsers']),
-    showItemList(e) {
+    selectTable(e) {
       const keyword = e.target.innerHTML.toLowerCase()
       // if (keyword === 'movie') {
       //   this.searchMovies()
@@ -45,9 +44,6 @@ export default {
       } else {
         this.clusteringUsers(params)
       }
-    },
-    check() {
-      console.log(this.$route.path)
     }
   }
 }

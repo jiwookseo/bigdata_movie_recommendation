@@ -19,29 +19,46 @@
       </div>
       <div v-if="form === 'register'" class="register">
         <div class="sign_div">
-          <p class="sign_title">Register</p>
+          <div class="sign_title_div">
+            <p class="sign_title">Register</p>
+          </div>
           <div class="register_form">
-            <input id="username" v-model="regInput.username" type="text" required>
+            <input id="username" v-model="reg_username" type="text" required>
             <label for="username">Username</label>
-            <input id="password1" v-model="regInput.password1" type="password" class="mt-30" required>
+            <span>{{ err_username }}</span>
+            <input id="password1" v-model="reg_password1" type="password" class="mt-30" required>
             <label for="password1">Password</label>
-            <input id="password2" v-model="regInput.password2" type="password" class="mt-30" required>
-            <label for="password2">Password</label>
-            <div class="age mt-30">
-              <label for="age">age</label>
-              <input id="age" v-model="regInput.age" type="number" required>
-            </div>
+            <span>{{ err_password1 }}</span>
+            <input id="password2" v-model="reg_password2" type="password" class="mt-30" required>
+            <label for="password2">Confirm Password</label>
+            <span>{{ err_password2 }}</span>
             <div class="gender mt-30">
               <p class="gender_title">gender</p>
               <label for="gender_F">Female</label>
-              <input id="gender_F" v-model="regInput.gender" value="F" type="radio" required>
+              <input id="gender_F" v-model="reg_gender" value="F" type="radio" required>
               <label for="gender_M">Male</label>
-              <input id="gender_M" v-model="regInput.gender" value="M" type="radio" required>
+              <input id="gender_M" v-model="reg_gender" value="M" type="radio" required>
             </div>
-            <input id="occupation" v-model="regInput.occupation" type="text" class="mt-30" required>
-            <label for="occupation">occupation</label>
+            <span>{{ err_gender }}</span>
+            <div class="age mt-30">
+              <label for="age">age</label>
+              <select id="age" v-model="reg_age" required>
+                <option v-for="(age, i) of ageList" :value="i">{{ age }}</option>
+              </select>
+            </div>
+            <span>{{ err_age }}</span>
+            <div class="occupation mt-30">
+              <label for="occupation">occupation</label>
+              <select id="occupation" v-model="reg_occupation" required>
+                <option v-for="(occupation, i) of occupationList" :value="i">{{ occupation }}</option>
+              </select>
+            </div>
+            <span>{{ err_occupation }}</span>
           </div>
-          <button class="sign_button" @click="register" @keydown.enter="register">Register</button>
+          <div class="buttons">
+            <button v-if="checkRegister" class="sign_button" @click="register" @keydown.enter="register">Register</button>
+            <button v-else class="disabled_button" disabled>Register</button>
+          </div>
         </div>
       </div>
       <div class="sign_image"></div>
@@ -57,30 +74,64 @@
         username: "",
         password: "",
       },
+      reg_username: "",
+      reg_password1: "",
+      reg_password2: "",
+      reg_age: "",
+      reg_gender: "",
+      reg_occupation: "",
+      err_username: "",
+      err_password1: "",
+      err_password2: "",
+      err_age: "",
+      err_gender: "",
+      err_occupation: "",
       username: "",
       form: "sign",
-      regInput: {
-        username: "",
-        password1: "",
-        password2: "",
-        age: 0,
-        gender: "",
-        occupation: ""
-      }
+      checkRegister: false,
+      ageList: ["Under 18", "18-24", "25-34", "35-44", "45-49", "50-55", "56+"],
+      ages: ["1", "18", "25", "35", "45", "50", "56"],
+      occupationList: [
+        "other", "academic/educator", "artist", "clerical/admin", "college/grad student", "customer service", "doctor/health care",
+        "executive/managerial", "farmer", "homemaker", "K-12 student", "lawyer", "programmer", "retired", "sales/marketing",
+        "scientist", "self-employed", "technician/engineer", "tradesman/craftsman", "unemployed", "writer"
+      ],
     }),
-    mounted() {
-      this.closeModal();
-    },
     computed: {
       ...mapState({getUsername: state => state.data.username}),
       ...mapState({getRegister: state => state.data.register})
     },
+    watch: {
+      reg_username: function() {
+        this.chkUsername();
+      },
+      reg_password1: function() {
+        this.chkPass1();
+      },
+      reg_password2: function() {
+        this.chkPass2();
+      },
+      reg_age: function() {
+        this.chkAge();
+      },
+      reg_gender: function() {
+        this.chkGender();
+      },
+      reg_occupation: function() {
+        this.chkOccupation();
+      }
+    },
+    mounted() {
+      this.closeModal(this.resetForm);
+    },
     methods: {
-      closeModal() {
+      closeModal(func) {
         const modal = document.getElementsByClassName("sign_modal")[0];
+        const change = func;
         window.onclick = function(e) {
           if (e.target === modal) {
             modal.style.display = "none";
+            change();
           }
         };
       },
@@ -100,12 +151,83 @@
           this.form = "register";
         }
       },
+      resetForm() {
+        this.form = "sign"
+      },
       async register() {
-        const params = {
-          "profiles": [this.regInput]
-        };
-        await this.setRegister(params);
-        this.form = this.getRegister;
+        this.chkRegister();
+        if (this.checkRegister) {
+          const params = {
+            "profiles": [
+              {
+                "username": this.reg_username,
+                "password1": this.reg_password1,
+                "password2": this.reg_password2,
+                "age": this.reg_age,
+                "gender": this.reg_gender,
+                "occupation": this.reg_occupation,
+              }
+            ]
+          };
+          await this.setRegister(params);
+          this.form = this.getRegister;
+        }
+      },
+      chkUsername() {
+        if (this.reg_username.length < 6) {
+          this.err_username = "username의 길이는 6자 이상이어야 합니다.";
+        } else {
+          this.err_username = "";
+        }
+        this.chkRegister();
+      },
+      chkPass1() {
+        if (this.reg_password1.length < 8) {
+          this.err_password1 = "password의 길이는 8자 이상이어야 합니다.";
+          this.checkRegister = false;
+        } else {
+          this.err_password1 = "";
+        }
+        this.chkRegister();
+      },
+      chkPass2() {
+        if (this.reg_password1 !== this.reg_password2) {
+          this.err_password2 = "password가 일치하지 않습니다.";
+        } else {
+          this.err_password2 = "";
+        }
+        this.chkRegister();
+      },
+      chkAge() {
+        if (typeof(this.reg_age) === "number" && this.ages[this.reg_age] !== undefined) {
+          this.err_age = "";
+        } else {
+          this.err_age = "age를 선택해주세요.";
+        }
+        this.chkRegister();
+      },
+      chkGender() {
+        if (this.reg_gender === "M" || this.reg_gender === "F") {
+          this.err_gender = "";
+        } else {
+          this.err_gender = "gender를 선택해주세요.";
+        }
+        this.chkRegister();
+      },
+      chkOccupation() {
+        if (typeof(this.reg_occupation) === "number" && this.occupationList[this.reg_occupation] !== undefined) {
+          this.err_occupation = "";
+        } else {
+          this.err_occupation = "occupation을 선택해주세요.";
+        }
+        this.chkRegister();
+      },
+      chkRegister() {
+        if (this.reg_username && this.reg_password1 && this.reg_password2 && this.ages[this.reg_age] !== undefined && this.reg_gender && this.occupationList[this.reg_occupation] !== undefined && !this.err_username && !this.err_password1 && !this.err_password2 && !this.err_age && !this.err_gender && !this.err_occupation) {
+          this.checkRegister = true;
+        } else {
+          this.checkRegister = false;
+        }
       }
     }
   }
@@ -171,7 +293,7 @@
       radius: 0px 15px 15px 0px;
     };
   }
-  #insert_id, #insert_pw, #username, #password1, #password2, #occupation {
+  #insert_id, #insert_pw, #username, #password1, #password2 {
     position: relative;
     z-index: 2;
     top: 20px;
@@ -181,7 +303,7 @@
     min-height: 16px;
     max-height: 16px;
   }
-  #insert_id + label, #insert_pw + label, #username + label, #password1 + label, #password2 + label, #occupation + label {
+  #insert_id + label, #insert_pw + label, #username + label, #password1 + label, #password2 + label {
     transition: all .5s ease;
     position: relative;
     top: 0px;
@@ -191,8 +313,11 @@
     font-size: 16px;
     min-height: 16px;
     max-height: 16px;
+    user: {
+      select: none;
+    }
   }
-  #insert_id:focus + label, #insert_pw:focus + label, #username:focus + label, #password1:focus + label, #password2:focus + label, #occupation:focus + label {
+  #insert_id:focus + label, #insert_pw:focus + label, #username:focus + label, #password1:focus + label, #password2:focus + label {
     top: -20px;
     font: {
       size: 12px;
@@ -202,8 +327,11 @@
     };
     min-height: 16px;
     max-height: 16px;
+    user: {
+      select: none;
+    }
   }
-  #insert_id:valid + label, #insert_pw:valid + label, #username:valid + label, #password1:valid + label, #password2:valid + label, #occupation:valid + label {
+  #insert_id:valid + label, #insert_pw:valid + label, #username:valid + label, #password1:valid + label, #password2:valid + label {
     top: -20px;
     font: {
       size: 12px;
@@ -212,7 +340,7 @@
       align: left;
     };
   }
-  #insert_id:focus, #insert_pw:focus, #username:focus, #password1:focus, #password2:focus, #occupation:focus {
+  #insert_id:focus, #insert_pw:focus, #username:focus, #password1:focus, #password2:focus {
     border: {
       bottom: rgba(255, 183, 0, 1.0) 2px solid;
     };
@@ -220,6 +348,16 @@
     outline: none;
     min-height: 16px;
     max-height: 16px;
+  }
+  label + span {
+    margin: {
+      top: 10px;
+    }
+    color: red;
+    font: {
+      size: 12px;
+    }
+    user-select: none;
   }
   .mt-30 {
     margin: {
@@ -260,7 +398,7 @@
     }
     font: {
       family: Consolas;
-      size: 25px;
+      size: 24px;
       weight: bold;
     }
     color: rgb(255, 255, 255);
@@ -275,6 +413,26 @@
       bottom: 30px;
     };
     outline: none;
+  }
+  .disabled_button {
+    background: {
+      color: rgba(117, 117, 117, 0.4)
+    };
+    font: {
+      family: Consolas;
+      size: 24px;
+      weight: bold;
+    };
+    padding: 5px 10px 10px 10px;
+    line: {
+      height: 1.2em;
+    };
+    border: {
+      radius: 15px;
+    };
+    margin: {
+      bottom: 30px;
+    };
   }
   .pw_reg {
     font: {
@@ -317,9 +475,30 @@
     color: rgba(117, 117, 117, 0.68);
   }
   #age {
+    width: 100%;
+    margin: {
+      left: 10px;
+    }
     border: {
       bottom: rgba(117, 117, 117, 0.68) 1.5px solid;
     }
+    outline: none;
+  }
+  .occupation {
+    display: flex;
+    justify: {
+      content: space-between;
+    }
+    color: rgba(117, 117, 117, 0.68);
+  }
+  #occupation {
+    width: 100%;
+    margin: {
+      left: 10px;
+    }
+    border: {
+      bottom: rgba(117, 117, 117, 0.68) 1.5px solid;
+    };
     outline: none;
   }
 </style>

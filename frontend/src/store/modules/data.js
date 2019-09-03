@@ -76,12 +76,12 @@ const actions = {
     }
   },
   async logout({ commit }) {
-    commit('setIsLogin", false');
+    commit('setIsLogin', false);
     commit("setId", null);
   },
   async setRegister({ commit }, params) {
     const res = await api.register(params);
-    if (res.status === 200) {
+    if (res.status === 201) {
       commit("setRegister", "sign");
     }
   },

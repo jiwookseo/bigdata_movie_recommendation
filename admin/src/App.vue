@@ -18,10 +18,14 @@
 
 <script>
 import router from "./router";
+import { mapActions } from 'vuex'
 
 export default {
   methods: {
-  
+    ...mapActions('movie', ['getMovieList'])
+  },
+  created() {
+    this.getMovieList()
   }
 };
 </script>
