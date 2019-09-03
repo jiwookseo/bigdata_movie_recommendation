@@ -14,8 +14,14 @@ urlpatterns = [
          views.user_ratings, name='user_ratings'),
     path('users/<str:username>/followings/',
          views.user_followings, name='user_followings'),
+    path('users/related_users/<int:user_id>/',
+         views.related_users, name="related_users"),
+    
+    
     path("login/", views.login, name="login"),
     path("logout/", views.logout, name="logout"),
+    
+    
     # jwt
     path("token/create/", obtain_jwt_token),
     path("token/verify/", verify_jwt_token),

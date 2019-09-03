@@ -9,7 +9,7 @@ from .jwt import create_token, verify_token
 from .serializers import UserSerializer
 from .models import User
 from .forms import CustomUserAuthenticationForm, CustomUserCreateForm, CustomUserChangeForm, CustomUserChangePwForm
-
+from django.db.models import Q
 
 # 회원가입
 @api_view(["POST"])
@@ -96,11 +96,12 @@ def user_followings(request, username):
 
 
 @api_view(['GET'])
-def related_users(request):
-    user_id = request.GET.get('userId')
+def related_users(request, user_id):
     user = get_object_or_404(User, id=user_id)
-
-    related_users = User.objects.filter(cluster__exact=movie.cluster)[:10]
+    query = Q(cluster__exact=user.cluster)
+    query.add(~Q(id=user_id), query.AND)
+    
+    related_users = User.objects.filter(query)[:10]
     serializer = UserSerializer(related_users, many=True)
     return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
 
