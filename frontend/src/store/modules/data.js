@@ -7,12 +7,14 @@ const state = {
   audience: [],
   userSearchList: [],
   user: {},
+  followings: [],
   ratings: [],
   recAge: [],
   recOccupation: [],
   recGender: [],
   isLogin: false,
   username: "",
+  userFollowings: []
 };
 
 // movie shape
@@ -38,7 +40,6 @@ const getters = {
   recAge: state => state.recAge,
   recOccupation: state => state.recOccupation,
   recGender: state => state.recGender
-
 };
 
 // actions
@@ -64,18 +65,19 @@ const actions = {
   async setLogin({ commit }, params) {
     const res = await api.login(params);
     if (res.status === 200) {
-      commit('setIsLogin', true);
+      commit("setIsLogin", true);
       const data = JSON.parse(res.config.data);
       commit("setUsername", data.login.username);
+      const res = await api.getFollowings(state.username);
+      commit("setUserFollowings", res.data);
     } else {
       commit("setIsLogin", false);
     }
   },
-  async logout({commit}) {
+  async logout({ commit }) {
     commit('setIsLogin", false');
-    commit('setId', null);
+    commit("setId", null);
   },
-
 
   // User
   async searchUsers({ commit }, params) {
@@ -89,6 +91,8 @@ const actions = {
     commit("setUser", user);
     const res2 = await api.getRatings(username);
     commit("setRatings", res2.data);
+    const res3 = await api.getFollowings(username);
+    commit("setFollowings", res3.data);
   },
   setEmptyUserList({ commit }) {
     commit("setUserSearchList", []);
@@ -109,6 +113,15 @@ const actions = {
     const resp = await api.searchMovies({ gender });
     const movies = resp.data.map(item => getMovieStucture(item));
     commit("setRecGender", movies);
+  },
+
+  // Follow
+  async follow({ commit }, id) {
+    if (state.isLogin) {
+      await api.follow(id);
+      const res = await api.getFollowings(state.username);
+      commit("setUserFollowings", res.data);
+    }
   }
 };
 
@@ -120,6 +133,8 @@ const mutations = {
   setUser: (state, payload) => (state.user = payload),
   setRatings: (state, payload) => (state.ratings = payload),
   setAudience: (state, payload) => (state.audience = payload),
+  setFollowings: (state, payload) => (state.followings = payload),
+  setUserFollowings: (state, payload) => (state.userFollowings = payload),
   setRecAge: (state, payload) => (state.recAge = payload),
   setRecOccupation: (state, payload) => (state.recOccupation = payload),
   setRecGender: (state, payload) => (state.recGender = payload),
