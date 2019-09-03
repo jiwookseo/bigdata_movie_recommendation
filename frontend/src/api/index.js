@@ -1,7 +1,7 @@
 import axios from "axios";
-​
+
 const BASE_URL = "/api";
-​
+
 export default {
   searchMovies(params) {
     return axios.get(`${BASE_URL}/movies/`, {
