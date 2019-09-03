@@ -1,7 +1,7 @@
 import axios from "axios";
-
+​
 const BASE_URL = "/api";
-
+​
 export default {
   searchMovies(params) {
     return axios.get(`${BASE_URL}/movies/`, {
@@ -27,5 +27,8 @@ export default {
   },
   login(params) {
     return axios.post("http://localhost:8000/api/login/", params);
+  },
+  register(params) {
+    return axios.post("http://localhost:8000/api/signup/", params);
   }
 };
