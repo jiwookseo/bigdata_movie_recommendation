@@ -81,7 +81,7 @@ const actions = {
   },
   async setRegister({ commit }, params) {
     const res = await api.register(params);
-    if (res.status === 200) {
+    if (res.status === 201) {
       commit("setRegister", "sign");
     }
   },
