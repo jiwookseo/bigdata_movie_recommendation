@@ -35,6 +35,8 @@ def data_preprocessing(table):
     if table == 'm':
         movies_data = np.zeros((movies.count(), users.count()))
         for movie in movies:
+            if movie.id > 3883:
+                break
             for rating in movie.ratings.all():
                 movies_data[movie.id-1][rating.user.id-1] += rating.rating
         
@@ -59,9 +61,14 @@ def update_clustering_data(table, clustering_data):
 
     if table == 'm':
         movies = Movie.objects.all()
-        for movie in movies:
-            movie.cluster = clustering_data[movie.id]
-            movie.save()
+        try:
+            for movie in movies:
+                if movie.id > 3883:
+                    break
+                movie.cluster = clustering_data[movie.id-1]
+                movie.save()
+        except:
+            print(movie.id, clustering_data[movie.id-1])
 
     if table == 'u':
         users = User.objects.all()
@@ -120,39 +127,48 @@ def kmeans_custom_clustering_movies(k, iters):
 
 # Movie Clustering
 @api_view(['POST'])
-def movie_clustering(request, method, k):
-    movies_data = data_preprocessing('m')
-    
-    # K-Means
-    if method == 'km':
-        model = KMeans(n_clusters=k, init="random", random_state=0)
-        model.fit(movies_data)
-        clustering_data = model.predict(movies_data) 
-
-    # Hierarchy
-    elif method == 'hr':
-        model = AgglomerativeClustering(n_clusters=k, affinity="euclidean", linkage='ward')
-        clustering_data = model.fit_predict(movies_data)
-
-    # EM
-    elif method == 'em':
-        model = GaussianMixture(n_components=k, init_params='random', random_state=0, max_iter=100)
-        with ignore_warnings(category=ConvergenceWarning):
+def movie_clustering(request):
+    try:
+        movies_data = data_preprocessing('m')
+        print("data preprocessing is completed")
+        method = request.data.get('mehtod', 'km')
+        k = request.data.get('k', 7)
+        
+        # K-Means
+        if method == 'km':
+            model = KMeans(n_clusters=k, init="random", random_state=0)
             model.fit(movies_data)
-        clustering_data = model.predict(movies_data)
+            clustering_data = model.predict(movies_data) 
 
-    # K-Means Customized
-    elif method == 'kmc':
-        clustering_data = kmeans_custom_clustering_movies(k, 100)
+        # Hierarchy
+        elif method == 'hr':
+            model = AgglomerativeClustering(n_clusters=k, affinity="euclidean", linkage='ward')
+            clustering_data = model.fit_predict(movies_data)
 
-    else:
-        print("method를 정확히 표기해주세요.")
+        # EM
+        elif method == 'em':
+            model = GaussianMixture(n_components=k, init_params='random', random_state=0, max_iter=100)
+            with ignore_warnings(category=ConvergenceWarning):
+                model.fit(movies_data)
+            clustering_data = model.predict(movies_data)
 
-      
-    update_clustering_data('m', clustering_data)
-    # print(clustering_data)
+        # K-Means Customized
+        elif method == 'kmc':
+            clustering_data = kmeans_custom_clustering_movies(k, 100)
 
-    return Response(status=status.HTTP_201_CREATED)
+        else:
+            print("method를 정확히 표기해주세요.")
+
+        print("clustering is completed")
+        update_clustering_data('m', clustering_data)
+        print("to update clustering data is completed")
+
+        return Response(status=status.HTTP_201_CREATED)
+    
+    except ConnectionAbortedError:
+        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    
 
 
 
@@ -207,8 +223,10 @@ def kmeans_custom_clustering_users(k, iters):
 
 # User Clustering
 @api_view(['POST'])
-def user_clustering(request, method, k):
+def user_clustering(request):
     users_data = data_preprocessing('u')
+    method = request.data.get('mehtod', 'km')
+    k = request.data.get('k', 7)
 
     # K-Means
     if method == 'km':

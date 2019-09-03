@@ -11,7 +11,7 @@ import ImageSlider from '../imageSlider/index'
 
 export default {
   name: "BoardingPage",
-  component: {
+  components: {
     Jumbotron,
     ImageSlider
   }
