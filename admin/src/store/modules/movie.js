@@ -35,6 +35,15 @@ const actions = {
     } catch(error) {
       console.log(error);
     }
+  },
+
+  async getRelatedMovies({ commit }, params) {
+    try {
+      const response = await api.getRelatedMovies(params);
+      console.log(response.data);
+    } catch(error) {
+      console.log(error);
+    }
   }
 }
 

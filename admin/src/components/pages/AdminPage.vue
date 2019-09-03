@@ -5,6 +5,7 @@
     </v-flex>
     <div>
       <v-btn @click="clustering">clustering</v-btn>
+      <v-btn @click="check">check</v-btn>
     </div>
     <div>
       <span @click="showItemList">Movie</span> |
@@ -24,6 +25,7 @@ export default {
   },
   methods: {
     ...mapActions('movie', ['searchMovies', 'clusteringMovies']),
+    ...mapActions('user', ['clusteringUsers']),
     showItemList(e) {
       const keyword = e.target.innerHTML.toLowerCase()
       // if (keyword === 'movie') {
@@ -35,15 +37,22 @@ export default {
     },
     clustering() {
       const params = {
-        method: 'km',
-        k: 7
+        method: 'em',
+        k: 5
       }
-      this.clusteringMovies(params)
+      if (this.$route.path === '/admin/movies') {
+        this.clusteringMovies(params)
+      } else {
+        this.clusteringUsers(params)
+      }
+    },
+    check() {
+      console.log(this.$route.path)
     }
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 
 </style>
