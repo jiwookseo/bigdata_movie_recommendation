@@ -76,7 +76,7 @@ const actions = {
     }
   },
   async logout({ commit }) {
-    commit('setIsLogin", false');
+    commit('setIsLogin', false);
     commit("setId", null);
   },
   async setRegister({ commit }, params) {
