@@ -14,6 +14,12 @@ export default {
   getAudience(id) {
     return axios.get(`${BASE_URL}/movies/${id}/ratings/`);
   },
+  getFollowers(id) {
+    return axios.get(`${BASE_URL}/movies/${id}/followers/`);
+  },
+  follow(id) {
+    return axios.post(`${BASE_URL}/movies/${id}/followers/`);
+  },
   searchUsers(params) {
     return axios.get(`${BASE_URL}/users/`, {
       params
@@ -25,7 +31,13 @@ export default {
   getRatings(username) {
     return axios.get(`${BASE_URL}/users/${username}/ratings/`);
   },
+  getFollowings(username) {
+    return axios.get(`${BASE_URL}/users/${username}/followers/`);
+  },
   login(params) {
     return axios.post("http://localhost:8000/api/login/", params);
+  },
+  register(params) {
+    return axios.post("http://localhost:8000/api/signup/", params);
   }
 };
