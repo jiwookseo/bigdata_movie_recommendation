@@ -95,6 +95,16 @@ def user_followings(request, username):
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+def related_users(request):
+    user_id = request.GET.get('userId')
+    user = get_object_or_404(User, id=user_id)
+
+    related_users = User.objects.filter(cluster__exact=movie.cluster)[:10]
+    serializer = UserSerializer(related_users, many=True)
+    return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
+
+
 @api_view(["POST"])
 def login(request):
     user = request.data.get("login", None)
