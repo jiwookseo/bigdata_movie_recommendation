@@ -1,7 +1,6 @@
 <template>
-  <v-container class="pa-2" fluid grid-list-md>
-    <v-layout column>
-      <v-flex v-for="movie in movieList" :key="movie.id" pa-2>
+    <div class="item-list-container">
+      <div v-for="(movie, idx) in movieList" v-if="idx < 10" :key="movie.id">
         <movie-info-bar
           :id="movie.id"
           :img="movie.img"
@@ -11,10 +10,8 @@
           :view-cnt="movie.viewCnt"
         >
         </movie-info-bar>
-      </v-flex>
-      <v-pagination v-if="maxPages > 1" v-model="page" :length="maxPages" />
-    </v-layout>
-  </v-container>
+      </div>
+    </div>
 </template>
 
 <script>
@@ -25,28 +22,14 @@ export default {
   components: {
     MovieInfoBar
   },
-  props: {
-    movieListCards: {
-      type: Array,
-      default: () => new Array(),
-    },
-  },
-  data: () => ({
-    cardsPerPage: 10,
-    page: 1,
-  }),
   computed: {
     ...mapState('movie', ['movieList']),
-    // pagination related variables
-    movieListEmpty: function() {
-      return this.movieListCards.length === 0;
-    },
-    maxPages: function() {
-      return Math.floor((this.movieListCards.length + this.cardsPerPage - 1) / this.cardsPerPage)
-    },
-    movieListCardsSliced: function() {
-      return this.movieListCards.slice(this.cardsPerPage * (this.page - 1), this.cardsPerPage * this.page)
-    },
   }
 };
 </script>
+
+<style scoped lang="scss">
+.item-list-container {
+  padding: 3vh 2vw;
+}
+</style>

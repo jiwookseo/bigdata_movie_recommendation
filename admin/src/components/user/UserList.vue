@@ -1,24 +1,24 @@
 <template>
-  <div>
-    <div>
-      this is UserList
+  <div class="item-list-container">
+    <div v-for="(user, idx) in userList" :key="user.id">
+      <user-info-bar 
+        :username="user.username"
+        :age="user.age"
+        :gender="user.gender"
+        :isStaff="user.isStaff"
+      >  
+      </user-info-bar>
     </div>
-    <ul>
-      <li v-for="user in userList">
-        <user-info-bar :username="user"></user-info-bar>
-      </li>
-    </ul>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import UserInfoBar from './UserInfoBar'
 
 export default {
-  data() {
-    return {
-      userList: ['user1', 'user2', 'user3']
-    }
+  computed: {
+    ...mapState('user', ['userList'])
   },
   components: {
     UserInfoBar
@@ -27,5 +27,7 @@ export default {
 </script>
 
 <style scoped>
-
+.item-list-container {
+  padding: 3vh 2vw;
+}
 </style>

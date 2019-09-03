@@ -164,9 +164,6 @@ def movie_clustering(request):
 
     
 
-
-
-
 # K-Means Customized Api (User)
 def kmeans_custom_clustering_users(k, iters):
     
