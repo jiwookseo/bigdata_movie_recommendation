@@ -69,18 +69,20 @@
       }
     }),
     mounted() {
-      this.closeModal();
+      this.closeModal(this.resetForm);
     },
     computed: {
       ...mapState({getUsername: state => state.data.username}),
       ...mapState({getRegister: state => state.data.register})
     },
     methods: {
-      closeModal() {
+      closeModal(func) {
         const modal = document.getElementsByClassName("sign_modal")[0];
+        const change = func;
         window.onclick = function(e) {
           if (e.target === modal) {
             modal.style.display = "none";
+            change();
           }
         };
       },
@@ -99,6 +101,9 @@
         } else {
           this.form = "register";
         }
+      },
+      resetForm() {
+        this.form = "sign"
       },
       async register() {
         const params = {
