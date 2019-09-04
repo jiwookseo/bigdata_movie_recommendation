@@ -34,5 +34,10 @@ export default {
 
   getRelatedUsers(params) {
     return axios.get(`${apiUrl}/users/related_users/${params.userId}`)
-  }
+  },
+
+  // login
+  login(params) {
+    return axios.post(`${apiUrl}/login/`, params);
+  },
 }
