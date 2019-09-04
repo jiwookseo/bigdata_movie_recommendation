@@ -16,7 +16,8 @@ const state = {
   username: "",
   userFollowings: [],
   register: "register",
-  errors: {}
+  regErrors: {},
+  logErrors: {}
 };
 
 // movie shape
@@ -74,6 +75,7 @@ const actions = {
       commit("setUserFollowings", res2.data);
     } else {
       commit("setIsLogin", false);
+      commit("setLogError", res.data)
     }
   },
   async logout({ commit }) {
@@ -85,7 +87,7 @@ const actions = {
     if (res.status === 201) {
       commit("setRegister", "sign");
     } else if (res.status === 203) {
-        commit("setError", res.data)
+        commit("setRegError", res.data)
     }
   },
 
@@ -151,7 +153,8 @@ const mutations = {
   setIsLogin: (state, payload) => (state.isLogin = payload),
   setUsername: (state, payload) => (state.username = payload),
   setRegister: (state, payload) => (state.register = payload),
-  setError: (state, payload) => (state.errors = payload)
+  setRegError: (state, payload) => (state.regErrors = payload),
+  setLogError: (state, payload) => (state.logErrors = payload)
 };
 
 export default {
