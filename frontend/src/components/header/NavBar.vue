@@ -17,6 +17,11 @@
           <font-awesome-icon icon="user" class="login_icon" />
         </router-link>
       </span>
+      <span v-if="getStaff">
+        <a :href="admin" target="_blank">
+          <font-awesome-icon icon="user" class="login_icon" />
+        </a>
+      </span>
     </div>
   </nav>  
 </template>
@@ -49,10 +54,13 @@ export default {
       modal.style.display = "flex";
     },
     userState: "guest",
-    profile: "profile"
+    profile: "profile",
+    admin: "http://localhost:8081/admin",
   }),
   computed: {
-    ...mapState({getUsername: state => state.data.username})
+    ...mapState({getUsername: state => state.data.username}),
+    ...mapState({getStaff: state => state.data.checkStaff}),
+    ...mapState({getToken: state => state.data.token})
   },
   watch: {
     getUsername: function() {
@@ -61,6 +69,9 @@ export default {
       } else {
         this.userState = "guest";
       }
+    },
+    getStaff: function() {
+      return this.getStaff;
     }
   },
 }
@@ -75,10 +86,15 @@ export default {
     align-items: center;
     background-color: rgb(33, 33, 33);
     opacity: 0.8;
+    width: 100%;
+    padding: {
+      left: 30px;
+      right: 30px;
+    }
   }
 
   .nav__title {
-    padding-left: 30px;
+
     font-size: 24px;
     font-weight: 700;
     cursor: pointer;
@@ -89,9 +105,10 @@ export default {
   }
   
   .nav__icon-bar {
-    padding-right: 30px;
+    margin-right: 20px;
     display: flex;
     align-items: center;
+    justify-content: space-around;
 
     span {
       cursor: pointer;
@@ -103,7 +120,6 @@ export default {
     }
     span + span {
       margin-left: 30px;
-      margin-right: 30px;
     }
   }
 

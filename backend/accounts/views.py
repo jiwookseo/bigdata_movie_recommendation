@@ -118,15 +118,21 @@ def login(request):
     user = request.data.get("login", None)
     form = CustomUserAuthenticationForm(request, data=user)
     if form.is_valid():
-        response = create_token(user)
-        token = response.json()["token"]
+        token = create_token(user)
+        token = token.json()["token"]
         user = form.get_user()
         user.refresh_token = token
         user.save()
 
         auth_login(request, user)
 
-        return Response(data=response.json(), status=status.HTTP_200_OK)
+        response = {
+            "token": token,
+            "username": user.username,
+            "is_staff": user.is_staff
+        }
+
+        return Response(data=response, status=status.HTTP_200_OK)
     else:
         error = form.errors.get_json_data()
         print(error)
