@@ -114,6 +114,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css?family=Jua|Ubuntu&display=swap');
+
 .jumbotron {
   top: 0;
   width: 100vw;
@@ -171,6 +173,7 @@ export default {
 .jumbotron__text-title {
   font-size: 48px;
   font-weight: 700;
+  font-family: 'Ubuntu', sans-serif;
   color: #fff;
   letter-spacing: 5px;
 }
@@ -185,10 +188,11 @@ export default {
   div {
     width: 50%;
     font-size: 28px;
-    font-weight: 700;
+    font-weight: 500;
+    font-family: 'Jua', sans-serif;
     box-sizing: border-box;
     display: flex;
-    justify-content: cneter;
+    justify-content: center;
     align-items: center;
 
     &:first-child {
@@ -214,6 +218,7 @@ export default {
     font-size: 24px;
     font-weight: 600;
     line-height: 1.6;
+    font-family: 'Ubuntu', sans-serif;
   }
 }
 
