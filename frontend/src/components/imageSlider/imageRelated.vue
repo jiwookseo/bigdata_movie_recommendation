@@ -1,15 +1,14 @@
 <template>
   <div class="cluster--movie">
     <div class="cluster--movie-img">
-      <img :src="imgUrl" />
+      <img :src="imgUrl">
     </div>
     <div class="cluster--movie-info">
       <div class="cluster--movie-info-basic">
-      <h4>{{movie.title}}</h4>
-      <p>{{movie.description}}</p>
+        <h4>{{ movie.title }}</h4>
+        <p>{{ movie.description }}</p>
       </div>
-      <div class="cluster--movie-info-description">
-      </div>
+      <div class="cluster--movie-info-description" />
     </div>
   </div>
 </template>
@@ -32,8 +31,8 @@ export default {
 .cluster--movie {
   display: flex;
   flex-direction: column;
-  max-width: 20vw;
-  min-width: 20vw;
+  max-width: 20%;
+  min-width: 20%;
   height: 100%;
 
   & + & {
@@ -69,7 +68,5 @@ export default {
     letter-spacing: 1.6px;
   }
 }
-
-
 
 </style>

@@ -17,9 +17,15 @@
           </div>
         </div>
       </div>
+
+      <!-- 회원가입 -->
       <div v-if="form === 'register'" class="register">
+        <Snackbar v-if="snackbar" />
         <div class="sign_div">
           <div class="sign_title_div">
+            <button class="back_button">
+              <i aria-hidden="true" class="v-icon mdi mdi-arrow-left hb-color" @click="changeForm" />
+            </button>
             <p class="sign_title">Register</p>
           </div>
           <div class="register_form">
@@ -43,14 +49,14 @@
             <div class="age mt-30">
               <label for="age">age</label>
               <select id="age" v-model="reg_age" required>
-                <option v-for="(age, i) of ageList" :value="i">{{ age }}</option>
+                <option v-for="(age, i) of ageList" :key="age + i" :value="i">{{ age }}</option>
               </select>
             </div>
             <span>{{ err_age }}</span>
             <div class="occupation mt-30">
               <label for="occupation">occupation</label>
               <select id="occupation" v-model="reg_occupation" required>
-                <option v-for="(occupation, i) of occupationList" :value="i">{{ occupation }}</option>
+                <option v-for="(occupation, i) of occupationList" :key="occupation + i" :value="i">{{ occupation }}</option>
               </select>
             </div>
             <span>{{ err_occupation }}</span>
@@ -61,15 +67,29 @@
           </div>
         </div>
       </div>
-      <div class="sign_image"></div>
+      <div class="sign_image" />
+    </div>
+    <div class="text-center">
+      <v-snackbar v-model="snackbar" :multi-line="multiLine">
+        {{ text }}
+        <v-btn color="red" text @click="snackbar = false">
+          Close
+        </v-btn>
+      </v-snackbar>
     </div>
   </div>
 </template>
+
+
 <script>
   import { mapState, mapActions } from "vuex";
+
   export default {
     name: "Sign",
     data: () => ({
+      multiLine: true,
+      snackbar: false,
+      text: '회원이 되신 것을 환영합니다 :)',
       loginInput: {
         username: "",
         password: "",
@@ -77,14 +97,14 @@
       reg_username: "",
       reg_password1: "",
       reg_password2: "",
-      reg_age: "",
+      reg_age: 0,
       reg_gender: "",
-      reg_occupation: "",
+      reg_occupation: 0,
       err_username: "",
       err_password1: "",
       err_password2: "",
       err_age: "",
-      err_gender: "",
+      err_gender: "F",
       err_occupation: "",
       username: "",
       form: "sign",
@@ -99,7 +119,8 @@
     }),
     computed: {
       ...mapState({getUsername: state => state.data.username}),
-      ...mapState({getRegister: state => state.data.register})
+      ...mapState({getRegister: state => state.data.register}),
+      ...mapState({getError: state => state.data.errors}),
     },
     watch: {
       reg_username: function() {
@@ -145,14 +166,24 @@
         this.username = this.getUsername;
       },
       changeForm() {
+        this.resetRegister();
         if (this.form === "register") {
           this.form = "sign";
         } else {
+          this.snackbar = false;
           this.form = "register";
         }
       },
       resetForm() {
         this.form = "sign"
+      },
+      resetRegister() {
+        this.reg_username = "";
+        this.reg_password1 = "";
+        this.reg_password2 = "";
+        this.reg_age = 0;
+        this.reg_gender = "F";
+        this.reg_occupation = 0;
       },
       async register() {
         this.chkRegister();
@@ -170,11 +201,47 @@
             ]
           };
           await this.setRegister(params);
-          this.form = this.getRegister;
+          const s = this.getRegister;
+          if (s === "sign") {
+            this.snackbar = true;
+            this.form = s
+          } else {
+            this.snackbar = false;
+            if (this.getError.username) {
+              for (const error of this.getError.username) {
+                this.err_username += error.message;
+              }
+            }
+            if (this.getError.password1) {
+              for (const error of this.getError.password1) {
+                this.err_password1 += error.message;
+              }
+            }
+            if (this.getError.password2) {
+              for (const error of this.getError.password2) {
+                this.err_password2 += error.message;
+              }
+            }
+            if (this.getError.age) {
+              for (const error of this.getError.age) {
+                this.err_age += error.message;
+              }
+            }
+            if (this.getError.gender) {
+              for (const error of this.getError.gender) {
+                this.err_gender += error.message;
+              }
+            }
+            if (this.getError.occupation) {
+              for (const error of this.getError.occupation) {
+                this.err_occupation += error.message;
+              }
+            }
+          }
         }
       },
       chkUsername() {
-        if (this.reg_username.length < 6) {
+        if (this.reg_username.length !== 0 && this.reg_username.length < 6) {
           this.err_username = "username의 길이는 6자 이상이어야 합니다.";
         } else {
           this.err_username = "";
@@ -182,7 +249,7 @@
         this.chkRegister();
       },
       chkPass1() {
-        if (this.reg_password1.length < 8) {
+        if (this.reg_password1.length !== 0 && this.reg_password1.length < 8) {
           this.err_password1 = "password의 길이는 8자 이상이어야 합니다.";
           this.checkRegister = false;
         } else {
@@ -249,7 +316,7 @@
     };
     align: {
       items: center;
-    }
+    };
   }
   .sign_contents {
     background: {
@@ -372,7 +439,11 @@
       width: 380px;
     }
   }
+  .sign_title_div {
+    width: 70%;
+  }
   .sign_title {
+    text-align: center;
     margin: 0;
     font: {
       family: Consolas;
@@ -488,17 +559,34 @@
     display: flex;
     justify: {
       content: space-between;
-    }
+    };
     color: rgba(117, 117, 117, 0.68);
   }
   #occupation {
     width: 100%;
     margin: {
       left: 10px;
-    }
+    };
     border: {
       bottom: rgba(117, 117, 117, 0.68) 1.5px solid;
     };
     outline: none;
+  }
+  .back_button {
+    position: absolute;
+    margin: {
+      right: 100%;
+    };
+    background: {
+      color: rgba(117, 117, 117, 0.18);
+    };
+    border: {
+      radius: 15px;
+    };
+    width: 30px;
+    height: 30px;
+  }
+  .hb-color {
+    color: rgba(255, 183, 0, 1.0);
   }
 </style>
