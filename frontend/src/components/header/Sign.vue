@@ -17,7 +17,10 @@
           </div>
         </div>
       </div>
+
+<!--      회원가입-->
       <div v-if="form === 'register'" class="register">
+        <Snackbar v-if="snackbar"/>
         <div class="sign_div">
           <div class="sign_title_div">
             <button class="back_button">
@@ -66,13 +69,27 @@
       </div>
       <div class="sign_image" />
     </div>
+    <div class="text-center">
+      <v-snackbar v-model="snackbar" :multi-line="multiLine">
+        {{ text }}
+        <v-btn color="red" text @click="snackbar = false">
+          Close
+        </v-btn>
+      </v-snackbar>
+    </div>
   </div>
 </template>
+
+
 <script>
   import { mapState, mapActions } from "vuex";
+
   export default {
     name: "Sign",
     data: () => ({
+      multiLine: true,
+      snackbar: false,
+      text: '회원이 되신 것을 환영합니다 :)',
       loginInput: {
         username: "",
         password: "",
@@ -152,6 +169,7 @@
         if (this.form === "register") {
           this.form = "sign";
         } else {
+          this.snackbar = false;
           this.form = "register";
         }
       },
@@ -182,7 +200,13 @@
             ]
           };
           await this.setRegister(params);
-          this.form = this.getRegister;
+          const s = this.getRegister;
+          if (s === "sign") {
+            this.snackbar = true;
+            this.form = s
+          } else {
+            this.snackbar = false;
+          }
         }
       },
       chkUsername() {
