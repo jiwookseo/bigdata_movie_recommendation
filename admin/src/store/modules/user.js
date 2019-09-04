@@ -64,17 +64,30 @@ const actions = {
 
   async setLogin({ commit }, params) {
     const res = await api.login(params);
-    if (res.status === 200) {
+    if (res.status === 200 && res.data.is_staff) {
       commit("setIsLogin", true);
       commit("setUsername", res.data.username);
       commit("setStaff", res.data.is_staff);
       commit("setToken", res.data.token);
+      sessionStorage.setItem("adminLogin", true);
+      sessionStorage.setItem("adminName", res.data.username);
+      sessionStorage.setItem("adminCheck", res.data.is_staff);
+      sessionStorage.setItem("adminToken", res.data.token);
     } else {
       commit("setIsLogin", false);
-      commit("setLogError", res.data)
     }
   },
-}
+  async logout({ commit }, params) {
+    const res = await api.logout(params);
+    if (res.status === 200) {
+      commit('setIsLogin', false);
+      commit("setUsername", "");
+      commit("setStaff", false);
+      commit("setToken", "");
+      sessionStorage.clear();
+    }
+  },
+};
 
 
 export default {

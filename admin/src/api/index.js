@@ -36,8 +36,11 @@ export default {
     return axios.get(`${apiUrl}/users/related_users/${params.userId}`)
   },
 
-  // login
+  // login, logout
   login(params) {
     return axios.post(`${apiUrl}/login/`, params);
+  },
+  logout(params) {
+    return axios.post(`${apiUrl}/logout/`, params);
   },
 }
