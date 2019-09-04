@@ -22,9 +22,17 @@ export default {
 
 
   // Users
+  getUserList() {
+    return axios.get(`${apiUrl}/admin/users/`)
+  },
+
   clusteringUsers(params) {
     return axios.post(`${apiUrl}/clustering/users/`, 
       params,
     )
+  },
+
+  getRelatedUsers(params) {
+    return axios.get(`${apiUrl}/users/related_users/${params.userId}`)
   }
 }
