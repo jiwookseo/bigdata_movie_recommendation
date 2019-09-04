@@ -6,6 +6,7 @@
 </template>
 
 <script>
+  import { mapState } from "vuex"
   import NavBar from "./NavBar"
   import Sign from "./Sign"
 
@@ -14,6 +15,31 @@
     components: {
       NavBar,
       Sign
+    },
+    computed: {
+      ...mapState({getToken: state => state.data.token}),
+      ...mapState({getIsLogin: state => state.data.isLogin}),
+      ...mapState({getUsername: state => state.data.username}),
+      ...mapState({getIsStaff: state => state.data.checkStaff})
+    },
+    mounted() {
+      this.checkLogin();
+    },
+    methods: {
+      checkLogin() {
+        if (sessionStorage.getItem("isLogin") !== null) {
+          this.$store.state.data.isLogin = sessionStorage.getItem("isLogin");
+        }
+        if (sessionStorage.getItem("jwt") !== null) {
+          this.$store.state.data.token = sessionStorage.getItem("jwt");
+        }
+        if (sessionStorage.getItem("username") !== null) {
+          this.$store.state.data.username = sessionStorage.getItem("username");
+        }
+        if (sessionStorage.getItem("isStaff") !== null) {
+          this.$store.state.data.checkStaff = sessionStorage.getItem("isStaff");
+        }
+      }
     }
   }
 </script>
