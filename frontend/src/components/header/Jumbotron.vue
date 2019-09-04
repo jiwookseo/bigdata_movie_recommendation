@@ -49,8 +49,8 @@ export default {
     handleClick: function(n) {
       let s = this.slideNum + n;
       if (s===1){
-        this.slideNum = -3
-      } else if (s===-4){
+        this.slideNum = -4
+      } else if (s===-5){
         this.slideNum = 0
       } else {
         this.slideNum = s

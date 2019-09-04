@@ -36,7 +36,10 @@
 import ImageSlider from "../imageSlider"
 export default {
   name: "Profile",
-  components: { ImageSlider }
+  components: { ImageSlider },
+  created(){
+    this.$store.commit('mvUi/setSliderType', "profile")
+  }
 }
 </script>
 

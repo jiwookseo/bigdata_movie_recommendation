@@ -14,6 +14,9 @@ export default {
   components: {
     Jumbotron,
     ImageSlider
+  },
+  created(){
+    this.$store.commit('mvUi/setSliderType', "board")
   }
 }
 </script>

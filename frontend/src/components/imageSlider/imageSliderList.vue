@@ -1,11 +1,14 @@
 <template>
   <div class="image-slider__list">
     <div class="image-slider__title">
-      <h2>
+      <h2 v-if="sliderType==='board'">
         <select v-model="selected" name="target">
           <option class="movie-option" value>{{ data.type }} 선택</option>
           <option class="movie-option" v-for="(key, value) in data.selectObject" :key="key" :value="value">{{ key }}</option>
         </select> 좋아하는 영화
+      </h2>
+      <h2 v-if="sliderType==='profile'">
+        {{ data.type }}
       </h2>
     </div>
     <div class="image-slider__wrapper">
@@ -51,7 +54,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("mvUi", ["detailToggler", "detailType"]),
+    ...mapGetters("mvUi", ["detailToggler", "detailType", "sliderType"]),
     type() {
       if (this.data.type === "연령대") {
         return "Age";
@@ -62,14 +65,25 @@ export default {
       }
     },
     movieList() {
-      return this.$store.getters[`data/rec${this.type}`].map(movie => ({
-        ...movie,
-        description: movie.story.slice(0, 500),
-        img:
-          movie.stillCut ||
-          movie.poster ||
-          "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
-      }));
+      if (this.$store.state.mvUi.sliderType === "board"){
+        return this.$store.getters[`data/rec${this.type}`].map(movie => ({
+          ...movie,
+          description: movie.story.slice(0, 500),
+          img:
+            movie.stillCut ||
+            movie.poster ||
+            "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
+        }))
+      } else if (this.$store.state.mvUi.sliderType === "profile"){
+        return this.$store.getters[`data/rec${this.type}`].map(movie => ({
+          ...movie,
+          description: movie.story.slice(0, 500),
+          img:
+            movie.stillCut ||
+            movie.poster ||
+            "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
+        }))
+      };
     },
     toggleDetail() {
       return this.detailToggler && this.detailType === this.type;
