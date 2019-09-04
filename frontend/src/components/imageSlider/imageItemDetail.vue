@@ -23,7 +23,7 @@
       </div>
       <div v-if="active.cluster" class="detail--related-movie">
         <div class="cluster--wrapper" :style="{ transform: 'translateX(' + -slideIndex*20 +'vw)' }">
-          <ImageRelated 
+          <ImageRelated
             v-for="rMovie in relativeMovie"
             :key="rMovie.id"
             :movie="rMovie"
@@ -129,6 +129,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css?family=Jua|Ubuntu&display=swap');
+
 .image-item-detail {
   margin-top: 30px;
   width: 100%;
@@ -191,6 +193,7 @@ export default {
 
 .detail--title {
   padding: 30px 0 0 40px;
+  font-family: 'Ubuntu', sans-serif;
 }
 
 .detail--score {
@@ -219,9 +222,10 @@ export default {
 .detail--description {
   padding: 30px 20px 0 40px;
   p {
+    font-family: 'Ubuntu', sans-serif;
     font-size: 18px;
-    color: #ddd;
     font-weight: 700;
+    color: #ddd;
     line-height: 1.4;
   }
 }

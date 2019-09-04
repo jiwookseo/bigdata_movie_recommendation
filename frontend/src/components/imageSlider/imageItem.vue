@@ -85,6 +85,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css?family=Jua|Ubuntu&display=swap');
+
 .image-item--box {
   display: flex;
   flex-direction: column;
@@ -107,6 +109,7 @@ export default {
     color: #fff;
     font-weight: 500;
     font-size: 18px;
+    font-family: 'Ubuntu', sans-serif;
   }
 }
 
@@ -123,8 +126,10 @@ export default {
   background-color: rgba(33, 33, 33, 0.7);
 
   color: #ddd;
+  font-family: 'Ubuntu', sans-serif;
   font-weight: 400;
   font-size: 13px;
+
   line-height: 1.2;
 }
 
