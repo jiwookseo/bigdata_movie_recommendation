@@ -14,10 +14,10 @@
       </div>
       <!-- 아래 화살표 -->
       <div class="image-item--under-expand">
-        <span v-show="!toggle" @click="handleToggle">
+        <span v-show="!toggle" @click="handleToggleOpen">
           <font-awesome-icon icon="sort-down" size="2x" />
         </span>
-        <span v-show="toggle" @click="handleToggle">
+        <span v-show="toggle" @click="handleToggleClose">
           <font-awesome-icon icon="sort-up" size="2x" />
         </span>
       </div>
@@ -65,16 +65,20 @@ export default {
       this.showDescription = !this.showDescription;
       if (this.detailType === this.type) {
         this.$store.commit("mvUi/setActivateMovie", this.movie);
+        this.$store.dispatch("mvUi/setRelatedMovies", {movieId: this.movie.id})
       }
     },
     handleMouseLeave: function() {
       this.showDescription = !this.showDescription;
     },
 
-    handleToggle: function() {
+    handleToggleOpen: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
       this.$store.commit("mvUi/setActivateMovie", this.movie);
       this.$store.dispatch("mvUi/setRelatedMovies", {movieId: this.movie.id})
+    },
+    handleToggleClose: function() {
+      this.$store.dispatch("mvUi/setDetailToggler", this.type);
     }
   }
 };

@@ -43,14 +43,14 @@
             <div class="age mt-30">
               <label for="age">age</label>
               <select id="age" v-model="reg_age" required>
-                <option v-for="(age, i) of ageList" :value="i">{{ age }}</option>
+                <option v-for="(age, i) of ageList" :key="i" :value="i">{{ age }}</option>
               </select>
             </div>
             <span>{{ err_age }}</span>
             <div class="occupation mt-30">
               <label for="occupation">occupation</label>
               <select id="occupation" v-model="reg_occupation" required>
-                <option v-for="(occupation, i) of occupationList" :value="i">{{ occupation }}</option>
+                <option v-for="(occupation, i) of occupationList" :key="i" :value="i">{{ occupation }}</option>
               </select>
             </div>
             <span>{{ err_occupation }}</span>

@@ -75,6 +75,7 @@ export default {
 
 <style lang="scss" scoped>
 .image-slider {
+  position: relative;
   padding: 40px 0;
   background-color: #111;
   div + div {

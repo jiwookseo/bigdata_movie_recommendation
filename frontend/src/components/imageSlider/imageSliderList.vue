@@ -186,7 +186,7 @@ export default {
 
 .image-slider__arrow-right {
   position: absolute;
-  right: 0;
+  right: 20px;
   width: 30px;
   height: 80px;
   display: flex;
@@ -204,7 +204,7 @@ export default {
   animation: bounce-in 1s;
 }
 .bounce-leave-active {
-  animation: bounce-in 1s reverse;
+  animation: bounce-out 0.4s;
 }
 @keyframes bounce-in {
   0% {
@@ -215,6 +215,23 @@ export default {
   }
   100% {
     transform: scale(1);
+  }
+}
+@keyframes bounce-out {
+  0% {
+    transform: scaleY(0.8);
+  }
+  25% {
+    transform: scaleY(0.6);
+  }
+  50% {
+    transform: scaleY(0.4);
+  }
+  75% {
+    transform: scaleY(0.2);
+  }
+  100% {
+    transform: scaleY(0);
   }
 }
 </style>

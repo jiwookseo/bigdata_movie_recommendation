@@ -27,13 +27,16 @@
     </div>
 
     <div class="profile--detail">
+      <ImageSlider />
     </div>
   </div>
 </template>
 
 <script>
+import ImageSlider from "../imageSlider"
 export default {
-  name: "Profile"
+  name: "Profile",
+  components: { ImageSlider }
 }
 </script>
 
@@ -44,6 +47,7 @@ export default {
     padding-top: 64px;
     background-color: #111;
     min-height: 100vh;
+    height: auto;
   }
 
   .profile--info {
@@ -52,7 +56,8 @@ export default {
     align-items: space-between;
 
     width: 25%;
-    height: calc(100vh - 64px);
+    min-height: calc(100vh - 64px);
+    height: auto;
   }
 
   .profile--info-image {
@@ -131,6 +136,7 @@ export default {
 
   .profile--detail {
     width: 80%;
-    height: calc(100vh - 64px);
+    min-height: calc(100vh - 64px);
+    overflow-x: hidden;
   }
 </style>

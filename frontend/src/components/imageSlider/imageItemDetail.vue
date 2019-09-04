@@ -1,5 +1,5 @@
 <template>
-  <div class="image-item-detail">
+  <div class="image-item-detail" ref="detailView">
     <div class="image-item--img-canvas" :class="classChanger">
       <img :src="movie.img" />
     </div>
@@ -24,9 +24,9 @@
       <div class="detail--related-movie" v-if="active.cluster">
         <div class="cluster--wrapper" :style="{ transform: 'translateX(' + -slideIndex*20 +'vw)' }">
           <ImageRelated 
-            v-for="movie in relativeMovie"
-            :key="movie.id"
-            :movie="movie"
+            v-for="cmovie in relativeMovie"
+            :key="cmovie.id"
+            :movie="cmovie"
           />
         </div>
         <div class="cluster--arrow-left" v-if="slideIndex >= 1">
@@ -34,7 +34,7 @@
             <font-awesome-icon icon="arrow-left" size="2x" />
           </span>
         </div>
-        <div class="cluster--arrow-right" v-if="slideIndex < 7">
+        <div class="cluster--arrow-right" v-if="slideIndex < 4">
           <span @click="handleClick(1)">
             <font-awesome-icon icon="arrow-right" size="2x" />
           </span>
@@ -110,6 +110,21 @@ export default {
     handleClick: function(n) {
       this.slideIndex = this.slideIndex + n;
     }
+  },
+  mounted(){
+    if (window.scrollY <= 323){
+      window.scroll({
+        behavior: 'smooth',
+        left: 0,
+        top: 300
+      })
+    } else if (window.scrollY <= 602){
+      window.scroll({
+        behavior: 'smooth',
+        left: 0,
+        top: this.$refs.detailView.clientHeight-400
+      })
+    }
   }
 };
 </script>
@@ -117,15 +132,14 @@ export default {
 <style lang="scss" scoped>
 .image-item-detail {
   margin-top: 30px;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
-  background-color: red;
   transition: all 0.4s ease-in-out;
 }
 
 .image-item--img-canvas {
   position: absolute;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   img {
     width: 100%;
@@ -138,20 +152,6 @@ export default {
   }
 }
 
-.detail--close-box {
-  position: absolute;
-  display: flex;
-  justify-content: flex-end;
-  width: 100vw;
-  padding-right: 40px;
-
-  span {
-    color: #fff;
-    font-size: 36px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-}
 
 .detail--content-box {
   position: relative;
@@ -165,13 +165,28 @@ export default {
   background-color: rgba(33, 33, 33, 0.6);
 
   &.cluster {
-    width: 100vw;
+    width: 100%;
   }
 
   h2 {
     color: #fff;
     font-weight: 700;
     font-size: 36px;
+  }
+}
+
+.detail--close-box {
+  position: absolute;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding-right: 40px;
+
+  span {
+    color: #fff;
+    font-size: 36px;
+    font-weight: 700;
+    cursor: pointer;
   }
 }
 
@@ -230,9 +245,9 @@ export default {
 }
 
 .detail--related-movie {
+  position: relative;
   margin-top: 80px;
-  width: 100%;
-  height: 300px;
+  max-width: 100%;
 }
 
 .cluster--wrapper {
@@ -244,13 +259,13 @@ export default {
 }
 
 .cluster--arrow-left {
+  position: absolute;
   width: 50px;
   height: 50px;
   background-color: rgba(33, 33, 33, 0.6);
   color: white;
   top: calc(50% - 25px);
   left: 0;
-  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -258,13 +273,13 @@ export default {
 }
 
 .cluster--arrow-right {
+  position: absolute;
   width: 50px;
   height: 50px;
   background-color: rgba(33, 33, 33, 0.6);
   color: white;
   top: calc(50% - 25px);
-  right: 20px;
-  position: absolute;
+  right: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
