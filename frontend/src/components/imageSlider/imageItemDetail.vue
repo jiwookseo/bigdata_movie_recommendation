@@ -1,7 +1,7 @@
 <template>
   <div class="image-item-detail">
     <div class="image-item--img-canvas" :class="classChanger">
-      <img :src="movie.img" />
+      <img :src="movie.img">
     </div>
     <div class="detail--content-box" :class="classChanger">
       <div class="detail--close-box">
@@ -12,7 +12,7 @@
         <span>평균별점</span>
         <span>4.0</span>
       </div>
-      <div class="detail--description" v-if="active.base">
+      <div v-if="active.base" class="detail--description">
         <p>{{ ellipsisDescription }}</p>
       </div>
       <div class="detail--info">
@@ -21,20 +21,20 @@
           <span v-for="(name, idx) in movie.genres" :key="movie.id+idx">{{ name }}</span>
         </div>
       </div>
-      <div class="detail--related-movie" v-if="active.cluster">
+      <div v-if="active.cluster" class="detail--related-movie">
         <div class="cluster--wrapper" :style="{ transform: 'translateX(' + -slideIndex*20 +'vw)' }">
           <ImageRelated 
-            v-for="movie in relativeMovie"
-            :key="movie.id"
-            :movie="movie"
+            v-for="rMovie in relativeMovie"
+            :key="rMovie.id"
+            :movie="rMovie"
           />
         </div>
-        <div class="cluster--arrow-left" v-if="slideIndex >= 1">
+        <div v-if="slideIndex >= 1" class="cluster--arrow-left">
           <span @click="handleClick(-1)">
             <font-awesome-icon icon="arrow-left" size="2x" />
           </span>
         </div>
-        <div class="cluster--arrow-right" v-if="slideIndex < 7">
+        <div v-if="slideIndex < 7" class="cluster--arrow-right">
           <span @click="handleClick(1)">
             <font-awesome-icon icon="arrow-right" size="2x" />
           </span>
@@ -55,7 +55,6 @@ import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 library.add(faArrowLeft, faArrowRight);
 
 import ImageRelated from "./imageRelated"
-import { mapGetters } from 'vuex';
 export default {
   name: "ImageItemDetail",
   components: { ImageRelated, FontAwesomeIcon },
