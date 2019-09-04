@@ -1,19 +1,13 @@
 <template>
-  <v-app id="app">
-    <v-app-bar app clipped-left color="indigo">
-      <!-- <v-app-bar-nav-icon class="white--text" @click="drawer = !drawer" /> -->
-      <span class="title ml-3 mr-5 white--text"><i class="fas fa-user-shield"></i> | Admin Page</span>
-      <v-spacer />
-    </v-app-bar>
+  <div id="app">
+    <!-- NavBar -->
+    <div class="navbar">
+      <div class="navbar-title"><i class="fas fa-user-shield"></i> ADMIN PAGE</div>
+    </div>
 
-    <v-content>
-      <v-container fluid fill-height class="grey lighten-4">
-        <v-layout justify-center align-center>
-          <router-view />
-        </v-layout>
-      </v-container>
-    </v-content>
-  </v-app>
+    <!-- Content Container -->
+    <router-view />
+  </div>
 </template>
 
 <script>
@@ -22,15 +16,32 @@ import { mapActions } from 'vuex'
 
 export default {
   methods: {
-    ...mapActions('movie', ['getMovieList'])
+    ...mapActions('movie', ['getMovieList']),
+    ...mapActions('user', ['getUserList']),
   },
   created() {
     this.getMovieList()
+    this.getUserList()
   }
 };
 </script>
 
-<style>
+<style lang="scss">
 
+ul {
+  list-style-type: none;
+}
+
+.navbar {
+  background-color: #1867C0;
+  height: 5vh;
+  color: white;
+  display: flex;
+  align-items: center;
+  .navbar-title {
+    margin-left: 3vw;
+    font-size: 2.5vh;
+  }
+}
 
 </style>
