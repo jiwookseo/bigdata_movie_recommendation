@@ -15,7 +15,8 @@ const state = {
   isLogin: false,
   username: "",
   userFollowings: [],
-  register: "register"
+  register: "register",
+  errors: {}
 };
 
 // movie shape
@@ -83,6 +84,8 @@ const actions = {
     const res = await api.register(params);
     if (res.status === 201) {
       commit("setRegister", "sign");
+    } else if (res.status === 203) {
+        commit("setError", res.data)
     }
   },
 
@@ -147,7 +150,8 @@ const mutations = {
   setRecGender: (state, payload) => (state.recGender = payload),
   setIsLogin: (state, payload) => (state.isLogin = payload),
   setUsername: (state, payload) => (state.username = payload),
-  setRegister: (state, payload) => (state.register = payload)
+  setRegister: (state, payload) => (state.register = payload),
+  setError: (state, payload) => (state.errors = payload)
 };
 
 export default {

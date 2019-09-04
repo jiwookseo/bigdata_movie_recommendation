@@ -1,15 +1,14 @@
 <template>
   <div class="cluster--movie">
     <div class="cluster--movie-img">
-      <img :src="imgUrl" />
+      <img :src="imgUrl">
     </div>
     <div class="cluster--movie-info">
       <div class="cluster--movie-info-basic">
-      <h4>{{movie.title}}</h4>
-      <p>{{movie.description}}</p>
+        <h4>{{ movie.title }}</h4>
+        <p>{{ movie.description }}</p>
       </div>
-      <div class="cluster--movie-info-description">
-      </div>
+      <div class="cluster--movie-info-description" />
     </div>
   </div>
 </template>
