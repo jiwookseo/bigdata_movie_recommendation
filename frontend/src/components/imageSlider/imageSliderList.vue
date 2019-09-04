@@ -115,7 +115,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.image-slider__list {
+@import url('https://fonts.googleapis.com/css?family=Jua|Ubuntu&display=swap');
+  .image-slider__list {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -143,7 +144,7 @@ export default {
     cursor: pointer;
     font-weight: 700;
     &:hover {
-      background-color: rgba(255, 177, 1);      
+      background-color: rgba(255, 177, 1);
       color: #111;
       border: none;
       outline: none;
@@ -153,6 +154,7 @@ export default {
   .movie-option {
     outline: none;
     border: none;
+    font-family: 'Ubuntu', sans-serif;
     font-size: 16px;
     font-weight: 700;
     text-align: center;
@@ -161,6 +163,7 @@ export default {
     &:first-child {
       color: #111;
       font-size: 18px;
+
     }
     &:active, &:focus {
       border: none;

@@ -17,14 +17,13 @@ const mutations = {
 const actions = {
   async getMovieList({ commit }) {
     const response = await api.getMovieList()
-    const movies = response.data.map(d => ({
-      id: d.id,
-      title: d.title,
-      genres: d.genres_array,
-      viewCnt: d.view_cnt,
-      rating: d.average_rating,
+    const movies = response.data.map(movie => ({
+      id: movie.id,
+      title: movie.title,
+      genres: movie.genres_array,
+      viewCnt: movie.view_cnt,
+      rating: movie.average_rating,
     }))
-    console.log("check")
     commit('setMovieList', movies)
   },
 

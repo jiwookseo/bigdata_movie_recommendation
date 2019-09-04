@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import AdminPage from '../components/pages/AdminPage'
+import AdminPage from '../components/views/AdminPage'
 import MovieList from '../components/movie/MovieList'
 import UserList from '../components/user/UserList'
 

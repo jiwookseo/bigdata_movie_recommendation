@@ -1,0 +1,27 @@
+.data-list-container {
+  padding: 3vh 2vw;
+  box-shadow: 1px 1px 3px gray;
+}
+
+.page-buttons-container {
+  display: flex;
+  justify-content: space-around;
+  margin: 2vh 20vw 0;
+}
+
+.page-button {
+  font-size: 2vw;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  color: #1867C0;
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+    color: #41B883;
+  }
+}
+
+.current-page {
+  transform: scale(1.1);
+  color: #41B883;
+}

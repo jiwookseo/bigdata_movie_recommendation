@@ -17,6 +17,23 @@ const mutations = {
 
 // actions
 const actions = {
+  async getUserList({ commit }) {
+    try {
+      const response = await api.getUserList();
+      const users = response.data.map(user => ({
+        id: user.id,
+        username: user.username,
+        gender: user.gender,
+        age: user.age,
+        occupation: user.occupation,
+        isStaff: user.is_staff
+      }))
+      commit('setUserList', users)
+    } catch(error) {
+      console.log(error);
+    }
+  },
+
   async clusteringUsers({ commit }, params) {
     try {
       const response = await api.clusteringUsers(params);
@@ -25,6 +42,15 @@ const actions = {
       console.log(error);
     }
   },
+
+  async getRelatedUsers({ commit }, params) {
+    try {
+      const response = await api.getRelatedUsers(params);
+      console.log(response.data);
+    } catch(error) {
+      console.log(error);
+    }
+  }
 }
 
 
