@@ -7,8 +7,8 @@
    
     <div class="data-list-container">
       <div class="data-list-header">
-        <div class="list-header-table" :class="{ 'selected': !directory }" @click="selectTable">Movie</div>
-        <div class="list-header-table" :class="{ 'selected': directory }" @click="selectTable">User</div>
+        <div class="list-header-table" :class="[ directory === 'movie'? 'selected' : '' ]" @click="selectTable">Movie</div>
+        <div class="list-header-table" :class="[ directory === 'user'? 'selected' : '' ]" @click="selectTable">User</div>
       </div>
       <div class="data-list-content">
         <router-view />
@@ -19,7 +19,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import SearchForm from '../common/SearchForm'
+import SearchForm from '../module/SearchForm'
 
 export default {
   components: {
@@ -27,7 +27,7 @@ export default {
   },
   data() {
     return {
-      directory: true
+      directory: 'movie'
     }
   },
   methods: {
@@ -35,7 +35,7 @@ export default {
     ...mapActions('user', ['clusteringUsers', 'getRelatedUsers']),
     selectTable(e) {
       const keyword = e.target.innerHTML.toLowerCase();
-      this.directory = !this.directory
+      this.directory = keyword
       this.$router.push({
         name: `${keyword}-list`
       })
@@ -97,7 +97,7 @@ export default {
 .selected {
   color: #1867C0;
   background-color: white;
-  box-shadow: 1px -1px 1px gray;
+  box-shadow: 1px -1px 3px gray;
   &:hover {
     background-color: #1867C0;
     color: white;

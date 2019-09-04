@@ -1,6 +1,6 @@
 <template>
-  <div class="item-info-bar">
-    <div class="item-info">
+  <div class="data-info-bar">
+    <div class="data-info">
       {{ title }} | {{ genresStr }} | {{ rating }} | {{ viewCnt }}
     </div>
     <div class="data-controller">
@@ -46,7 +46,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.item-info-bar {
+.data-info-bar {
   border-radius: 5px;
   height: 5vh;
   display: flex;
@@ -54,7 +54,7 @@ export default {
   align-items: center;
   box-shadow: 1px 1px 3px;
 
-  .item-info {
+  .data-info {
     padding: 0 1vw;
     font-family: 'Lato', sans-serif;
     color: #535353;
