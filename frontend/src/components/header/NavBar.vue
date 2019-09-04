@@ -12,7 +12,7 @@
         <font-awesome-icon icon="search" size="2x" />
       </span>
       <span>
-        <v-icon v-if="userState === 'guest'" class="login_icon" @click="sign">vpn_key</v-icon>
+        <v-icon v-if="userState === false" class="login_icon" @click="sign">vpn_key</v-icon>
         <router-link v-else :to="profile">
           <font-awesome-icon icon="user" class="login_icon" />
         </router-link>
@@ -48,19 +48,19 @@ export default {
       const modal = document.getElementsByClassName("sign_modal")[0];
       modal.style.display = "flex";
     },
-    userState: "guest",
+    userState: false,
     profile: "profile",
     admin: "http://localhost:8081/admin",
   }),
   computed: {
-    ...mapState({getUsername: state => state.data.username}),
+    ...mapState({getIsLogin: state => state.data.isLogin}),
   },
   watch: {
-    getUsername: function() {
-      if (this.getUsername !== "") {
-        this.userState = "login";
+    getIsLogin: function() {
+      if (this.getIsLogin !== "") {
+        this.userState = this.getIsLogin;
       } else {
-        this.userState = "guest";
+        this.userState = this.getIsLogin;
       }
     },
   },

@@ -74,6 +74,10 @@ const actions = {
       commit("setUsername", res.data.username);
       commit("setStaff", res.data.is_staff);
       commit("setToken", res.data.token);
+      sessionStorage.setItem("username", res.data.username);
+      sessionStorage.setItem("isStaff", res.data.is_staff);
+      sessionStorage.setItem("jwt", res.data.token);
+      sessionStorage.setItem("isLogin", true);
       const res2 = await api.getFollowings(state.username);
       commit("setUserFollowings", res2.data);
     } else {
