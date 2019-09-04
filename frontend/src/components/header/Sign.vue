@@ -18,9 +18,9 @@
         </div>
       </div>
 
-<!--      회원가입-->
+      <!-- 회원가입 -->
       <div v-if="form === 'register'" class="register">
-        <Snackbar v-if="snackbar"/>
+        <Snackbar v-if="snackbar" />
         <div class="sign_div">
           <div class="sign_title_div">
             <button class="back_button">
@@ -119,7 +119,8 @@
     }),
     computed: {
       ...mapState({getUsername: state => state.data.username}),
-      ...mapState({getRegister: state => state.data.register})
+      ...mapState({getRegister: state => state.data.register}),
+      ...mapState({getError: state => state.data.errors}),
     },
     watch: {
       reg_username: function() {
@@ -206,6 +207,36 @@
             this.form = s
           } else {
             this.snackbar = false;
+            if (this.getError.username) {
+              for (const error of this.getError.username) {
+                this.err_username += error.message;
+              }
+            }
+            if (this.getError.password1) {
+              for (const error of this.getError.password1) {
+                this.err_password1 += error.message;
+              }
+            }
+            if (this.getError.password2) {
+              for (const error of this.getError.password2) {
+                this.err_password2 += error.message;
+              }
+            }
+            if (this.getError.age) {
+              for (const error of this.getError.age) {
+                this.err_age += error.message;
+              }
+            }
+            if (this.getError.gender) {
+              for (const error of this.getError.gender) {
+                this.err_gender += error.message;
+              }
+            }
+            if (this.getError.occupation) {
+              for (const error of this.getError.occupation) {
+                this.err_occupation += error.message;
+              }
+            }
           }
         }
       },

@@ -22,7 +22,8 @@ def signup(request):
                 form.save()
 
             else:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                error = form.errors.get_json_data()
+                return Response(data=error, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
         return Response(status=status.HTTP_201_CREATED)
 
 
