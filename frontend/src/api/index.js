@@ -35,10 +35,10 @@ export default {
     return axios.get(`${BASE_URL}/users/${username}/followings/`);
   },
   login(params) {
-    return axios.post("http://localhost:8000/api/login/", params);
+    return axios.post(`${BASE_URL}/login/`, params);
   },
   register(params) {
-    return axios.post("http://localhost:8000/api/signup/", params);
+    return axios.post(`${BASE_URL}/signup/`, params);
   },
   getRelatedMovies(params) {
     return axios.get(`${BASE_URL}/movies/related_movies/`, { params});
