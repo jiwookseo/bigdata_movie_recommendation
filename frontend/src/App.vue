@@ -2,7 +2,7 @@
   <div class="app">
     <Header />
     <router-view />
-    
+    <Snackbar />
   </div>
 </template>
 
@@ -10,10 +10,12 @@
 import router from "./router";
 import "./reset.css";
 import Header from "./components/header/index";
+import Snackbar from "./components/header/Snackbar";
 
 export default {
   components: {
     Header,
+    Snackbar
   },
   data: () => ({
     drawer: null,
@@ -27,7 +29,7 @@ export default {
         icon: "people",
         text: "유저 검색",
         path: "user-search"
-      },
+      }
     ]
   }),
   methods: {
