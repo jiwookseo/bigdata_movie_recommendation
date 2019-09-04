@@ -6,6 +6,8 @@ from accounts.serializers import UserSerializer
 from api.serializers import MovieSerializer, RatingSerializer
 from rest_framework.response import Response
 from datetime import datetime
+from accounts.jwt import verify_token
+from django.contrib.auth import logout as auth_logout
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404
 
@@ -78,7 +80,14 @@ def movie_list(request):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'POST':
+        # username = request.data.get("username", None)
+        # token = request.data.get("token", None)
+        # user = User.objects.get(username=username)
         movies = request.data.get('movies', [])
+
+        # if user.is_staff and token:
+        #     response = verify_token(token)
+        #     if response and response.status_code == 200:
         for movie in movies:
             id = movie.get('id', None)
             title = movie.get('title', None)
@@ -101,6 +110,10 @@ def movie_list(request):
                 movie.save()
 
         return Response(status=status.HTTP_200_OK)
+        # user.refresh_token = ""
+        # user.save()
+        # auth_logout(request)
+        # return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -112,12 +125,31 @@ def movie_detail(request, movie_id):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE':
+        # username = request.data.get("username", None)
+        # token = request.data.get("token", None)
+        # user = User.objects.get(username=username)
+        #
+        # if user.is_staff and token:
+        #     response = verify_token(token)
+        #     if response and response.status_code == 200:
         movie.delete()
         return Response(status=status.HTTP_200_OK)
+        # user.refresh_token = ""
+        # user.save()
+        # return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
     if request.method == 'PUT':
         title = movie.get('title', None)
         genres = movie.get('genres', None)
+
+        # username = request.data.get("username", None)
+        # token = request.data.get("token", None)
+        # user = User.objects.get(username=username)
+        #
+        # if user.is_staff and token:
+        #     response = verify_token(token)
+        #     if response and response.status_code == 200:
+
         if not (title and genres):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         if title:
@@ -126,6 +158,10 @@ def movie_detail(request, movie_id):
             movie.genres = '|'.join(genres)
         movie.save()
         return Response(status=status.HTTP_202_ACCEPTED)
+
+        # user.refresh_token = ""
+        # user.save()
+        # return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
 @api_view(['GET', 'POST'])
@@ -138,6 +174,13 @@ def rating_list(request):
 
     if request.method == 'POST':
         ratings = request.data.get('ratings', None)
+        # username = request.data.get("username", None)
+        # token = request.data.get("token", None)
+        # user = User.objects.get(username=username)
+        #
+        # if user.is_staff and token:
+        #     response = verify_token(token)
+        #     if response and response.status_code == 200:
 
         for item in ratings:
             username = item.get('username', None)
@@ -158,6 +201,9 @@ def rating_list(request):
                 movie.total_rating / movie.rating_count, 2)
             movie.save()
         return Response(status=status.HTTP_200_OK)
+        # user.refresh_token = ""
+        # user.save()
+        # return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -169,11 +215,29 @@ def rating_detail(request, rating_id):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE':
+        # username = request.data.get("username", None)
+        # token = request.data.get("token", None)
+        # user = User.objects.get(username=username)
+        #
+        # if user.is_staff and token:
+        #     response = verify_token(token)
+        #     if response and response.status_code == 200:
         rating.delete()
         return Response(status=status.HTTP_200_OK)
+        # user.refresh_token = ""
+        # user.save()
+        # return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
     if request.method == 'PUT':
         rating = request.data.get('rating', None)
+        # username = request.data.get("username", None)
+        # token = request.data.get("token", None)
+        # user = User.objects.get(username=username)
+        #
+        # if user.is_staff and token:
+        #     response = verify_token(token)
+        #     if response and response.status_code == 200:
+
         if rating:
             rating.rating = rating
             rating.timestamp = datetime.now()
@@ -181,6 +245,9 @@ def rating_detail(request, rating_id):
             return Response(status=status.HTTP_202_ACCEPTED)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        # user.refresh_token = ""
+        # user.save()
+        # return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
 @api_view(['GET'])

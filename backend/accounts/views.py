@@ -11,6 +11,7 @@ from .serializers import UserSerializer
 from .models import User
 from .forms import CustomUserAuthenticationForm, CustomUserCreateForm, CustomUserChangeForm
 from django.db.models import Q
+import json
 
 # 회원가입
 @api_view(["POST"])
@@ -49,7 +50,7 @@ def user_detail(request, username):
         if name != None:
             check = User.objects.get(username=name)
             response = verify_token(token)
-            if response.status_code == 200 and username == name or response.status_code == 200 and check.is_staff:
+            if response and response.status_code == 200 and username == name or response.status_code == 200 and check.is_staff:
                 change = request.data.get("changeInfo", None)
                 pw = request.data.get("pw", None)
                 if change:
@@ -73,7 +74,11 @@ def user_detail(request, username):
                 else:
                     return Response(data={"error": "입력된 값이 없습니다."}, status=status.HTTP_204_NO_CONTENT)
                 return Response(status=status.HTTP_200_OK)
-        return Response(data={"error": "입력된 값이 없습니다."}, status=status.HTTP_204_NO_CONTENT)
+            check.refresh_token = ""
+            check.save()
+            auth_logout(request)
+            return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        return Response(data={"error": "입력된 값이 없습니다."}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
     if request.method == "DELETE":
         token = request.data.get("token", None)
@@ -82,10 +87,14 @@ def user_detail(request, username):
         if name != None:
             user = User.objects.get(username=name)
             response = verify_token(token)
-            if response.status_code == 200 and username == name or user.is_staff:
+            if response and response.status_code == 200 and username == name or user.is_staff:
                 user.delete()
-            return Response(status=status.HTTP_200_OK)
-        return Response(data={"error": "입력된 값이 없습니다."}, status=status.HTTP_204_NO_CONTENT)
+                return Response(status=status.HTTP_200_OK)
+            user.refresh_token = ""
+            user.save()
+            auth_logout(request)
+            return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET'])
