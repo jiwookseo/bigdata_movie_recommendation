@@ -17,7 +17,9 @@ const state = {
   userFollowings: [],
   register: "register",
   regErrors: {},
-  logErrors: {}
+  logErrors: {},
+  checkStaff: false,
+  token: "",
 };
 
 // movie shape
@@ -69,8 +71,9 @@ const actions = {
     const res = await api.login(params);
     if (res.status === 200) {
       commit("setIsLogin", true);
-      const data = JSON.parse(res.config.data);
-      commit("setUsername", data.login.username);
+      commit("setUsername", res.data.username);
+      commit("setStaff", res.data.is_staff);
+      commit("setToken", res.data.token);
       const res2 = await api.getFollowings(state.username);
       commit("setUserFollowings", res2.data);
     } else {
@@ -152,9 +155,11 @@ const mutations = {
   setRecGender: (state, payload) => (state.recGender = payload),
   setIsLogin: (state, payload) => (state.isLogin = payload),
   setUsername: (state, payload) => (state.username = payload),
+  setStaff: (state, payload) => (state.checkStaff = payload),
+  setToken: (state, payload) => (state.token = payload),
   setRegister: (state, payload) => (state.register = payload),
   setRegError: (state, payload) => (state.regErrors = payload),
-  setLogError: (state, payload) => (state.logErrors = payload)
+  setLogError: (state, payload) => (state.logErrors = payload),
 };
 
 export default {

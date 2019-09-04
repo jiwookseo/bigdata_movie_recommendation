@@ -217,9 +217,9 @@
                 "username": this.reg_username,
                 "password1": this.reg_password1,
                 "password2": this.reg_password2,
-                "age": this.reg_age,
+                "age": this.ages[this.reg_age],
                 "gender": this.reg_gender,
-                "occupation": this.reg_occupation,
+                "occupation": this.occupationList[this.reg_occupation],
               }
             ]
           };
