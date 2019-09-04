@@ -5,13 +5,13 @@
         <div class="sign_div">
           <p class="sign_title">Member Login</p>
           <div class="signin">
-            <input id="insert_id" v-model="loginInput.username" type="text" required>
+            <input id="insert_id" v-model="loginInput.username" type="text" required @keydown.enter="login">
             <label for="insert_id">Username</label>
-            <input id="insert_pw" v-model="loginInput.password" type="password" class="mt-30" required>
+            <input id="insert_pw" v-model="loginInput.password" type="password" class="mt-30" required @keydown.enter="login">
             <label for="insert_pw">Password</label>
             <span>{{ err_login }}</span>
           </div>
-          <button class="sign_button" @click="login" @keydown.enter="login">Login</button>
+          <button class="sign_button" @click="login">Login</button>
           <div class="pw_reg">
             <button class="password_button">Forget password?</button>
             <button class="register_button" @click="changeForm">Register</button>
