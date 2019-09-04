@@ -8,6 +8,7 @@ class User(AbstractUser):
     age = models.IntegerField(default=25)
     occupation = models.CharField(max_length=200)
     cluster = models.IntegerField(null=True)
+    refresh_token = models.TextField(default="")
 
     def __str__(self):
         return "{}".format(self.username)
