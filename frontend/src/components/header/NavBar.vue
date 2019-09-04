@@ -9,10 +9,10 @@
     </div>
     <div class="nav__icon-bar">
       <span>
-        <font-awesome-icon icon="search" size="2x"/>
+        <font-awesome-icon icon="search" size="2x" />
       </span>
       <span>
-        <font-awesome-icon icon="user" size="2x" @click="sign"/>
+        <font-awesome-icon icon="user" size="2x" @click="sign" />
       </span>
     </div>
   </nav>  

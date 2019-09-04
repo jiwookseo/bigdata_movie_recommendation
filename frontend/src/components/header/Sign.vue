@@ -23,6 +23,9 @@
         <Snackbar v-if="snackbar"/>
         <div class="sign_div">
           <div class="sign_title_div">
+            <button class="back_button">
+              <i aria-hidden="true" class="v-icon mdi mdi-arrow-left hb-color" />
+            </button>
             <p class="sign_title">Register</p>
           </div>
           <div class="register_form">
@@ -46,14 +49,14 @@
             <div class="age mt-30">
               <label for="age">age</label>
               <select id="age" v-model="reg_age" required>
-                <option v-for="(age, i) of ageList" :value="i">{{ age }}</option>
+                <option v-for="(age, i) of ageList" :key="age + i" :value="i">{{ age }}</option>
               </select>
             </div>
             <span>{{ err_age }}</span>
             <div class="occupation mt-30">
               <label for="occupation">occupation</label>
               <select id="occupation" v-model="reg_occupation" required>
-                <option v-for="(occupation, i) of occupationList" :value="i">{{ occupation }}</option>
+                <option v-for="(occupation, i) of occupationList" :key="occupation + i" :value="i">{{ occupation }}</option>
               </select>
             </div>
             <span>{{ err_occupation }}</span>
@@ -64,7 +67,7 @@
           </div>
         </div>
       </div>
-      <div class="sign_image"></div>
+      <div class="sign_image" />
     </div>
     <div class="text-center">
       <v-snackbar v-model="snackbar" :multi-line="multiLine">
@@ -273,7 +276,7 @@
     };
     align: {
       items: center;
-    }
+    };
   }
   .sign_contents {
     background: {
@@ -396,7 +399,11 @@
       width: 380px;
     }
   }
+  .sign_title_div {
+    width: 70%;
+  }
   .sign_title {
+    text-align: center;
     margin: 0;
     font: {
       family: Consolas;
@@ -512,17 +519,34 @@
     display: flex;
     justify: {
       content: space-between;
-    }
+    };
     color: rgba(117, 117, 117, 0.68);
   }
   #occupation {
     width: 100%;
     margin: {
       left: 10px;
-    }
+    };
     border: {
       bottom: rgba(117, 117, 117, 0.68) 1.5px solid;
     };
     outline: none;
+  }
+  .back_button {
+    position: absolute;
+    margin: {
+      right: 100%;
+    };
+    background: {
+      color: rgba(117, 117, 117, 0.18);
+    };
+    border: {
+      radius: 15px;
+    };
+    width: 30px;
+    height: 30px;
+  }
+  .hb-color {
+    color: rgba(255, 183, 0, 1.0);
   }
 </style>
