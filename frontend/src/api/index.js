@@ -37,6 +37,9 @@ export default {
   login(params) {
     return axios.post(`${BASE_URL}/login/`, params);
   },
+  logout(params) {
+    return axios.post(`${BASE_URL}/logout/`, params);
+  },
   register(params) {
     return axios.post(`${BASE_URL}/signup/`, params);
   },
