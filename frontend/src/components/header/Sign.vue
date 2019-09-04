@@ -21,7 +21,7 @@
         <div class="sign_div">
           <div class="sign_title_div">
             <button class="back_button">
-              <i aria-hidden="true" class="v-icon mdi mdi-arrow-left hb-color" />
+              <i aria-hidden="true" class="v-icon mdi mdi-arrow-left hb-color" @click="changeForm" />
             </button>
             <p class="sign_title">Register</p>
           </div>
@@ -80,14 +80,14 @@
       reg_username: "",
       reg_password1: "",
       reg_password2: "",
-      reg_age: "",
+      reg_age: 0,
       reg_gender: "",
-      reg_occupation: "",
+      reg_occupation: 0,
       err_username: "",
       err_password1: "",
       err_password2: "",
       err_age: "",
-      err_gender: "",
+      err_gender: "F",
       err_occupation: "",
       username: "",
       form: "sign",
@@ -148,6 +148,7 @@
         this.username = this.getUsername;
       },
       changeForm() {
+        this.resetRegister();
         if (this.form === "register") {
           this.form = "sign";
         } else {
@@ -156,6 +157,14 @@
       },
       resetForm() {
         this.form = "sign"
+      },
+      resetRegister() {
+        this.reg_username = "";
+        this.reg_password1 = "";
+        this.reg_password2 = "";
+        this.reg_age = 0;
+        this.reg_gender = "F";
+        this.reg_occupation = 0;
       },
       async register() {
         this.chkRegister();
@@ -177,7 +186,7 @@
         }
       },
       chkUsername() {
-        if (this.reg_username.length < 6) {
+        if (this.reg_username.length !== 0 && this.reg_username.length < 6) {
           this.err_username = "username의 길이는 6자 이상이어야 합니다.";
         } else {
           this.err_username = "";
@@ -185,7 +194,7 @@
         this.chkRegister();
       },
       chkPass1() {
-        if (this.reg_password1.length < 8) {
+        if (this.reg_password1.length !== 0 && this.reg_password1.length < 8) {
           this.err_password1 = "password의 길이는 8자 이상이어야 합니다.";
           this.checkRegister = false;
         } else {
