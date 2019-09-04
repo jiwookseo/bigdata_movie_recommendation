@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <NavBar />
-    <Sign/>
+    <Sign />
   </header>
 </template>
 

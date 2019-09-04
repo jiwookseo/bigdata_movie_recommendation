@@ -12,7 +12,10 @@
         <font-awesome-icon icon="search" size="2x" />
       </span>
       <span>
-        <font-awesome-icon icon="user" size="2x" @click="sign" />
+        <v-icon v-if="userState === 'guest'" class="login_icon" @click="sign">vpn_key</v-icon>
+        <router-link v-else :to="profile">
+          <font-awesome-icon icon="user" class="login_icon" />
+        </router-link>
       </span>
     </div>
   </nav>  
@@ -31,6 +34,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faSearch, faUser } from '@fortawesome/free-solid-svg-icons'
+import { mapState } from "vuex"
 
 library.add(faSearch, faUser)
 
@@ -43,8 +47,22 @@ export default {
     sign() {
       const modal = document.getElementsByClassName("sign_modal")[0];
       modal.style.display = "flex";
+    },
+    userState: "guest",
+    profile: "profile"
+  }),
+  computed: {
+    ...mapState({getUsername: state => state.data.username})
+  },
+  watch: {
+    getUsername: function() {
+      if (this.getUsername !== "") {
+        this.userState = "login";
+      } else {
+        this.userState = "guest";
+      }
     }
-  })
+  },
 }
 </script>
 
@@ -72,6 +90,8 @@ export default {
   
   .nav__icon-bar {
     padding-right: 30px;
+    display: flex;
+    align-items: center;
 
     span {
       cursor: pointer;
@@ -82,8 +102,16 @@ export default {
       }
     }
     span + span {
-      margin-left: 50px;
+      margin-left: 30px;
       margin-right: 30px;
     }
+  }
+
+  .login_icon {
+    color: rgba(255, 177, 1, 0.7) !important;
+    transform: scale(1.5);
+  }
+  .login_icon:hover {
+    color: rgb(255, 177, 1) !important;
   }
 </style>

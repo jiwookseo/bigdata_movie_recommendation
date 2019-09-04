@@ -5,12 +5,13 @@
         <div class="sign_div">
           <p class="sign_title">Member Login</p>
           <div class="signin">
-            <input id="insert_id" v-model="loginInput.username" type="text" required>
+            <input id="insert_id" v-model="loginInput.username" type="text" required @keydown.enter="login">
             <label for="insert_id">Username</label>
-            <input id="insert_pw" v-model="loginInput.password" type="password" class="mt-30" required>
+            <input id="insert_pw" v-model="loginInput.password" type="password" class="mt-30" required @keydown.enter="login">
             <label for="insert_pw">Password</label>
+            <span>{{ err_login }}</span>
           </div>
-          <button class="sign_button" @click="login" @keydown.enter="login">Login</button>
+          <button class="sign_button" @click="login">Login</button>
           <div class="pw_reg">
             <button class="password_button">Forget password?</button>
             <button class="register_button" @click="changeForm">Register</button>
@@ -94,6 +95,7 @@
         username: "",
         password: "",
       },
+      err_login: "",
       reg_username: "",
       reg_password1: "",
       reg_password2: "",
@@ -120,7 +122,8 @@
     computed: {
       ...mapState({getUsername: state => state.data.username}),
       ...mapState({getRegister: state => state.data.register}),
-      ...mapState({getError: state => state.data.errors}),
+      ...mapState({getRegError: state => state.data.regErrors}),
+      ...mapState({getLogError: state => state.data.logErrors}),
     },
     watch: {
       reg_username: function() {
@@ -163,7 +166,20 @@
           "login": this.loginInput
         };
         await this.setLogin(params);
-        this.username = this.getUsername;
+        const name = this.getUsername;
+        if (name === "") {
+          if (this.getLogError["__all__"]) {
+            for (const error of this.getLogError["__all__"]) {
+              this.err_login += error.message;
+            }
+          }
+        } else {
+          const modal = document.getElementsByClassName("sign_modal")[0];
+          modal.style.display = "none";
+          this.loginInput.username = "";
+          this.loginInput.password = "";
+          this.err_login = "";
+        }
       },
       changeForm() {
         this.resetRegister();
@@ -175,7 +191,14 @@
         }
       },
       resetForm() {
-        this.form = "sign"
+        this.resetLogin();
+        this.resetRegister();
+        this.form = "sign";
+      },
+      resetLogin() {
+        this.loginInput.username = "";
+        this.loginInput.password = "";
+        this.err_login = "";
       },
       resetRegister() {
         this.reg_username = "";
@@ -207,33 +230,33 @@
             this.form = s
           } else {
             this.snackbar = false;
-            if (this.getError.username) {
-              for (const error of this.getError.username) {
+            if (this.getRegError.username) {
+              for (const error of this.getRegError.username) {
                 this.err_username += error.message;
               }
             }
-            if (this.getError.password1) {
-              for (const error of this.getError.password1) {
+            if (this.getRegError.password1) {
+              for (const error of this.getRegError.password1) {
                 this.err_password1 += error.message;
               }
             }
-            if (this.getError.password2) {
-              for (const error of this.getError.password2) {
+            if (this.getRegError.password2) {
+              for (const error of this.getRegError.password2) {
                 this.err_password2 += error.message;
               }
             }
-            if (this.getError.age) {
-              for (const error of this.getError.age) {
+            if (this.getRegError.age) {
+              for (const error of this.getRegError.age) {
                 this.err_age += error.message;
               }
             }
-            if (this.getError.gender) {
-              for (const error of this.getError.gender) {
+            if (this.getRegError.gender) {
+              for (const error of this.getRegError.gender) {
                 this.err_gender += error.message;
               }
             }
-            if (this.getError.occupation) {
-              for (const error of this.getError.occupation) {
+            if (this.getRegError.occupation) {
+              for (const error of this.getRegError.occupation) {
                 this.err_occupation += error.message;
               }
             }
