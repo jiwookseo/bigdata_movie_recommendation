@@ -3,7 +3,12 @@ import api from '../../api'
 
 // state
 const state = {
-  userList : []
+  userList : [],
+  isLogin: false,
+  username: "",
+  checkStaff: false,
+  token: "",
+  logErrors: "",
 }
 
 
@@ -11,7 +16,12 @@ const state = {
 const mutations = {
   setUserList(state, users) {
     state.userList = users
-  }
+  },
+  setIsLogin: (state, payload) => (state.isLogin = payload),
+  setUsername: (state, payload) => (state.username = payload),
+  setStaff: (state, payload) => (state.checkStaff = payload),
+  setToken: (state, payload) => (state.token = payload),
+  setLogError: (state, payload) => (state.logErrors = payload),
 }
 
 
@@ -50,7 +60,20 @@ const actions = {
     } catch(error) {
       console.log(error);
     }
-  }
+  },
+
+  async setLogin({ commit }, params) {
+    const res = await api.login(params);
+    if (res.status === 200) {
+      commit("setIsLogin", true);
+      commit("setUsername", res.data.username);
+      commit("setStaff", res.data.is_staff);
+      commit("setToken", res.data.token);
+    } else {
+      commit("setIsLogin", false);
+      commit("setLogError", res.data)
+    }
+  },
 }
 
 

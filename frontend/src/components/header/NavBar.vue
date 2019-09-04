@@ -17,11 +17,6 @@
           <font-awesome-icon icon="user" class="login_icon" />
         </router-link>
       </span>
-      <span v-if="getStaff">
-        <a :href="admin" target="_blank">
-          <font-awesome-icon icon="user" class="login_icon" />
-        </a>
-      </span>
     </div>
   </nav>  
 </template>
@@ -59,8 +54,6 @@ export default {
   }),
   computed: {
     ...mapState({getUsername: state => state.data.username}),
-    ...mapState({getStaff: state => state.data.checkStaff}),
-    ...mapState({getToken: state => state.data.token})
   },
   watch: {
     getUsername: function() {
@@ -70,9 +63,6 @@ export default {
         this.userState = "guest";
       }
     },
-    getStaff: function() {
-      return this.getStaff;
-    }
   },
 }
 </script>
