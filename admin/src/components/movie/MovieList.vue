@@ -36,9 +36,7 @@ export default {
     page: 1,
   }),
   computed: {
-    ...mapState({
-      movieList: state => state.movie.movieList
-    }),
+    ...mapState('movie', ['movieList']),
     // pagination related variables
     movieListEmpty: function() {
       return this.movieListCards.length === 0;
@@ -49,7 +47,6 @@ export default {
     movieListCardsSliced: function() {
       return this.movieListCards.slice(this.cardsPerPage * (this.page - 1), this.cardsPerPage * this.page)
     },
-  },
-  methods: mapActions("movie", ["searchMovies"])
+  }
 };
 </script>

@@ -18,25 +18,30 @@ def movie_list(request):
         age = request.GET.get("age", None)
         occupation = request.GET.get("occupation", None)
         gender = request.GET.get("gender", None)
+        limit = int(request.GET.get("limit", 10))
+        start = int(request.GET.get("start", 0))
         if age:
             movies = Movie.objects.annotate(
                 age_count=Count(
                     'ratings', filter=Q(ratings__user__age=age))
-            ).order_by('-age_count')[:10]
+            ).order_by('-age_count')[start: start + limit]
             serializer = MovieSerializer(movies, many=True)
+            # return Response(data={"movies": serializer.data}, status=status.HTTP_200_OK)
+            # TODO : 데이터 구조 바꾸기, 모든 데이터 다 보내주는 방식에서, 10개 씩 보여줄 수 있도록
+            # start, end, total 정도 보내주면 될 듯.
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         elif occupation:
             movies = Movie.objects.annotate(
                 occupation_count=Count(
                     'ratings', filter=Q(ratings__user__occupation=occupation))
-            ).order_by('-occupation_count')[:10]
+            ).order_by('-occupation_count')[start: start + limit]
             serializer = MovieSerializer(movies, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         elif gender:
             movies = Movie.objects.annotate(
                 gender_count=Count(
                     'ratings', filter=Q(ratings__user__gender=gender))
-            ).order_by('-gender_count')[:10]
+            ).order_by('-gender_count')[start: start + limit]
             serializer = MovieSerializer(movies, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
@@ -203,15 +208,12 @@ def movie_followers(request, movie_id):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-
 @api_view(['GET'])
 def related_movies(request):
     movie_id = request.GET.get('movieId')
     movie = get_object_or_404(Movie, id=movie_id)
 
-    related_movies = Movie.objects.filter(cluster__exact=movie.cluster).order_by("-avg_rating")[:10]
+    related_movies = Movie.objects.filter(
+        cluster__exact=movie.cluster).order_by("-avg_rating")[:10]
     serializer = MovieSerializer(related_movies, many=True)
     return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
-
-    
-
