@@ -11,30 +11,35 @@
       <span>
         <font-awesome-icon icon="search" size="2x" />
       </span>
-      <span>
-        <v-icon v-if="userState === false" class="login_icon" @click="sign">vpn_key</v-icon>
-        <router-link v-else :to="profile">
+      <span v-if="!getIsLogin">
+        <v-icon class="login_icon" @click="sign">vpn_key</v-icon>
+      </span>
+      <span v-else class="user_span">
+        <router-link :to="profile">
           <font-awesome-icon icon="user" class="login_icon" />
         </router-link>
+        <button @click="signout">
+          <i class="material-icons login_icon">meeting_room</i>
+        </button>
       </span>
     </div>
-  </nav>  
+  </nav>
 </template>
-
+​
 <script>
-/* Requirements for use fontawesome & How to Use
-   1. library 를 @fontawesome/fontawesome-svg-core 에서 import 하세요
-   2. @fontawesome/free-solid-svg-icons에서 필요한 아이콘을 import 하세요
-      (font-awesome 사이트에서 fas-fa-user인 경우 faUser로 import 하면 됩니다.)
-   3. import 해온 것을 library에 add 합니다.
-   4. FontAwesomeIcon의 경우 <template>내부에 <font-awesome-icon /> 으로 정의하고, icon값에 위에 import 한 icon에서 fa를 빼고 소문자로 입력하시면 됩니다.
-   ex) faSearch => <font-awesome-icon icon="search" />
-   참고) https://github.com/FortAwesome/vue-fontawesome
-*/
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faSearch, faUser } from '@fortawesome/free-solid-svg-icons'
-import { mapState } from "vuex"
+  /* Requirements for use fontawesome & How to Use
+     1. library 를 @fontawesome/fontawesome-svg-core 에서 import 하세요
+     2. @fontawesome/free-solid-svg-icons에서 필요한 아이콘을 import 하세요
+        (font-awesome 사이트에서 fas-fa-user인 경우 faUser로 import 하면 됩니다.)
+     3. import 해온 것을 library에 add 합니다.
+     4. FontAwesomeIcon의 경우 <template>내부에 <font-awesome-icon /> 으로 정의하고, icon값에 위에 import 한 icon에서 fa를 빼고 소문자로 입력하시면 됩니다.
+     ex) faSearch => <font-awesome-icon icon="search" />
+     참고) https://github.com/FortAwesome/vue-fontawesome
+  */
+  import { library } from '@fortawesome/fontawesome-svg-core'
+  import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+  import { faSearch, faUser } from '@fortawesome/free-solid-svg-icons'
+  import { mapState, mapActions } from "vuex"
 
 library.add(faSearch, faUser)
 
@@ -54,16 +59,17 @@ export default {
   }),
   computed: {
     ...mapState({getIsLogin: state => state.data.isLogin}),
+    ...mapState({getUsername: state => state.data.username}),
   },
-  watch: {
-    getIsLogin: function() {
-      if (this.getIsLogin !== "") {
-        this.userState = this.getIsLogin;
-      } else {
-        this.userState = this.getIsLogin;
-      }
-    },
-  },
+  methods: {
+    ...mapActions("data", ["logout"]),
+    async signout() {
+      const params = {
+        "username": this.getUsername
+      };
+      await this.logout(params);
+    }
+  }
 }
 </script>
 
@@ -93,7 +99,7 @@ export default {
       text-decoration: none;
     }
   }
-  
+
   .nav__icon-bar {
     margin-right: 20px;
     display: flex;
@@ -108,16 +114,24 @@ export default {
         color: rgb(255, 177, 1);
       }
     }
-    span + span {
-      margin-left: 30px;
-    }
   }
 
   .login_icon {
     color: rgba(255, 177, 1, 0.7) !important;
     transform: scale(1.5);
+    margin: {
+      left: 30px;
+    };
   }
   .login_icon:hover {
     color: rgb(255, 177, 1) !important;
+  }
+  .user_span {
+    display: flex;
+    align-items: center;
+
+    button {
+      outline: none;
+    }
   }
 </style>
