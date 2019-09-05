@@ -162,6 +162,7 @@
       ...mapActions("data", ["setLogin"]),
       ...mapActions("data", ["setRegister"]),
       async login() {
+        this.resetError();
         const params = {
           "login": this.loginInput
         };
@@ -183,6 +184,7 @@
       },
       changeForm() {
         this.resetRegister();
+        this.resetError();
         if (this.form === "register") {
           this.form = "sign";
         } else {
@@ -193,6 +195,7 @@
       resetForm() {
         this.resetLogin();
         this.resetRegister();
+        this.resetError();
         this.form = "sign";
       },
       resetLogin() {
@@ -209,6 +212,7 @@
         this.reg_occupation = 0;
       },
       async register() {
+        this.resetError();
         this.chkRegister();
         if (this.checkRegister) {
           const params = {
@@ -318,6 +322,15 @@
         } else {
           this.checkRegister = false;
         }
+      },
+      resetError() {
+        this.err_login = "";
+        this.err_username = "";
+        this.err_password1 = "";
+        this.err_password2 = "";
+        this.err_age = "";
+        this.err_gender = "";
+        this.err_occupation = "";
       }
     }
   }

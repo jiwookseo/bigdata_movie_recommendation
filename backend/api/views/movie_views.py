@@ -6,7 +6,7 @@ from accounts.serializers import UserSerializer
 from api.serializers import MovieSerializer, RatingSerializer
 from rest_framework.response import Response
 from datetime import datetime
-from accounts.jwt import verify_token
+from accounts.jwt import verify_token, refresh_token
 from django.contrib.auth import logout as auth_logout
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404
@@ -85,8 +85,15 @@ def movie_list(request):
         # user = User.objects.get(username=username)
         movies = request.data.get('movies', [])
 
-        # if user.is_staff and token:
-        #     response = verify_token(token)
+        # if not user.is_staff or user.refresh_token != token:
+        #     return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        #
+        # response = verify_token(token)
+        # if response.status_code != 200:
+        #     response = refresh_token(token)
+        #     new_token = json.loads(response.text)["token"]
+        #     user.refresh_token = new_token
+
         #     if response and response.status_code == 200:
         for movie in movies:
             id = movie.get('id', None)
@@ -129,8 +136,15 @@ def movie_detail(request, movie_id):
         # token = request.data.get("token", None)
         # user = User.objects.get(username=username)
         #
-        # if user.is_staff and token:
-        #     response = verify_token(token)
+        # if not user.is_staff or user.refresh_token != token:
+        #     return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        #
+        # response = verify_token(token)
+        # if response.status_code != 200:
+        #     response = refresh_token(token)
+        #     new_token = json.loads(response.text)["token"]
+        #     user.refresh_token = new_token
+
         #     if response and response.status_code == 200:
         movie.delete()
         return Response(status=status.HTTP_200_OK)
@@ -146,8 +160,15 @@ def movie_detail(request, movie_id):
         # token = request.data.get("token", None)
         # user = User.objects.get(username=username)
         #
-        # if user.is_staff and token:
-        #     response = verify_token(token)
+        # if not user.is_staff or user.refresh_token != token:
+        #     return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        #
+        # response = verify_token(token)
+        # if response.status_code != 200:
+        #     response = refresh_token(token)
+        #     new_token = json.loads(response.text)["token"]
+        #     user.refresh_token = new_token
+
         #     if response and response.status_code == 200:
 
         if not (title and genres):
@@ -178,8 +199,15 @@ def rating_list(request):
         # token = request.data.get("token", None)
         # user = User.objects.get(username=username)
         #
-        # if user.is_staff and token:
-        #     response = verify_token(token)
+        # if not user.is_staff or user.refresh_token != token:
+        #     return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        #
+        # response = verify_token(token)
+        # if response.status_code != 200:
+        #     response = refresh_token(token)
+        #     new_token = json.loads(response.text)["token"]
+        #     user.refresh_token = new_token
+
         #     if response and response.status_code == 200:
 
         for item in ratings:
@@ -219,8 +247,15 @@ def rating_detail(request, rating_id):
         # token = request.data.get("token", None)
         # user = User.objects.get(username=username)
         #
-        # if user.is_staff and token:
-        #     response = verify_token(token)
+        # if not user.is_staff or user.refresh_token != token:
+        #     return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        #
+        # response = verify_token(token)
+        # if response.status_code != 200:
+        #     response = refresh_token(token)
+        #     new_token = json.loads(response.text)["token"]
+        #     user.refresh_token = new_token
+
         #     if response and response.status_code == 200:
         rating.delete()
         return Response(status=status.HTTP_200_OK)
@@ -234,8 +269,15 @@ def rating_detail(request, rating_id):
         # token = request.data.get("token", None)
         # user = User.objects.get(username=username)
         #
-        # if user.is_staff and token:
-        #     response = verify_token(token)
+        # if not user.is_staff or user.refresh_token != token:
+        #     return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        #
+        # response = verify_token(token)
+        # if response.status_code != 200:
+        #     response = refresh_token(token)
+        #     new_token = json.loads(response.text)["token"]
+        #     user.refresh_token = new_token
+
         #     if response and response.status_code == 200:
 
         if rating:
