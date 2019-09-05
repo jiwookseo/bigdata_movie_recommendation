@@ -41,11 +41,11 @@ export default {
   name: "Profile",
   components: { ImageSlider, SimilarUserList },
   watch: {
-    '$route.params.username': function(e) {
-      this.$store.commit('data/setUsername', e)
-      this.$store.dispatch('data/getUserByUsername', e)
-      this.$store.dispatch('mvUi/setUserRatingMovies', e)
-      this.$store.dispatch('mvUi/setSimilarUser', e)
+    '$route.params.username': function(username) {
+      this.$store.commit('data/setUsername', username)
+      this.$store.dispatch('data/getUserByUsername', username)
+      this.$store.dispatch('mvUi/setUserRatingMovies', username)
+      this.$store.dispatch('mvUi/setSimilarUser', username)
     }
   },
   computed: {

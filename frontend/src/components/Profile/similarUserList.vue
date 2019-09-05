@@ -58,10 +58,12 @@ export default {
   max-width: 10%;
   height: 100px;
   border-radius: 25%;
-  background-color: blue;
+  border: 4px solid rgba(255, 177, 1);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  font-size: 16px;
+  font-weight: 700;
 }
 </style>

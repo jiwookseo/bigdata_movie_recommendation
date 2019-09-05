@@ -87,6 +87,8 @@ const actions = {
   },
   async setUserRatingMovies({ commit }, param){
     const data = await api.getUserRatingMovie(param)
+    console.log("파람", param)
+    console.log('유저레이팅', data)
     commit("setUserRatingMovies", data.data)
   },
   async setSimilarUser({ commit }, param){
