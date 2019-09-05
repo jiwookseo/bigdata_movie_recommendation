@@ -34,12 +34,22 @@
 
 <script>
 import ImageSlider from "../imageSlider"
+
 export default {
   name: "Profile",
   components: { ImageSlider },
+  watch: {
+    '$route.params.username': function(e) {
+      console.log("somethign in happen?")
+    }
+  },
   created(){
     this.$store.commit('mvUi/setSliderType', "profile")
-  }
+
+  },
+  mounted(){
+    this.$store.dispatch('data/getUserByUsername', this.$route.params.username)
+  },
 }
 </script>
 

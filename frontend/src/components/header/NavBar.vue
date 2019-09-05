@@ -13,7 +13,7 @@
       </span>
       <span>
         <v-icon v-if="userState === false" class="login_icon" @click="sign">vpn_key</v-icon>
-        <router-link v-else :to="profile">
+        <router-link v-else :to="{name: 'profile', params: {username: loginUsername}}">
           <font-awesome-icon icon="user" class="login_icon" />
         </router-link>
       </span>
@@ -54,6 +54,13 @@ export default {
   }),
   computed: {
     ...mapState({getIsLogin: state => state.data.isLogin}),
+    loginUsername(){
+      if (this.userState){
+        return this.$store.state.data.username
+      } else {
+        return ''
+      }
+    }
   },
   watch: {
     getIsLogin: function() {

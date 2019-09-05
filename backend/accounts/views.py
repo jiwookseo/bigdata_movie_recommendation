@@ -100,7 +100,7 @@ def user_detail(request, username):
 @api_view(['GET'])
 def user_ratings(request, username):
     user = get_object_or_404(User, username=username)
-    serializer = RatingSerializer(user.ratings, many=True)
+    serializer = RatingSerializer(user.ratings.all()[:10], many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
@@ -112,10 +112,10 @@ def user_followings(request, username):
 
 
 @api_view(['GET'])
-def related_users(request, user_id):
-    user = get_object_or_404(User, id=user_id)
+def related_users(request, username):
+    user = get_object_or_404(User, username=username)
     query = Q(cluster__exact=user.cluster)
-    query.add(~Q(id=user_id), query.AND)
+    query.add(~Q(username=username), query.AND)
     
     related_users = User.objects.filter(query)[:10]
     serializer = UserSerializer(related_users, many=True)

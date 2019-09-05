@@ -13,7 +13,7 @@ const router = new VueRouter({
     { path: '/', component: BoardingPage, name: 'home' },
     { path: '/movies/search', component: MovieSearchPage, name: 'movie-search' },
     { path: '/users/search', component: UserSearchPage, name: 'user-search' },
-    { path: '/profile', component: ProfilePage, name: 'profile'},
+    { path: '/profile/:username', component: ProfilePage, name: 'profile', },
   ],
   scrollBehavior() {
     return { x: 0, y: 0 }

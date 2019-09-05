@@ -14,7 +14,7 @@ urlpatterns = [
          views.user_ratings, name='user_ratings'),
     path('users/<str:username>/followings/',
          views.user_followings, name='user_followings'),
-    path('users/related_users/<int:user_id>/',
+    path('users/related_users/<str:username>/',
          views.related_users, name="related_users"),
     
     

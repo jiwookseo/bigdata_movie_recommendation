@@ -21,7 +21,10 @@ export default {
       if (this.$store.state.mvUi.sliderType === "board"){
         return this.$store.getters["mvUi/sliderBoardData"]
       } else if (this.$store.state.mvUi.sliderType === "profile"){
-        return this.$store.getters["mvUi/sliderProfileData"]
+        return [{ 
+          type: '평가한 영화',
+          selectedObject: ''
+        }]
       }
     }
   },
