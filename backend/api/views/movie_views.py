@@ -10,6 +10,7 @@ from accounts.jwt import verify_token, refresh_token
 from django.contrib.auth import logout as auth_logout
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404
+import json
 
 
 @api_view(['GET', 'POST'])
@@ -142,57 +143,57 @@ def movie_detail(request, movie_id):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE':
-        # username = request.data.get("username", None)
-        # token = request.data.get("token", None)
-        # user = User.objects.get(username=username)
-        #
-        # if not user.is_staff or user.refresh_token != token:
-        #     return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
-        #
-        # response = verify_token(token)
-        # if response.status_code != 200:
-        #     response = refresh_token(token)
-        #     new_token = json.loads(response.text)["token"]
-        #     user.refresh_token = new_token
+        username = request.data.get("username", None)
+        token = request.data.get("token", None)
+        user = User.objects.get(username=username)
 
-        #     if response and response.status_code == 200:
-        movie.delete()
-        return Response(status=status.HTTP_200_OK)
-        # user.refresh_token = ""
-        # user.save()
-        # return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        if not user.is_staff or user.refresh_token != token:
+            return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
+        response = verify_token(token)
+        if response.status_code != 200:
+            response = refresh_token(token)
+            if response.status_code == 200:
+                new_token = json.loads(response.text)["token"]
+                user.refresh_token = new_token
+
+        if response and response.status_code == 200:
+            movie.delete()
+            return Response(status=status.HTTP_200_OK)
+        user.refresh_token = ""
+        user.save()
+        return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
     if request.method == 'PUT':
-        title = movie.get('title', None)
-        genres = movie.get('genres', None)
+        username = request.data.get("username", None)
+        token = request.data.get("token", None)
+        user = User.objects.get(username=username)
 
-        # username = request.data.get("username", None)
-        # token = request.data.get("token", None)
-        # user = User.objects.get(username=username)
-        #
-        # if not user.is_staff or user.refresh_token != token:
-        #     return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
-        #
-        # response = verify_token(token)
-        # if response.status_code != 200:
-        #     response = refresh_token(token)
-        #     new_token = json.loads(response.text)["token"]
-        #     user.refresh_token = new_token
+        if not user.is_staff or user.refresh_token != token:
+            return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
-        #     if response and response.status_code == 200:
+        response = verify_token(token)
+        if response.status_code != 200:
+            response = refresh_token(token)
+            if response.status_code == 200:
+                new_token = json.loads(response.text)["token"]
+                user.refresh_token = new_token
 
-        if not (title and genres):
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        if title:
-            movie.title = title
-        if genres:
-            movie.genres = '|'.join(genres)
-        movie.save()
-        return Response(status=status.HTTP_202_ACCEPTED)
+        if response and response.status_code == 200:
+            movie_info = request.data.get("movie", None)
 
-        # user.refresh_token = ""
-        # user.save()
-        # return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+            if movie_info:
+                movie.title = movie_info["title"]
+                genres = movie_info["genres"]
+                genres = '|'.join(genres)
+                movie.genres = genres
+                movie.save()
+                return Response(status=status.HTTP_202_ACCEPTED)
+            return Response(data={"error": "입력값이 없습니다."}, status=status.HTTP_204_NO_CONTENT)
+
+        user.refresh_token = ""
+        user.save()
+        return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
 @api_view(['GET', 'POST'])

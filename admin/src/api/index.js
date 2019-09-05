@@ -20,6 +20,14 @@ export default {
     })
   },
 
+  editMovie(id, params) {
+    return axios.put(`${apiUrl}/movies/${id}/`, params)
+  },
+
+  deleteMovie(id, params) {
+    return axios.delete(`${apiUrl}/movies/${id}/`, {data: params})
+  },
+
 
   // Users
   getUserList() {
