@@ -29,11 +29,13 @@ import { mapState, mapActions } from 'vuex'
 export default {
   computed: {
     ...mapState({getStaff: state => state.user.checkStaff}),
+    ...mapState({getError: state => state.user.logErrors}),
   },
   watch: {
     getStaff: function() {
       if (this.getStaff) {
-        this.getLists();
+        this.getMovieList();
+        this.getUserList();
       }
     }
   },
@@ -56,18 +58,16 @@ export default {
     ...mapActions("user", ["logout"]),
     async login() {
       const params = {
-        "login": this.loginInput
+        "login": this.loginInput,
+        "admin": true,
       };
       await this.setLogin(params);
-      if (this.getStaff === true) {
+      if (!this.getError) {
         this.form = "admin";
         this.loginInput.username = "";
         this.loginInput.password = "";
-        this.err_login = "";
-      } else {
-        this.err_login += "관리자만 로그인이 가능합니다. 계정을 확인하세요.";
-        await this.logout({"username": params.login.username});
       }
+      this.err_login = this.getError;
     },
     checkLogin() {
       if (sessionStorage.getItem("adminLogin") !== null) {
@@ -83,10 +83,6 @@ export default {
         this.$store.state.user.token = sessionStorage.getItem("adminToken");
       }
     },
-    getLists() {
-      this.getMovieList();
-      this.getUserList();
-    }
   },
 };
 </script>

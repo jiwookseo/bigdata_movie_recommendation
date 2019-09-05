@@ -73,8 +73,14 @@ const actions = {
       sessionStorage.setItem("adminName", res.data.username);
       sessionStorage.setItem("adminCheck", res.data.is_staff);
       sessionStorage.setItem("adminToken", res.data.token);
-    } else {
-      commit("setIsLogin", false);
+    } else if (res.status === 203) {
+      if (res.data["__all__"]) {
+        commit("setLogError", res.data["__all__"][0]["message"])
+      } else if (res.data.username) {
+        commit("setLogError", res.data.username[0]["message"])
+      } else if (res.data.error) {
+        commit("setLogError", "관리자만 로그인이 가능합니다. 권한을 확인해주세요.");
+      }
     }
   },
   async logout({ commit }, params) {

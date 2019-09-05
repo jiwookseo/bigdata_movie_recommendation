@@ -152,11 +152,18 @@ def related_users(request, username):
 @api_view(["POST"])
 def login(request):
     user = request.data.get("login", None)
+    admin = request.data.get("admin", None)
+
     form = CustomUserAuthenticationForm(request, data=user)
     if form.is_valid():
+        user = form.get_user()
+
+        if admin:
+            if not user.is_staff:
+                return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
         token = create_token(user)
         token = token.json()["token"]
-        user = form.get_user()
         user.refresh_token = token
         user.save()
 
