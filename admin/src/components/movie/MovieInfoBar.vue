@@ -167,6 +167,7 @@ export default {
   }
 
   .data-controller {
+
     padding: 0 1vw;
     color: #535353;
     .fa-edit:hover {
@@ -180,7 +181,6 @@ export default {
 .data-edit {
   padding: {
     left: 14px;
-    right: 14px;
   }
   display: flex;
   justify: {
