@@ -2,7 +2,7 @@
   <div class="content-container">
     <div class="data-controller-container">
       <search-form :submit="searchMovies" />
-      <v-btn @click="clustering">clustering</v-btn>
+      <v-btn class="clustering_button" @click="clustering">clustering</v-btn>
     </div>
 
     <div class="data-list-container">
@@ -63,9 +63,17 @@ export default {
 
 <style scoped lang="scss">
 
+.content-container {
+  padding: 30px;
+}
+
+.clustering_button {
+  height: 40px !important;
+}
+
 .data-controller-container {
   display: flex;
-  height: 15vh;
+  height: 10vh;
   padding-bottom: 2vh;
 }
 

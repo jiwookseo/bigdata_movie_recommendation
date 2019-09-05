@@ -18,11 +18,27 @@ def movie_list(request):
     if request.method == 'GET':
         # recommend by age, occupation, gender
         age = request.GET.get("age", None)
+        username = request.GET.get("username", None)
         occupation = request.GET.get("occupation", None)
         gender = request.GET.get("gender", None)
         limit = int(request.GET.get("limit", 10))
         start = int(request.GET.get("start", 0))
-        if age:
+        if username:
+            user = User.objects.get(username=username)
+            arr = []
+            for rating in user.ratings.all():
+                arr.append(rating.movie.id)
+            arr.sort()
+            for movie in arr:
+                print(Movie.objects.get(id=movie).title)
+            movies = Movie.objects.annotate(
+                username_count=Count(
+                    "ratings", filter=Q(ratings__user__username=username))
+                ).order_by("-username_count")[start: start + limit]
+            serializer = MovieSerializer(movies, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+        elif age:
             movies = Movie.objects.annotate(
                 age_count=Count(
                     'ratings', filter=Q(ratings__user__age=age))
