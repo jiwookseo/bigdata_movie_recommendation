@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from api.serializers import MovieSerializer, RatingSerializer
-from .jwt import create_token, verify_token
+from .jwt import create_token, verify_token, refresh_token
 from .serializers import UserSerializer
 from .models import User
 from .forms import CustomUserAuthenticationForm, CustomUserCreateForm, CustomUserChangeForm
@@ -49,8 +49,20 @@ def user_detail(request, username):
         name = request.data.get("username", None)
         if name != None:
             check = User.objects.get(username=name)
+
+            if token != check.refresh_token:
+                return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
+            if username != name or not check.is_staff:
+                return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
             response = verify_token(token)
-            if response and response.status_code == 200 and username == name or response.status_code == 200 and check.is_staff:
+            if response.status_code != 200:
+                response = refresh_token(token)
+                new_token = json.loads(response.text)["token"]
+                check.refresh_token = new_token
+
+            if response and response.status_code == 200:
                 change = request.data.get("changeInfo", None)
                 pw = request.data.get("pw", None)
                 if change:
@@ -85,11 +97,24 @@ def user_detail(request, username):
         name = request.data.get("username", None)
 
         if name != None:
-            user = User.objects.get(username=name)
+            check = User.objects.get(username=name)
+
+            if token != check.refresh_token:
+                return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
+            if not check.is_staff or username != name:
+                return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
             response = verify_token(token)
-            if response and response.status_code == 200 and username == name or user.is_staff:
+            if response.status_code != 200:
+                response = refresh_token(token)
+                new_token = json.loads(response.text)["token"]
+                check.refresh_token = new_token
+
+            if response and response.status_code == 200:
                 user.delete()
                 return Response(status=status.HTTP_200_OK)
+
             user.refresh_token = ""
             user.save()
             auth_logout(request)
