@@ -31,8 +31,8 @@ export default {
     ...mapState({getStaff: state => state.user.checkStaff}),
   },
   watch: {
-    form: function() {
-      if (this.form === "admin") {
+    getStaff: function() {
+      if (this.getStaff) {
         this.getLists();
       }
     }
