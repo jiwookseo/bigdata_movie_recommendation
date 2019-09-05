@@ -28,23 +28,28 @@
 
     <div class="profile--detail">
       <ImageSlider />
+      <SimilarUserList />
     </div>
   </div>
 </template>
 
 <script>
 import ImageSlider from "../imageSlider"
+import SimilarUserList from './similarUserList'
 import { mapGetters } from 'vuex'
 export default {
   name: "Profile",
-  components: { ImageSlider },
+  components: { ImageSlider, SimilarUserList },
   watch: {
     '$route.params.username': function(e) {
-      console.log("EEEEEEEEEEEE",e)
+      this.$store.commit('data/setUsername', e)
+      this.$store.dispatch('data/getUserByUsername', e)
+      this.$store.dispatch('mvUi/setUserRatingMovies', e)
+      this.$store.dispatch('mvUi/setSimilarUser', e)
     }
   },
   computed: {
-    ...mapGetters('data', ['user'])
+    ...mapGetters('data', ['user']),
   },
   created(){
     this.$store.commit('mvUi/setSliderType', "profile")
@@ -54,6 +59,7 @@ export default {
     const username = this.$route.params.username
     this.$store.dispatch('data/getUserByUsername', username)
     this.$store.dispatch('mvUi/setUserRatingMovies', username)
+    this.$store.dispatch('mvUi/setSimilarUser', username)
   },
 }
 </script>

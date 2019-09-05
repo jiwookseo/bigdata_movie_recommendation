@@ -44,7 +44,8 @@ const getters = {
   ratings: state => state.ratings,
   recAge: state => state.recAge,
   recOccupation: state => state.recOccupation,
-  recGender: state => state.recGender
+  recGender: state => state.recGender,
+  username: state => state.username
 };
 
 // actions

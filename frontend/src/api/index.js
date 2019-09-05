@@ -49,4 +49,7 @@ export default {
   getRelatedMovies(params) {
     return axios.get(`${BASE_URL}/movies/related_movies/`, { params});
   },
+  getRelatedUsers(params) {
+    return axios.get(`${BASE_URL}/users/related_users/${params}`)
+  }
 };
