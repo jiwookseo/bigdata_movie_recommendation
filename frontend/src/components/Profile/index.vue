@@ -15,7 +15,7 @@
           <div class="profile-info-data-num">
             <span>22</span>
             <span>33</span>
-            <span>34</span>
+            <span>{{ user.rating_cnt }}</span>
           </div>
           <div class="profile-info-data-text">
             <span>보고 싶어요</span>
@@ -34,7 +34,7 @@
 
 <script>
 import ImageSlider from "../imageSlider"
-
+import { mapGetters } from 'vuex'
 export default {
   name: "Profile",
   components: { ImageSlider },
@@ -42,6 +42,9 @@ export default {
     '$route.params.username': function(e) {
       console.log("EEEEEEEEEEEE",e)
     }
+  },
+  computed: {
+    ...mapGetters('data', ['user'])
   },
   created(){
     this.$store.commit('mvUi/setSliderType', "profile")
