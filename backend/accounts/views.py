@@ -59,8 +59,9 @@ def user_detail(request, username):
             response = verify_token(token)
             if response.status_code != 200:
                 response = refresh_token(token)
-                new_token = json.loads(response.text)["token"]
-                check.refresh_token = new_token
+                if response.status_code == 200:
+                    new_token = json.loads(response.text)["token"]
+                    check.refresh_token = new_token
 
             if response and response.status_code == 200:
                 change = request.data.get("changeInfo", None)
@@ -108,8 +109,9 @@ def user_detail(request, username):
             response = verify_token(token)
             if response.status_code != 200:
                 response = refresh_token(token)
-                new_token = json.loads(response.text)["token"]
-                check.refresh_token = new_token
+                if response.status_code == 200:
+                    new_token = json.loads(response.text)["token"]
+                    check.refresh_token = new_token
 
             if response and response.status_code == 200:
                 user.delete()
@@ -119,7 +121,7 @@ def user_detail(request, username):
             user.save()
             auth_logout(request)
             return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(data={"error": "입력값이 없습니다."}, status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET'])
