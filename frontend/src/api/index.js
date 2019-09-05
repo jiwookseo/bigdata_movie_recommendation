@@ -31,6 +31,9 @@ export default {
   getRatings(username) {
     return axios.get(`${BASE_URL}/users/${username}/ratings/`);
   },
+  getUserRatingMovie(username, s=0, e=10) {
+    return axios.get(`${BASE_URL}/movies/?username=${username}&start=${s}&limit=${e}`)
+  },
   getFollowings(username) {
     return axios.get(`${BASE_URL}/users/${username}/followings/`);
   },

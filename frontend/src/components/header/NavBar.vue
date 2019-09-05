@@ -16,7 +16,7 @@
         <v-icon class="login_icon" @click="sign">vpn_key</v-icon>
       </span>
       <span v-else class="user_span">
-        <router-link :to="{name: 'profile', params: {username: loginUsername}}">
+        <router-link :to="{name: 'profile', params: {username: getUsername}}">
           <font-awesome-icon icon="user" class="login_icon" />
         </router-link>
         <button @click="signout">

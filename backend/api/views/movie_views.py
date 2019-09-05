@@ -25,12 +25,6 @@ def movie_list(request):
         start = int(request.GET.get("start", 0))
         if username:
             user = User.objects.get(username=username)
-            arr = []
-            for rating in user.ratings.all():
-                arr.append(rating.movie.id)
-            arr.sort()
-            for movie in arr:
-                print(Movie.objects.get(id=movie).title)
             movies = Movie.objects.annotate(
                 username_count=Count(
                     "ratings", filter=Q(ratings__user__username=username))

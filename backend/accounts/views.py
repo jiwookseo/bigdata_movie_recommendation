@@ -125,7 +125,7 @@ def user_detail(request, username):
 @api_view(['GET'])
 def user_ratings(request, username):
     user = get_object_or_404(User, username=username)
-    serializer = RatingSerializer(user.ratings.all()[:10], many=True)
+    serializer = RatingSerializer(user.ratings.all(), many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 

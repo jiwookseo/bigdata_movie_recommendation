@@ -40,7 +40,7 @@ export default {
   components: { ImageSlider },
   watch: {
     '$route.params.username': function(e) {
-      console.log("somethign in happen?")
+      console.log("EEEEEEEEEEEE",e)
     }
   },
   created(){
@@ -48,7 +48,9 @@ export default {
 
   },
   mounted(){
-    this.$store.dispatch('data/getUserByUsername', this.$route.params.username)
+    const username = this.$route.params.username
+    this.$store.dispatch('data/getUserByUsername', username)
+    this.$store.dispatch('mvUi/setUserRatingMovies', username)
   },
 }
 </script>
