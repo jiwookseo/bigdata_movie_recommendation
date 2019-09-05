@@ -4,7 +4,7 @@
     <div class="navbar">
       <div class="navbar-title"><i class="fas fa-user-shield"></i> ADMIN PAGE</div>
     </div>
-    <div v-if="form === 'sign'" class="sign">
+    <div v-if="!getStaff" class="sign">
       <div class="sign_div">
         <p class="sign_title">Admin Login</p>
         <div class="signin">
@@ -71,16 +71,16 @@ export default {
     },
     checkLogin() {
       if (sessionStorage.getItem("adminLogin") !== null) {
-        this.$store.user.isLogin = sessionStorage.getItem("adminLogin");
+        this.$store.state.user.isLogin = sessionStorage.getItem("adminLogin");
       }
       if (sessionStorage.getItem("adminName") !== null) {
-        this.$store.user.username = sessionStorage.getItem("adminName");
+        this.$store.state.user.username = sessionStorage.getItem("adminName");
       }
       if (sessionStorage.getItem("adminCheck") !== null) {
-        this.$store.user.checkStaff = sessionStorage.getItem("adminCheck");
+        this.$store.state.user.checkStaff = sessionStorage.getItem("adminCheck");
       }
       if (sessionStorage.getItem("adminToken") !== null) {
-        this.$store.user.token = sessionStorage.getItem("adminToken");
+        this.$store.state.user.token = sessionStorage.getItem("adminToken");
       }
     },
     getLists() {
