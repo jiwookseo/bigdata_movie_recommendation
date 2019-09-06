@@ -9,19 +9,6 @@ class MovieAdmin(admin.ModelAdmin):
     list_display_links = ['title']
     list_per_page = 50
 
-    def km_clustering(self, request, queryset):
-        self.message_user(request, 'K-Means 클러스터링 수행')
-    km_clustering.short_description = 'K-Means Clustering'
-
-    def hr_clustering(self, request, queryset):
-        self.message_user(request, 'HR 클러스터링 수행')
-    hr_clustering.short_description = 'HR Clustering'
-
-    def em_clustering(self, request, queryset):
-        self.message_user(request, 'EM 클러스터링 수행')
-    em_clustering.short_description = "EM Clustering"
-
-
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
