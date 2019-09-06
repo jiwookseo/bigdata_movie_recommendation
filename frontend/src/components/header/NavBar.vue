@@ -70,7 +70,7 @@ export default {
       this.redirectHome();
     },
     redirectHome(){
-      this.$router.push("")
+      this.$router.push("/")
     },
     ...mapActions("data", ["logout"]),
     
