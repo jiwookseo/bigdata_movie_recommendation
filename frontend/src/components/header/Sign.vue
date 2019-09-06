@@ -134,10 +134,12 @@
       ],
     }),
     computed: {
-      ...mapState({getUsername: state => state.data.username}),
-      ...mapState({getRegister: state => state.data.register}),
-      ...mapState({getRegError: state => state.data.regErrors}),
-      ...mapState({getLogError: state => state.data.logErrors}),
+      ...mapState({
+        getUsername: state => state.data.username,
+        getRegister: state => state.data.register,
+        getRegError: state => state.data.regErrors,
+        getLogError: state => state.data.logErrors
+        }),
     },
     watch: {
       reg_username: function() {
@@ -163,6 +165,7 @@
       this.closeModal(this.resetForm);
     },
     methods: {
+      ...mapActions("data", ["setLogin", "setRegister"]),
       closeModal(func) {
         const modal = document.getElementsByClassName("sign_modal")[0];
         const change = func;
@@ -173,8 +176,6 @@
           }
         };
       },
-      ...mapActions("data", ["setLogin"]),
-      ...mapActions("data", ["setRegister"]),
       async login() {
         this.resetError();
         const params = {
@@ -467,7 +468,7 @@
     }
     color: rgba(255, 183, 0, 1.0);
   }
-  
+
   .signin {
     width: 70%;
     margin: 30px 0;
