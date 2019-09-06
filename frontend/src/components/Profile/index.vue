@@ -57,6 +57,7 @@ export default {
   },
   mounted(){
     const username = this.$route.params.username
+    this.$store.commit('data/setUsername', username)
     this.$store.dispatch('data/getUserByUsername', username)
     this.$store.dispatch('mvUi/setUserRatingMovies', username)
     this.$store.dispatch('mvUi/setSimilarUser', username)
