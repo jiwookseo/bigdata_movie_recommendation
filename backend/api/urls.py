@@ -49,11 +49,11 @@ urlpatterns = [
     path('admin/users/', admin_views.users, name="admin_users"),
 
 
-    # clustering
-    path('clustering/movies/', clustering_views.movie_clustering, 
-          name="movie_clustering"),
-    path('clustering/users/', clustering_views.user_clustering, 
-          name="user_clustering"),
+#     # clustering
+#     path('clustering/movies/', clustering_views.movie_clustering, 
+#           name="movie_clustering"),
+#     path('clustering/users/', clustering_views.user_clustering, 
+#           name="user_clustering"),
     
     # scrap
     path('scrap/', scrap_views.scrap_poster),

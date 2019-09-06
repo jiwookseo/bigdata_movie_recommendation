@@ -15,6 +15,7 @@ const router = new VueRouter({
     { path: '/admin', 
       component: AdminPage, 
       name: 'admin',
+      redirect: { name: 'movie-list' },
       children: [
         {
           path: 'movies',

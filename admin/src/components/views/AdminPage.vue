@@ -1,14 +1,17 @@
 <template>
   <div class="content-container">
     <div class="data-controller-container">
+      <!-- Search Form -->
       <search-form :submit="searchMovies" />
-      <v-btn class="clustering_button" @click="clustering">clustering</v-btn>
+
+      <!-- Clustering -->
+      <clustering-form :data="data" />
     </div>
 
     <div class="data-list-container">
       <div class="data-list-header">
-        <div class="list-header-table" :class="[ directory === 'movie'? 'selected' : '' ]" @click="selectTable">Movie</div>
-        <div class="list-header-table" :class="[ directory === 'user'? 'selected' : '' ]" @click="selectTable">User</div>
+        <div class="list-header-table" :class="[ data === 'movie'? 'selected' : '' ]" @click="selectTable">Movie</div>
+        <div class="list-header-table" :class="[ data === 'user'? 'selected' : '' ]" @click="selectTable">User</div>
       </div>
       <div class="data-list-content">
         <router-view />
@@ -20,14 +23,16 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import SearchForm from '../module/SearchForm'
+import ClusteringForm from '../module/ClusteringForm'
 
 export default {
   components: {
     SearchForm,
+    ClusteringForm
   },
   data() {
     return {
-      directory: 'movie',
+      data: 'movie',
     }
   },
   methods: {
@@ -35,7 +40,7 @@ export default {
     ...mapActions('user', ['clusteringUsers', 'getRelatedUsers']),
     selectTable(e) {
       const keyword = e.target.innerHTML.toLowerCase();
-      this.directory = keyword
+      this.data = keyword
       this.$router.push({
         name: `${keyword}-list`
       })
@@ -50,12 +55,6 @@ export default {
       } else {
         this.clusteringUsers(params)
       }
-    },
-    test() {
-      const params = {
-        userId: 1
-      }
-      this.getRelatedUsers(params);
     },
   }
 }
