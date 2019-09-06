@@ -25,13 +25,13 @@
       </div>
       <div class="isStaff">
         <label for="isStaff_T">staff=T</label>
-        <input id="isStaff_T" v-model="checkIsStaff" :value=true type="radio">
+        <input id="isStaff_T" v-model="checkIsStaff" :value="true" type="radio">
         <label for="isStaff_F">staff=F</label>
-        <input id="isStaff_F" v-model="checkIsStaff" :value=false type="radio">
+        <input id="isStaff_F" v-model="checkIsStaff" :value="false" type="radio">
       </div>
-      <div class="data-controller">
-        <i v-if="user === idx" class="fas fa-check" @click="editInfo"></i> | <i class="fas fa-edit" @click="editUser"></i> | <i class="fas fa-trash-alt" @click="delUser"></i>
-      </div>
+    </div>
+    <div class="data-controller">
+      <i v-if="user === idx" class="fas fa-check" @click="editInfo"></i> | <i class="fas fa-edit" @click="editUser"></i> | <i class="fas fa-trash-alt" @click="delUser"></i>
     </div>
   </div>
 </template>
@@ -178,6 +178,8 @@
     }
 
     .data-controller {
+      display: flex;
+      justify-content: space-between;
       padding: 0 1vw;
       color: #535353;
       .fa-edit:hover {
@@ -185,6 +187,12 @@
       }
       .fa-trash-alt:hover {
         color: #FE1A1A;
+      }
+      i {
+        margin: {
+          left: 3px;
+          right: 3px;
+        }
       }
     }
   }
