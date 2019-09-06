@@ -4,11 +4,16 @@
     <!-- Data List -->
     <div v-for="(user, idx) in dataList" v-if="idx+1 <= currentPage*10 && idx+1 > (currentPage-1)*10" :key="`user${user.id}`">
       <user-info-bar
-        :id="user.id"
-        :username="user.username"
-        :gender="user.gender"
-        :age="user.age"
-        :isStaff="user.isStaff"
+              :id="user.id"
+              :username="user.username"
+              :gender="user.gender"
+              :age="user.age"
+              :occupation="user.occupation"
+              :isStaff="user.isStaff"
+              :idx="idx"
+              :check="checkUser"
+              :user="userIdx"
+              :edited="edited"
       >
       </user-info-bar>
     </div>
@@ -23,12 +28,12 @@
         <i class="fas fa-caret-left"></i>
       </div>
 
-      <div class="page-button" 
-        v-for="pageNumber in pageArray" 
-        :key="`page${pageNumber}`"
-        v-show="pageNumber <= lastPage"
-        @click="changeCurrentPage(pageNumber)"
-        :class="{ 'current-page' : pageNumber === currentPage}"
+      <div class="page-button"
+           v-for="pageNumber in pageArray"
+           :key="`page${pageNumber}`"
+           v-show="pageNumber <= lastPage"
+           @click="changeCurrentPage(pageNumber)"
+           :class="{ 'current-page' : pageNumber === currentPage}"
       >
         {{ pageNumber }}
       </div>
@@ -45,9 +50,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import UserInfoBar from './UserInfoBar'
-import DataList from '../../mixin/components/DataList'
+  import { mapState } from "vuex";
+  import UserInfoBar from './UserInfoBar'
+  import DataList from '../../mixin/components/DataList'
 
 export default {
   components: {
@@ -55,16 +60,32 @@ export default {
   },
   data() {
     return {
-      currentView: 'user'
+      currentView: 'user',
+      userIdx: -1,
     }
   },
   computed: {
     ...mapState('user', { dataList: 'userList' }),
+  },
+  methods: {
+    checkUser(idx) {
+      if (this.userIdx === idx) {
+        this.userIdx = -1;
+      } else {
+        this.userIdx = idx;
+      }
+    },
+    edited(idx, info) {
+      this.dataList[idx]["age"] = info["age"];
+      this.dataList[idx]["gender"] = info["gender"];
+      this.dataList[idx]["occupation"] = info["occupation"];
+      this.dataList[idx]["is_staff"] = info["is_staff"];
+    }
   },
   mixins: [ DataList ]
 };
 </script>
 
 <style scoped lang="scss">
-@import "@/mixin/style/_datalist";
+  @import "@/mixin/style/_datalist";
 </style>
