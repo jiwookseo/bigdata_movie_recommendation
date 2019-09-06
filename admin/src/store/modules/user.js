@@ -95,31 +95,37 @@ const actions = {
 },
 
 // login
-async setLogin({ commit }, params) {
-  const res = await api.login(params);
-  if (res.status === 200 && res.data.is_staff) {
-    commit("setIsLogin", true);
-    commit("setUsername", res.data.username);
-    commit("setStaff", res.data.is_staff);
-    commit("setToken", res.data.token);
-    sessionStorage.setItem("adminLogin", true);
-    sessionStorage.setItem("adminName", res.data.username);
-    sessionStorage.setItem("adminCheck", res.data.is_staff);
-    sessionStorage.setItem("adminToken", res.data.token);
-  } else {
-    commit("setIsLogin", false);
-  }
-},
-async logout({ commit }, params) {
-  const res = await api.logout(params);
-  if (res.status === 200) {
-    commit('setIsLogin', false);
-    commit("setUsername", "");
-    commit("setStaff", false);
-    commit("setToken", "");
-    sessionStorage.clear();
-  }
-},
+  async setLogin({ commit }, params) {
+    const res = await api.login(params);
+    if (res.status === 200 && res.data.is_staff) {
+      commit("setIsLogin", true);
+      commit("setUsername", res.data.username);
+      commit("setStaff", res.data.is_staff);
+      commit("setToken", res.data.token);
+      sessionStorage.setItem("adminLogin", true);
+      sessionStorage.setItem("adminName", res.data.username);
+      sessionStorage.setItem("adminCheck", res.data.is_staff);
+      sessionStorage.setItem("adminToken", res.data.token);
+    } else if (res.status === 203) {
+      if (res.data["__all__"]) {
+        commit("setLogError", res.data["__all__"][0]["message"])
+      } else if (res.data.username) {
+        commit("setLogError", res.data.username[0]["message"])
+      } else if (res.data.error) {
+        commit("setLogError", "관리자만 로그인이 가능합니다. 권한을 확인해주세요.");
+      }
+    }
+  },
+  async logout({ commit }, params) {
+    const res = await api.logout(params);
+    if (res.status === 200) {
+      commit('setIsLogin', false);
+      commit("setUsername", "");
+      commit("setStaff", false);
+      commit("setToken", "");
+      sessionStorage.clear();
+    }
+  },
 };
 
 
