@@ -117,14 +117,12 @@ const actions = {
     }
   },
   async logout({ commit }, params) {
-    const res = await api.logout(params);
-    if (res.status === 200) {
-      commit('setIsLogin', false);
-      commit("setUsername", "");
-      commit("setStaff", false);
-      commit("setToken", "");
-      sessionStorage.clear();
-    }
+    commit('setIsLogin', false);
+    commit("setUsername", "");
+    commit("setStaff", false);
+    commit("setToken", "");
+    sessionStorage.clear();
+    await api.logout(params);
   },
 };
 
