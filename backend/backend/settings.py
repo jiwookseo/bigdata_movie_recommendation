@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # apps
     'api',
     "accounts",
+    'cluster',
 
     # cors
     "corsheaders"
