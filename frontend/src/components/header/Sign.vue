@@ -6,21 +6,21 @@
           <p class="sign_title">Member Login</p>
           <div class="signin">
             <input 
-              id="insert_id" 
+              id="insert_id"
+              v-model="loginInput.username"
               class="login--input"
-              type="text" 
-              v-model="loginInput.username" 
-              @keydown.enter="login"
+              type="text"
               required
+              @keydown.enter="login"
             >
             <label for="insert_id">Username</label>
             <input 
               id="insert_pw" 
-              class="mt-30 login--input" 
-              type="password"
               v-model="loginInput.password"
-              @keydown.enter="login"
+              class="mt-30 login--input"
+              type="password"
               required
+              @keydown.enter="login"
             >
             <label for="insert_pw">Password</label>
             <span>{{ err_login }}</span>
@@ -44,7 +44,7 @@
             <p class="sign_title">Register</p>
           </div>
           <div class="register_form">
-            <input id="username" class="signup--input" v-model="reg_username" type="text" required>
+            <input id="username" v-model="reg_username" class="signup--input" type="text" required>
             <label for="username">Username</label>
             <span>{{ err_username }}</span>
             <input id="password1" v-model="reg_password1" type="password" class="mt-30 signup--input" required>
@@ -97,7 +97,7 @@
 
 
 <script>
-  import { mapState, mapGetters, mapActions } from "vuex";
+  import { mapState, mapActions } from "vuex";
 
   export default {
     name: "Sign",

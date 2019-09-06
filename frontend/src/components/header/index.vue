@@ -6,7 +6,6 @@
 </template>
 
 <script>
-  import { mapState } from "vuex"
   import NavBar from "./NavBar"
   import Sign from "./Sign"
 
