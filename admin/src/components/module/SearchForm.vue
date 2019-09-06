@@ -1,8 +1,11 @@
 <template>
-  <v-form ref="form" class="search_form">
-    <v-text-field v-model="title" class="search_input" label="키워드를 입력하세요" />
-    <v-btn large class="search_button" @click="onSubmit">Search</v-btn>
-  </v-form>
+  <div class="search-form-container">
+    <v-form ref="form" class="search_form">
+      <v-text-field v-model="title" class="search_input" label="키워드를 입력하세요" />
+      <v-btn large class="search_button" @click="onSubmit">Search</v-btn>
+    </v-form>
+  </div>
+  
 </template>
 
 <script>
@@ -29,6 +32,14 @@ export default {
 </script>
 
 <style lang="scss">
+.search-form-container {
+  width: 50%;
+  display: flex;
+  padding: 0 5%;
+  justify-content: space-around;
+  align-items: center;
+}
+
 .search_input {
   padding: 0 !important;
   width: 250px;

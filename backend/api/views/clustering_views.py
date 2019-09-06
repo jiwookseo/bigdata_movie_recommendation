@@ -15,6 +15,7 @@ from api.models import Movie, Rating
 
 # Data Processing Tools
 import numpy as np
+import pandas as pd
 
 # Clustering
 from sklearn.cluster import KMeans, AgglomerativeClustering
