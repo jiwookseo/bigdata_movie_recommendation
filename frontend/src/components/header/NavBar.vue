@@ -26,7 +26,7 @@
     </div>
   </nav>
 </template>
-​
+
 <script>
   /* Requirements for use fontawesome & How to Use
      1. library 를 @fontawesome/fontawesome-svg-core 에서 import 하세요
@@ -40,7 +40,7 @@
   import { library } from '@fortawesome/fontawesome-svg-core'
   import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
   import { faSearch, faUser } from '@fortawesome/free-solid-svg-icons'
-  import { mapState, mapActions, mapGetters } from "vuex"
+  import { mapActions, mapGetters } from "vuex"
 
 library.add(faSearch, faUser)
 
@@ -67,9 +67,10 @@ export default {
         username: this.username
       };
       await this.logout(params);
+      this.redirectHome();
     },
     redirectHome(){
-      this.$router.push('/')
+      this.$router.push("/")
     },
     ...mapActions("data", ["logout"]),
     

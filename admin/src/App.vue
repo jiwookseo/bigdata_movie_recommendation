@@ -3,6 +3,7 @@
     <!-- NavBar -->
     <div class="navbar">
       <div class="navbar-title"><i class="fas fa-user-shield"></i> ADMIN PAGE</div>
+      <div v-if="getStaff"><i class="fas fa-sign-out-alt" @click="signout"></i></div>
     </div>
     <div v-if="!getStaff" class="sign">
       <div class="sign_div">
@@ -30,6 +31,7 @@ export default {
   computed: {
     ...mapState({getStaff: state => state.user.checkStaff}),
     ...mapState({getError: state => state.user.logErrors}),
+    ...mapState({getUsername: state => state.user.username}),
   },
   watch: {
     getStaff: function() {
@@ -83,6 +85,13 @@ export default {
         this.$store.state.user.token = sessionStorage.getItem("adminToken");
       }
     },
+    async signout() {
+      const params = {
+        username: this.getUsername
+      };
+      await this.logout(params);
+    },
+    ...mapActions("user", ["logout"]),
   },
 };
 </script>
@@ -98,7 +107,13 @@ ul {
   height: 5vh;
   color: white;
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  .fa-sign-out-alt {
+    margin-right: 30px;
+    transform: scale(1.5);
+  }
+
   .navbar-title {
     margin-left: 3vw;
     font-size: 2.5vh;
