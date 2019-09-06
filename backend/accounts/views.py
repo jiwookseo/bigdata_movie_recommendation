@@ -46,22 +46,23 @@ def user_detail(request, username):
 
     if request.method == "PUT":
         token = request.data.get("token", None)
-        name = request.data.get("username", None)
-        if name != None:
-            check = User.objects.get(username=name)
+        req_name = request.data.get("username", None)
+        if req_name != None:
+            req_user = get_object_or_404(User, username=req_name)
 
-            if token != check.refresh_token:
+            if token != req_user.refresh_token:
                 return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
-            if username != name or not check.is_staff:
-                return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+            if username != req_name:
+                if not req_user.is_staff:
+                    return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
             response = verify_token(token)
             if response.status_code != 200:
                 response = refresh_token(token)
                 if response.status_code == 200:
                     new_token = json.loads(response.text)["token"]
-                    check.refresh_token = new_token
+                    req_user.refresh_token = new_token
 
             if response and response.status_code == 200:
                 change = request.data.get("changeInfo", None)
@@ -75,11 +76,11 @@ def user_detail(request, username):
                         return Response(data=error, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
                 elif pw:
                     original = pw["original"]
-                    if check_password(original, check.password):
+                    if check_password(original, req_user.password):
                         if pw["new1"] == pw["new2"]:
-                            check.set_password(pw["new1"])
-                            check.save()
-                            auth_login(request, check)
+                            req_user.set_password(pw["new1"])
+                            req_user.save()
+                            auth_login(request, req_user)
                         else:
                             return Response(data={"error": "새 비밀번호가 틀렸습니다."}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
                     else:
@@ -87,31 +88,32 @@ def user_detail(request, username):
                 else:
                     return Response(data={"error": "입력된 값이 없습니다."}, status=status.HTTP_204_NO_CONTENT)
                 return Response(status=status.HTTP_200_OK)
-            check.refresh_token = ""
-            check.save()
+            req_user.refresh_token = ""
+            req_user.save()
             auth_logout(request)
             return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
         return Response(data={"error": "입력된 값이 없습니다."}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
     if request.method == "DELETE":
         token = request.data.get("token", None)
-        name = request.data.get("username", None)
+        req_name = request.data.get("username", None)
 
-        if name != None:
-            check = User.objects.get(username=name)
+        if req_name != None:
+            req_user = get_object_or_404(User, username=req_name)
 
-            if token != check.refresh_token:
+            if token != req_user.refresh_token:
                 return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
-            if not check.is_staff or username != name:
-                return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+            if username != req_name:
+                if not req_user.is_staff:
+                    return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
             response = verify_token(token)
             if response.status_code != 200:
                 response = refresh_token(token)
                 if response.status_code == 200:
                     new_token = json.loads(response.text)["token"]
-                    check.refresh_token = new_token
+                    req_user.refresh_token = new_token
 
             if response and response.status_code == 200:
                 user.delete()
@@ -186,7 +188,7 @@ def login(request):
 @api_view(["POST"])
 def logout(request):
     username = request.data.get("username", None)
-    user = User.objects.get(username=username)
+    user = get_object_or_404(User, username=username)
     user.refresh_token = ""
     user.save()
 
