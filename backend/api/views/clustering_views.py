@@ -15,7 +15,6 @@ from api.models import Movie, Rating
 
 # Data Processing Tools
 import numpy as np
-import pandas as pd
 
 # Clustering
 from sklearn.cluster import KMeans, AgglomerativeClustering
@@ -168,7 +167,7 @@ def movie_clustering(request):
 # K-Means Customized Api (User)
 def kmeans_custom_clustering_users(k, iters):
     
-    # define variables and data
+    # define variables, functions and data
     ml = movies_count
     ul = users.count()
     clustering_data = np.full((1, ul), -1)[0]
@@ -191,7 +190,6 @@ def kmeans_custom_clustering_users(k, iters):
                     cluster = j
 
             clustering_data[i] = cluster
-        
 
         # adjust centroids
         centroids = np.zeros((k, ml))
