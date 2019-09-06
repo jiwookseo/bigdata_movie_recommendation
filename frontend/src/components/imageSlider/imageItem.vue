@@ -57,8 +57,8 @@ export default {
   computed: {
     ...mapGetters("mvUi", ["detailToggler", "detailType"]),
       toggle() {
-      return this.detailToggler && this.detailType === this.type;
-    },
+        return this.detailToggler && this.detailType === this.type;
+      },
   },
   methods: {
     handleMouseOver: function() {

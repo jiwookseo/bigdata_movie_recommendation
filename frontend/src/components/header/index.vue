@@ -16,12 +16,6 @@
       NavBar,
       Sign
     },
-    computed: {
-      ...mapState({getToken: state => state.data.token}),
-      ...mapState({getIsLogin: state => state.data.isLogin}),
-      ...mapState({getUsername: state => state.data.username}),
-      ...mapState({getIsStaff: state => state.data.checkStaff})
-    },
     mounted() {
       this.checkLogin();
     },

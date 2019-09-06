@@ -45,7 +45,10 @@ const getters = {
   recAge: state => state.recAge,
   recOccupation: state => state.recOccupation,
   recGender: state => state.recGender,
-  username: state => state.username
+  username: state => state.username,
+  isLogin: state => state.isLogin,
+  register: state => state.register,
+  logErrors: state => state.logErrors
 };
 
 // actions

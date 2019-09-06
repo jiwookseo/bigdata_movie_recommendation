@@ -2,7 +2,7 @@
   <div class="app">
     <Header />
     <router-view />
-    <Snackbar />
+    <!-- <Snackbar /> 나중에 쓰일 친구입니다.-->
   </div>
 </template>
 

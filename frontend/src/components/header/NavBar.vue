@@ -1,22 +1,22 @@
 <template>
   <nav class="nav">
     <div class="nav__title">
-      <router-link to="/">
+      <a @click="redirectHome">
         <span class="txt-orange">
           HONEY BEE
         </span>
-      </router-link>
+      </a>
     </div>
     <div class="nav__icon-bar">
       <span>
         <font-awesome-icon icon="search" size="2x" />
       </span>
 
-      <span v-if="!getIsLogin">
+      <span v-if="!isLogin">
         <v-icon class="login_icon" @click="sign">vpn_key</v-icon>
       </span>
       <span v-else class="user_span">
-        <router-link :to="{name: 'profile', params: {username: getUsername}}">
+        <router-link :to="{name: 'profile', params: { username }}">
           <font-awesome-icon icon="user" class="login_icon" />
         </router-link>
         <button @click="signout">
@@ -40,7 +40,7 @@
   import { library } from '@fortawesome/fontawesome-svg-core'
   import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
   import { faSearch, faUser } from '@fortawesome/free-solid-svg-icons'
-  import { mapState, mapActions } from "vuex"
+  import { mapState, mapActions, mapGetters } from "vuex"
 
 library.add(faSearch, faUser)
 
@@ -59,17 +59,20 @@ export default {
     admin: "http://localhost:8081/admin",
   }),
   computed: {
-    ...mapState({getIsLogin: state => state.data.isLogin}),
-    ...mapState({getUsername: state => state.data.username}),
+    ...mapGetters('data', ["isLogin", "username"]),
   },
   methods: {
-    ...mapActions("data", ["logout"]),
     async signout() {
       const params = {
-        "username": this.getUsername
+        username: this.username
       };
       await this.logout(params);
-    }
+    },
+    redirectHome(){
+      this.$router.push('/')
+    },
+    ...mapActions("data", ["logout"]),
+    
   }
 }
 </script>
