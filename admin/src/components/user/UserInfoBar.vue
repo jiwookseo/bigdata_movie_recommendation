@@ -6,9 +6,9 @@
     <div v-else class="data-edit">
       <span>{{ username }}</span>
       <div class="gender">
-        <label for="gender_F">F</label>
+        <label for="gender_F">Female</label>
         <input id="gender_F" v-model="checkGender" value="F" type="radio">
-        <label for="gender_M">M</label>
+        <label for="gender_M">Male</label>
         <input id="gender_M" v-model="checkGender" value="M" type="radio">
       </div>
       <div class="age">
@@ -24,14 +24,14 @@
         </select>
       </div>
       <div class="isStaff">
-        <label for="isStaff_T">T</label>
+        <label for="isStaff_T">staff=T</label>
         <input id="isStaff_T" v-model="checkIsStaff" :value=true type="radio">
-        <label for="isStaff_F">F</label>
+        <label for="isStaff_F">staff=F</label>
         <input id="isStaff_F" v-model="checkIsStaff" :value=false type="radio">
       </div>
-    </div>
-    <div class="data-controller">
-      <i v-if="user === idx" class="fas fa-check" @click="editInfo"></i> | <i class="fas fa-edit" @click="editUser"></i> | <i class="fas fa-trash-alt" @click="delUser"></i>
+      <div class="data-controller">
+        <i v-if="user === idx" class="fas fa-check" @click="editInfo"></i> | <i class="fas fa-edit" @click="editUser"></i> | <i class="fas fa-trash-alt" @click="delUser"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -159,11 +159,16 @@
 <style scoped lang="scss">
   .data-info-bar {
     border-radius: 5px;
-    height: 5vh;
+    height: auto;
+    min-height: 5vh;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 1px 1px 3px;
+    padding: {
+      top: 10px;
+      bottom: 10px;
+    }
 
     .data-info {
       padding: 0 1vw;
@@ -187,18 +192,25 @@
     display: flex;
     justify-content: space-between;
     padding-left: 14px;
-    width: 50%;
+    width: 100%;
+    overflow: hidden;
   }
   .gender, .isStaff {
+    margin-left: 15px;
     input {
       margin-left: 10px;
       margin-right: 15px;
     }
   }
   .age, .occupation {
-    border-bottom: rgba(255, 183, 0, 1.0) 2px solid;
+    margin-left: 15px;
+
     select {
+      border-bottom: rgba(255, 183, 0, 1.0) 2px solid;
       outline: none;
     }
+  }
+  .fa-check:hover {
+    color: rgba(0, 76, 255, 0.96);
   }
 </style>
