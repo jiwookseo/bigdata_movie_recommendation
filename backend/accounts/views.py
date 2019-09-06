@@ -160,7 +160,8 @@ def login(request):
     if form.is_valid():
 
         if admin:
-            if not user.is_staff:
+            admin = form.get_user()
+            if not admin.is_staff:
                 return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
         token = create_token(user)
