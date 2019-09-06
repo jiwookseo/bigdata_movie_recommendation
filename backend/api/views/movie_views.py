@@ -25,7 +25,6 @@ def movie_list(request):
         limit = int(request.GET.get("limit", 10))
         start = int(request.GET.get("start", 0))
         if username:
-            user = User.objects.get(username=username)
             movies = Movie.objects.annotate(
                 username_count=Count(
                     "ratings", filter=Q(ratings__user__username=username))
@@ -102,8 +101,9 @@ def movie_list(request):
         # response = verify_token(token)
         # if response.status_code != 200:
         #     response = refresh_token(token)
-        #     new_token = json.loads(response.text)["token"]
-        #     user.refresh_token = new_token
+        #     if response.status_code == 200:
+        #         new_token = json.loads(response.text)["token"]
+        #         user.refresh_token = new_token
 
         #     if response and response.status_code == 200:
         for movie in movies:
@@ -216,8 +216,9 @@ def rating_list(request):
         # response = verify_token(token)
         # if response.status_code != 200:
         #     response = refresh_token(token)
-        #     new_token = json.loads(response.text)["token"]
-        #     user.refresh_token = new_token
+        #     if response.status_code == 200:
+        #         new_token = json.loads(response.text)["token"]
+        #         user.refresh_token = new_token
 
         #     if response and response.status_code == 200:
 
@@ -264,8 +265,9 @@ def rating_detail(request, rating_id):
         # response = verify_token(token)
         # if response.status_code != 200:
         #     response = refresh_token(token)
-        #     new_token = json.loads(response.text)["token"]
-        #     user.refresh_token = new_token
+        #     if response.status_code == 200:
+        #         new_token = json.loads(response.text)["token"]
+        #         user.refresh_token = new_token
 
         #     if response and response.status_code == 200:
         rating.delete()
