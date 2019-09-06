@@ -158,7 +158,6 @@ def login(request):
 
     form = CustomUserAuthenticationForm(request, data=user)
     if form.is_valid():
-        user = form.get_user()
 
         if admin:
             if not user.is_staff:
@@ -166,6 +165,7 @@ def login(request):
 
         token = create_token(user)
         token = token.json()["token"]
+        user = form.get_user()
         user.refresh_token = token
         user.save()
 

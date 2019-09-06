@@ -32,41 +32,41 @@ const actions = {
   },
 
   async clusteringMovies({ commit }, params) {
-    try {
-      const response = await api.clusteringMovies(params);
-      console.log(response.status);
-    } catch(error) {
-      console.log(error);
-    }
-  },
+  try {
+    const response = await api.clusteringMovies(params);
+    console.log(response.status);
+  } catch(error) {
+    console.log(error);
+  }
+},
 
   async editMovie({ commit }, params) {
-    const id = params.id;
-    const res = await api.editMovie(id, params);
-    if (res.status === 202) {
-      commit("editComment", "영화 정보가 수정되었습니다.")
+  const id = params.id;
+  const res = await api.editMovie(id, params);
+  if (res.status === 202) {
+    commit("editComment", "영화 정보가 변경되었습니다.")
+  } else {
+    if (res.data.error) {
+      commit("editComment", res.data.error)
     } else {
-      if (res.data.error) {
-        commit("editComment", res.data.error)
-      } else {
-        commit("editComment", "정보 수정에 실패했습니다.")
-      }
-    }
-  },
-
-  async deleteMovie({ commit }, params) {
-    const id = params.id;
-    const res = await api.deleteMovie(id, params);
-    if (res.status === 200) {
-      commit("deleteComment", "영화가 삭제되었습니다.")
-    } else {
-      if (res.data.error) {
-        commit("deleteComment", res.data.error)
-      } else {
-        commit("deleteComment", "영화 삭제에 실패했습니다.")
-      }
+      commit("editComment", "정보 수정을 실패했습니다.")
     }
   }
+},
+
+  async deleteMovie({ commit }, params) {
+  const id = params.id;
+  const res = await api.deleteMovie(id, params);
+  if (res.status === 200) {
+    commit("deleteComment", "영화가 삭제되었습니다.")
+  } else {
+    if (res.data.error) {
+      commit("deleteComment", res.data.error)
+    } else {
+      commit("deleteComment", "영화 삭제를 실패했습니다.")
+    }
+  }
+}
 }
 
 export default {
