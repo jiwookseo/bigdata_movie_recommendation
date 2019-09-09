@@ -330,12 +330,31 @@ def movie_followers(request, movie_id):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def related_movies(request):
-    movie_id = request.GET.get('movieId')
-    movie = get_object_or_404(Movie, id=movie_id)
+    movie_id = request.data.get('movieId', None)
+    username = request.data.get("username", None)
 
-    related_movies = Movie.objects.filter(
-        cluster__exact=movie.cluster).order_by("-avg_rating")[:10]
-    serializer = MovieSerializer(related_movies, many=True)
-    return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
+    if username:
+        user = get_object_or_404(User, username=username)
+
+        movies = Movie.objects.annotate(
+            username_count=Count(
+                "ratings", filter=Q(ratings__user__username=username))
+        ).order_by("-username_count")
+        response_data = {}
+        for movie in movies:
+            related_movies = Movie.objects.filter(Q(cluster__exact=movie.cluster) & ~Q(ratings__user__username=username)).order_by("-avg_rating")[:5]
+            serializer = MovieSerializer(related_movies, many=True)
+
+            response_data[movie.title] = serializer.data
+
+        return Response(data=response_data, status=status.HTTP_200_OK)
+
+    if movie_id:
+        movie = get_object_or_404(Movie, id=movie_id)
+
+        related_movies = Movie.objects.filter(
+            cluster__exact=movie.cluster).order_by("-avg_rating")[:10]
+        serializer = MovieSerializer(related_movies, many=True)
+        return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
