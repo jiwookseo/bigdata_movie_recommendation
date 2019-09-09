@@ -4,27 +4,30 @@
       <h2 v-if="sliderType==='board'">
         <select v-model="selected" name="target">
           <option class="movie-option" value>{{ data.type }} 선택</option>
-          <option class="movie-option" v-for="(key, value) in data.selectObject" :key="key" :value="value">{{ key }}</option>
+          <option
+            class="movie-option"
+            v-for="(key, value) in data.selectObject"
+            :key="key"
+            :value="value"
+          >{{ key }}</option>
         </select> 좋아하는 영화
       </h2>
-      <h2 v-if="sliderType==='profile'">
-        {{ data.type }}
-      </h2>
+      <h2 v-if="sliderType==='profile'">{{ data.type }}</h2>
     </div>
     <div class="image-slider__wrapper">
-      <div class="image-slider__box" :style="{ transform: 'translateX(' + slideNum*16 +'vw)' }">
+      <div class="image-slider__box" :style="{ transform: 'translateX(' + slideNum * 16 +'vw)' }">
         <ImageItem
           v-for="movie in movieList"
-          :key="movie.id"
+          :key="type + movie.id"
           :movie="movie"
           :type="type"
           class="image-slider__item"
         />
       </div>
-      <div v-if="slideNum !=0" class="image-slider__arrow-left" @click="handleClick(1)">
+      <div v-if="slideNum != 0" class="image-slider__arrow-left" @click="handleClick(1)">
         <span>&#60;</span>
       </div>
-      <div v-if="slideNum>-5" class="image-slider__arrow-right" @click="handleClick(-1)">
+      <div class="image-slider__arrow-right" @click="handleClick(-1)">
         <span>&#62;</span>
       </div>
     </div>
@@ -65,25 +68,26 @@ export default {
       }
     },
     movieList() {
-      if (this.$store.state.mvUi.sliderType === "board"){
-        return this.$store.getters[`data/rec${this.type}`].map(movie => ({
+      if (this.$store.state.mvUi.sliderType === "board") {
+        return this.$store.getters[`movie/rec${this.type}`].map(movie => ({
           ...movie,
           description: movie.story.slice(0, 500),
           img:
             movie.stillCut ||
             movie.poster ||
             "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
-        }))
-      } else if (this.$store.state.mvUi.sliderType === "profile"){
-        return this.$store.getters[`mvUi/userRatingMovies`].map(movie => ({
+        }));
+      } else if (this.$store.state.mvUi.sliderType === "profile") {
+        console.log(this.$store.getters["user/ratings"]);
+        return this.$store.getters["user/ratings"].map(movie => ({
           ...movie,
           description: movie.story.slice(0, 500),
           img:
             movie.stillCut ||
             movie.poster ||
             "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
-        }))
-      };
+        }));
+      }
     },
     toggleDetail() {
       return this.detailToggler && this.detailType === this.type;
@@ -91,8 +95,7 @@ export default {
   },
   watch: {
     selected() {
-      if (this.selected !== "")
-        this.$store.dispatch(`data/getRecBy${this.type}`, this.selected);
+      if (this.selected !== "") this.load();
     }
   },
   mounted() {
@@ -104,19 +107,22 @@ export default {
   },
   methods: {
     handleClick: function(n) {
-      const s = this.slideNum + n;
-      this.slideNum = s;
+      this.slideNum += n;
+      if (this.slideNum < -this.movieList.length + 4) this.load();
     },
     handleDetailToggler: function() {
       this.$store.dispatch("mvUi/setDetailToggler");
+    },
+    load: function() {
+      this.$store.dispatch(`movie/getRecBy${this.type}`, this.selected);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import url('https://fonts.googleapis.com/css?family=Jua|Ubuntu&display=swap');
-  .image-slider__list {
+@import url("https://fonts.googleapis.com/css?family=Jua|Ubuntu&display=swap");
+.image-slider__list {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -154,7 +160,7 @@ export default {
   .movie-option {
     outline: none;
     border: none;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: "Ubuntu", sans-serif;
     font-size: 16px;
     font-weight: 700;
     text-align: center;
@@ -163,9 +169,9 @@ export default {
     &:first-child {
       color: #111;
       font-size: 18px;
-
     }
-    &:active, &:focus {
+    &:active,
+    &:focus {
       border: none;
       outline: none;
       background-color: #111;

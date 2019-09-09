@@ -2,9 +2,7 @@
   <nav class="nav">
     <div class="nav__title">
       <a @click="redirectHome">
-        <span class="txt-orange">
-          HONEY BEE
-        </span>
+        <span class="txt-orange">HONEY BEE</span>
       </a>
     </div>
     <div class="nav__icon-bar">
@@ -28,7 +26,7 @@
 </template>
 
 <script>
-  /* Requirements for use fontawesome & How to Use
+/* Requirements for use fontawesome & How to Use
      1. library 를 @fontawesome/fontawesome-svg-core 에서 import 하세요
      2. @fontawesome/free-solid-svg-icons에서 필요한 아이콘을 import 하세요
         (font-awesome 사이트에서 fas-fa-user인 경우 faUser로 import 하면 됩니다.)
@@ -37,17 +35,17 @@
      ex) faSearch => <font-awesome-icon icon="search" />
      참고) https://github.com/FortAwesome/vue-fontawesome
   */
-  import { library } from '@fortawesome/fontawesome-svg-core'
-  import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-  import { faSearch, faUser } from '@fortawesome/free-solid-svg-icons'
-  import { mapActions, mapGetters } from "vuex"
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
+import { mapActions, mapGetters } from "vuex";
 
-library.add(faSearch, faUser)
+library.add(faSearch, faUser);
 
 export default {
   name: "Header",
   components: {
-    FontAwesomeIcon,
+    FontAwesomeIcon
   },
   data: () => ({
     sign() {
@@ -56,10 +54,10 @@ export default {
     },
     userState: false,
     profile: "profile",
-    admin: "http://localhost:8081/admin",
+    admin: "http://localhost:8081/admin"
   }),
   computed: {
-    ...mapGetters('data', ["isLogin", "username"]),
+    ...mapGetters("user", ["isLogin", "username"])
   },
   methods: {
     async signout() {
@@ -69,74 +67,72 @@ export default {
       await this.logout(params);
       this.redirectHome();
     },
-    redirectHome(){
-      this.$router.push("/")
+    redirectHome() {
+      this.$router.push("/");
     },
-    ...mapActions("data", ["logout"]),
-    
+    ...mapActions("user", ["logout"])
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  .nav {
-    z-index: 10;
-    height: 64px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgb(33, 33, 33);
-    opacity: 0.8;
-    width: 100%;
-    padding: {
-      left: 30px;
-      right: 30px;
-    }
+.nav {
+  z-index: 10;
+  height: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(33, 33, 33);
+  opacity: 0.8;
+  width: 100%;
+  padding: {
+    left: 30px;
+    right: 30px;
   }
+}
 
-  .nav__title {
+.nav__title {
+  font-size: 24px;
+  font-weight: 700;
+  cursor: pointer;
 
-    font-size: 24px;
-    font-weight: 700;
+  a {
+    text-decoration: none;
+  }
+}
+
+.nav__icon-bar {
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  span {
     cursor: pointer;
+    color: rgba(255, 177, 1, 0.7);
 
-    a {
-      text-decoration: none;
+    &:hover {
+      color: rgb(255, 177, 1);
     }
   }
+}
 
-  .nav__icon-bar {
-    margin-right: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-
-    span {
-      cursor: pointer;
-      color: rgba(255, 177, 1, 0.7);
-
-      &:hover {
-        color: rgb(255, 177, 1);
-      }
-    }
+.login_icon {
+  color: rgba(255, 177, 1, 0.7) !important;
+  transform: scale(1.5);
+  margin: {
+    left: 30px;
   }
+}
+.login_icon:hover {
+  color: rgb(255, 177, 1) !important;
+}
+.user_span {
+  display: flex;
+  align-items: center;
 
-  .login_icon {
-    color: rgba(255, 177, 1, 0.7) !important;
-    transform: scale(1.5);
-    margin: {
-      left: 30px;
-    };
+  button {
+    outline: none;
   }
-  .login_icon:hover {
-    color: rgb(255, 177, 1) !important;
-  }
-  .user_span {
-    display: flex;
-    align-items: center;
-
-    button {
-      outline: none;
-    }
-  }
+}
 </style>
