@@ -1,18 +1,12 @@
 import axios from 'axios'
 
 const apiUrl = '/api'
-const clusterUrl = '/cluster'
+const clusterUrl = 'http://localhost:8000/cluster'
 
 export default {
   // Movies
   getMovieList() {
     return axios.get(`${apiUrl}/admin/movies/`)
-  },
-
-  clusteringMovies(params) {
-    return axios.post(`http://localhost:8000/cluster/movies/`,
-        params,
-    )
   },
 
   getRelatedMovies(params) {
@@ -35,12 +29,6 @@ export default {
     return axios.get(`${apiUrl}/admin/users/`)
   },
 
-  clusteringUsers(params) {
-    return axios.post("http://localhost:8000/cluster/users/",
-        params,
-    )
-  },
-
   getRelatedUsers(params) {
     return axios.get(`${apiUrl}/users/related_users/${params.userId}`)
   },
@@ -53,11 +41,27 @@ export default {
     return axios.delete(`${apiUrl}/users/${username}/`, {data: params})
   },
 
+
   // login, logout
   login(params) {
     return axios.post(`${apiUrl}/login/`, params);
   },
   logout(params) {
     return axios.post(`${apiUrl}/logout/`, params);
+  },
+
+
+  
+  // Clustering
+  clusteringMovies(params) {
+    return axios.post(`${clusterUrl}/movies/`,
+        params,
+    )
+  },
+
+  clusteringUsers(params) {
+    return axios.post(`${clusterUrl}/users/`,
+        params,
+    )
   },
 }

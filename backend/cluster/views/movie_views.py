@@ -1,5 +1,6 @@
 # django
 from django.shortcuts import get_object_or_404
+from django.db.models import Count, Q
 
 # rest_framework
 from rest_framework import status
@@ -8,11 +9,12 @@ from rest_framework.response import Response
 
 # Models
 from accounts.models import User
-from api.models import Movie, Rating
+from api.models import Movie
+from cluster.models import MovieSimilarity
 
 # Variables and Functions For Data Processing : data_views.py
 from .data_views import data_preprocessing, update_clustering_data, kmeans_custom_clustering_movies
-
+from .data_views import cos_sim
 
 # Data Processing & Clustering Libs 
 import numpy as np
@@ -66,3 +68,41 @@ def movie_clustering(request):
     
     except ConnectionAbortedError:
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+# Movie Similarity
+@api_view(['POST'])
+def movie_similarity(request):
+
+    # define Index Variables
+    ml = Movie.objects.last().id
+    ul = User.objects.last().id
+
+    # get movie rating matrix
+    movies_data = data_preprocessing('m')
+
+    for i in range(ml):
+        for j in range(i+1, ml): 
+            movie_i_ratings = movies_data[i]
+            movie_j_ratings = movies_data[j]
+            similarity = cos_sim(movie_i_ratings, movie_j_ratings)
+
+            if isinstance(similarity, float) and similarity >= 0.75:
+                try:
+                    movie_similarity = MovieSimilarity.objects.get(movie_former=Movie.objects.get(pk=i+1), movie_latter=Movie.objects.get(pk=j+1))
+                except:
+                    movie_similarity = MovieSimilarity(movie_former=Movie.objects.get(pk=i+1), movie_latter=Movie.objects.get(pk=j+1))
+
+                movie_similarity.similarity = similarity
+                movie_similarity.save()
+            else:
+                continue
+
+        print("loading... {}/{}".format(i, ml))
+    return Response(status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+def similar_movies(request, movie_id):
+    pass
