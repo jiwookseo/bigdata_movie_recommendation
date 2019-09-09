@@ -9,6 +9,8 @@ class User(AbstractUser):
     occupation = models.CharField(max_length=200)
     cluster = models.IntegerField(null=True)
     refresh_token = models.TextField(default="")
+    subscribe = models.BooleanField(default=False)
+    subscribe_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return "{}".format(self.username)
