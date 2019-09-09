@@ -1,16 +1,29 @@
-from rest_framework import status
-from rest_framework.decorators import api_view
-from api.models import Movie, Rating
-from accounts.models import User
-from accounts.serializers import UserSerializer
-from api.serializers import MovieSerializer, RatingSerializer
-from rest_framework.response import Response
+# Python Modules
 from datetime import datetime
-from accounts.jwt import verify_token, refresh_token
+import json
+
+# Django
 from django.contrib.auth import logout as auth_logout
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404
-import json
+
+# rest_framework
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+# JWT
+from accounts.jwt import verify_token, refresh_token
+
+# Models
+from api.models import Movie, Rating
+from accounts.models import User
+
+# Serializers
+from accounts.serializers import UserSerializer
+from api.serializers import MovieSerializer, RatingSerializer
+
+
 
 
 @api_view(['GET', 'POST'])
@@ -330,6 +343,8 @@ def movie_followers(request, movie_id):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
+
+# 유사한 영화 추천 알고리즘 (영화 클러스터링)
 @api_view(['GET'])
 def related_movies(request):
     movie_id = request.GET.get('movieId')
