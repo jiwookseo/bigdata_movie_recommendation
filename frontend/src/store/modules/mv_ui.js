@@ -82,17 +82,17 @@ const actions = {
     }
   },
   async setRelatedMovies({ commit }, param){
-    const data = await api.getRelatedMovies(param)
+    const data = await api.getRelatedMovies(param);
     commit("setRelatedMovie", data.data)
   },
   async setUserRatingMovies({ commit }, param){
-    const data = await api.getUserRatingMovie(param)
-    console.log("파람", param)
-    console.log('유저레이팅', data)
+    const data = await api.getUserRatingMovie(param);
+    console.log("파람", param);
+    console.log('유저레이팅', data);
     commit("setUserRatingMovies", data.data)
   },
   async setSimilarUser({ commit }, param){
-    const data = await api.getRelatedUsers(param)
+    const data = await api.getRelatedUsers(param);
     commit("setSimilarUser", data.data)
   }
 };

@@ -4,9 +4,7 @@
     <div class="similar-user-list-wrapper">
       <div class="similar-user-list-item" v-for="user in similarUser" :key="user.id">
         <router-link :to="{name: 'profile', params: {username: user.username}}">
-        <p>
-          {{ user.username }}
-        </p>
+          <p>{{ user.username }}</p>
         </router-link>
       </div>
     </div>
