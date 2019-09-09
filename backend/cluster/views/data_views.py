@@ -14,13 +14,15 @@ movie_views, user_views에서 처리시에 필요한 데이터, 변수들을 저
 '''
 
 # Variables
-movies_count = Movie.objects.last().id
-users_count = User.objects.last().id
+
 
 # Data Preprocessing
 def data_preprocessing(table):
     movies = Movie.objects.all()
     users = User.objects.all()
+
+    movies_count = Movie.objects.last().id
+    users_count = User.objects.last().id
 
     print("number of movies: {}, users: {}".format(movies_count, users_count))
 
@@ -64,7 +66,10 @@ def update_clustering_data(table, clustering_data):
 
 
 # K-Means Customized Api (Movie)
-def kmeans_custom_clustering_movies(k, iters):
+def kmeans_custom_clustering_movies(k, iters, movies_data):
+
+    movies_count = Movie.objects.last().id
+    users_count = User.objects.last().id
    
     # define variables, data, and function
     ml = movies_count
@@ -111,7 +116,10 @@ def kmeans_custom_clustering_movies(k, iters):
 
 
 # K-Means Customized Api (User)
-def kmeans_custom_clustering_users(k, iters):
+def kmeans_custom_clustering_users(k, iters, users_data):
+
+    movies_count = Movie.objects.last().id
+    users_count = User.objects.last().id
     
     # define variables, functions and data
     ml = movies_count

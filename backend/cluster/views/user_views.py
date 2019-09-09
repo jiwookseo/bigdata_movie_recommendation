@@ -52,7 +52,7 @@ def user_clustering(request):
 
     # K-Means Customized
     elif method == 'kmc':
-        clustering_data = kmeans_custom_clustering_users(k, 100)
+        clustering_data = kmeans_custom_clustering_users(k, 100, users_data)
 
     else:
         print("method를 정확히 표기해주세요.")

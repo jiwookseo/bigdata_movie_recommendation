@@ -53,7 +53,7 @@ def movie_clustering(request):
 
         # K-Means Customized
         elif method == 'kmc':
-            clustering_data = kmeans_custom_clustering_movies(k, 100)
+            clustering_data = kmeans_custom_clustering_movies(k, 100, movies_data)
 
         else:
             print("method를 정확히 표기해주세요.")
