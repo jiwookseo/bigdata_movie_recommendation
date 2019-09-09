@@ -17,6 +17,9 @@ import json
 def movie_list(request):
 
     if request.method == 'GET':
+        movies = Movie.objects.all()
+        total = len(movies)
+
         # recommend by age, occupation, gender
         age = request.GET.get("age", None)
         username = request.GET.get("username", None)
@@ -25,40 +28,43 @@ def movie_list(request):
         limit = int(request.GET.get("limit", 10))
         start = int(request.GET.get("start", 0))
         if username:
-            movies = Movie.objects.annotate(
+            movies = movies.annotate(
                 username_count=Count(
                     "ratings", filter=Q(ratings__user__username=username))
-                ).order_by("-username_count")[start: start + limit]
+            ).order_by("-username_count")[start: start + limit]
             serializer = MovieSerializer(movies, many=True)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+            data = {"data": serializer.data,
+                    "total": total, "start": start, "limit": limit}
+            return Response(data=data, status=status.HTTP_200_OK)
 
         elif age:
-            movies = Movie.objects.annotate(
+            movies = movies.annotate(
                 age_count=Count(
                     'ratings', filter=Q(ratings__user__age=age))
             ).order_by('-age_count')[start: start + limit]
             serializer = MovieSerializer(movies, many=True)
-            # return Response(data={"movies": serializer.data}, status=status.HTTP_200_OK)
-            # TODO : 데이터 구조 바꾸기, 모든 데이터 다 보내주는 방식에서, 10개 씩 보여줄 수 있도록
-            # start, end, total 정도 보내주면 될 듯.
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+            data = {"data": serializer.data,
+                    "total": total, "start": start, "limit": limit}
+            return Response(data=data, status=status.HTTP_200_OK)
         elif occupation:
-            movies = Movie.objects.annotate(
+            movies = movies.annotate(
                 occupation_count=Count(
                     'ratings', filter=Q(ratings__user__occupation=occupation))
             ).order_by('-occupation_count')[start: start + limit]
             serializer = MovieSerializer(movies, many=True)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+            data = {"data": serializer.data,
+                    "total": total, "start": start, "limit": limit}
+            return Response(data=data, status=status.HTTP_200_OK)
         elif gender:
             movies = Movie.objects.annotate(
                 gender_count=Count(
                     'ratings', filter=Q(ratings__user__gender=gender))
             ).order_by('-gender_count')[start: start + limit]
             serializer = MovieSerializer(movies, many=True)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+            data = {"data": serializer.data,
+                    "total": total, "start": start, "limit": limit}
+            return Response(data=data, status=status.HTTP_200_OK)
         else:
-            movies = Movie.objects.all()
-
             # filter movies
             id = request.GET.get('id', request.GET.get('movie_id', None))
             title = request.GET.get('title', None)
