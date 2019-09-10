@@ -13,7 +13,7 @@ class User(AbstractUser):
     gender = models.CharField(max_length=10, default='M')
     age = models.IntegerField(default=25)
     occupation = models.CharField(max_length=200)
-    cluster = models.IntegerField(blank=True)
+    cluster = models.IntegerField(default=-1)
     refresh_token = models.TextField(default="")
     image = ProcessedImageField(
         upload_to=image_path,
@@ -25,7 +25,7 @@ class User(AbstractUser):
         source='image',
         processors=[ResizeToFit(width=50, upscale=False)],
         format='JPEG',
-        options={'quality': 60},
+        options={'quality': 60}
     )
 
     def __str__(self):
