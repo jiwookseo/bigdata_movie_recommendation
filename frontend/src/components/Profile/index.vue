@@ -50,25 +50,27 @@ export default {
   components: { ImageSlider, SimilarUserList, editUserInfo },
   watch: {
     '$route.params.username': function(username) {
-      this.$store.commit('data/setUsername', username);
-      this.$store.dispatch('data/getUserByUsername', username);
+      this.$store.commit('user/setUsername', username);
+      this.$store.dispatch('user/getUserByUsername', username);
+      this.$store.dispatch('mvUi/setUserRatingMovies', username);
       this.$store.dispatch('mvUi/setSimilarUser', username);
-    }
+    },
   },
   computed: {
-    ...mapGetters('data', ['user']),
+    ...mapGetters('user', ['user']),
   },
   created(){
     this.$store.commit('mvUi/setSliderType', "profile");
   },
   mounted(){
     const username = this.$route.params.username;
-    this.$store.commit('data/setUsername', username);
-    this.$store.dispatch('data/getUserByUsername', username);
+    this.$store.commit('user/setUsername', username);
+    this.$store.dispatch('user/getUserByUsername', username);
+    this.$store.dispatch('mvUi/setUserRatingMovies', username);
     this.$store.dispatch('mvUi/setSimilarUser', username);
 
-    if (this.$store.state.data.username !== "") {
-      this.loginUsername = this.$store.state.data.username;
+    if (this.$store.state.user.username !== "") {
+      this.loginUsername = this.$store.state.user.username;
     }
   },
   data: () => ({

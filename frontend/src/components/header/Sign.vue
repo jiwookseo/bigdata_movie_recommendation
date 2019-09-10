@@ -172,10 +172,10 @@ export default {
   }),
   computed: {
     ...mapState({
-      getUsername: state => state.data.username,
-      getRegister: state => state.data.register,
-      getRegError: state => state.data.regErrors,
-      getLogError: state => state.data.logErrors
+      getUsername: state => state.user.username,
+      getRegister: state => state.user.register,
+      getRegError: state => state.user.regErrors,
+      getLogError: state => state.user.logErrors
     })
   },
   watch: {

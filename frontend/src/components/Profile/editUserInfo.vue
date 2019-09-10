@@ -61,13 +61,13 @@ export default {
     },
     user_occupation: function() {
       this.chkOccupation();
-    }
+    },
   },
   computed: {
-    ...mapGetters('data', ['token', 'username']),
+    ...mapGetters('user', ['token', 'username']),
     ...mapState({
-      getEdit: state => state.data.editCom,
-      getBool: state => state.data.edit,
+      getEdit: state => state.user.editCom,
+      getBool: state => state.user.edit,
     }),
   },
   mounted() {
@@ -93,7 +93,7 @@ export default {
     checkEdit: false,
   }),
   methods: {
-    ...mapActions('data', ['editUserInfo']),
+    ...mapActions('user', ['editUserInfo', 'getUserByUsername']),
     backTo() {
       this.back();
     },
@@ -142,6 +142,8 @@ export default {
       const s = this.getBool;
       if (s === true) {
         this.backTo();
+        this.getUserByUsername(this.user.username);
+        this.$store.commit('user/edited', false);
       } else {
         this.err_edit = this.getEdit;
       }
