@@ -27,9 +27,10 @@
       <div v-if="slideNum != 0" class="image-slider__arrow-left" @click="handleClick(1)">
         <span>&#60;</span>
       </div>
-      <div class="image-slider__arrow-right" @click="handleClick(-1)">
+      <div v-show="loadAble" class="image-slider__arrow-right" @click="handleClick(-1)">
         <span>&#62;</span>
       </div>
+      <div v-show="!loadAble">spinner?</div>
     </div>
     <transition name="bounce">
       <ImageItemDetail v-if="toggleDetail" />
@@ -53,7 +54,8 @@ export default {
     return {
       slideNum: 0,
       detailToggle: false,
-      selected: 18
+      selected: 18,
+      loadAble: true
     };
   },
   computed: {
@@ -97,6 +99,9 @@ export default {
   watch: {
     selected() {
       if (this.selected !== "") this.load();
+    },
+    movieList() {
+      this.loadAble = true;
     }
   },
   mounted() {
@@ -109,7 +114,10 @@ export default {
   methods: {
     handleClick: function(n) {
       this.slideNum += n;
-      if (this.slideNum < -this.movieList.length + 4) this.load();
+      if (this.slideNum < -this.movieList.length + 5) {
+        this.load();
+        this.loadAble = false;
+      }
     },
     handleDetailToggler: function() {
       this.$store.dispatch("mvUi/setDetailToggler");
