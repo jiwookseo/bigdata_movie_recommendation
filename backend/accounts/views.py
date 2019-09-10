@@ -11,7 +11,7 @@ from .serializers import UserSerializer
 from .models import User
 from .forms import CustomUserAuthenticationForm, CustomUserCreateForm, CustomUserChangeForm
 from django.db.models import Q
-import json
+import json, datetime
 
 # 회원가입
 @api_view(["POST"])
@@ -25,7 +25,7 @@ def signup(request):
 
             else:
                 error = form.errors.get_json_data()
-                return Response(data=error, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+                return Response(data=error, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_201_CREATED)
 
 
@@ -51,6 +51,9 @@ def user_detail(request, username):
             req_user = get_object_or_404(User, username=req_name)
 
             if token != req_user.refresh_token:
+                user.refresh_token = ""
+                user.save()
+                auth_logout(request)
                 return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
             if username != req_name:
@@ -73,7 +76,7 @@ def user_detail(request, username):
                         form.save()
                     else:
                         error = form.errors.get_json_data()
-                        return Response(data=error, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+                        return Response(data=error, status=status.HTTP_200_OK)
                 elif pw:
                     original = pw["original"]
                     if check_password(original, req_user.password):
@@ -82,17 +85,17 @@ def user_detail(request, username):
                             req_user.save()
                             auth_login(request, req_user)
                         else:
-                            return Response(data={"error": "새 비밀번호가 틀렸습니다."}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+                            return Response(data={"error": "새 비밀번호가 틀렸습니다."}, status=status.HTTP_200_OK)
                     else:
-                        return Response(data={"error": "현재 비밀번호가 틀렸습니다."}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+                        return Response(data={"error": "현재 비밀번호가 틀렸습니다."}, status=status.HTTP_200_OK)
                 else:
                     return Response(data={"error": "입력된 값이 없습니다."}, status=status.HTTP_204_NO_CONTENT)
-                return Response(status=status.HTTP_200_OK)
+                return Response(status=status.HTTP_202_ACCEPTED)
             req_user.refresh_token = ""
             req_user.save()
             auth_logout(request)
             return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
-        return Response(data={"error": "입력된 값이 없습니다."}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        return Response(data={"error": "입력된 값이 없습니다."}, status=status.HTTP_204_NO_CONTENT)
 
     if request.method == "DELETE":
         token = request.data.get("token", None)
@@ -102,6 +105,9 @@ def user_detail(request, username):
             req_user = get_object_or_404(User, username=req_name)
 
             if token != req_user.refresh_token:
+                user.refresh_token = ""
+                user.save()
+                auth_logout(request)
                 return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
             if username != req_name:
@@ -168,6 +174,10 @@ def login(request):
         token = token.json()["token"]
         user = form.get_user()
         user.refresh_token = token
+
+        if user.subscribe:
+            if datetime.datetime.now() - user.subscribe_at > datetime.timedelta(30):
+                user.subscribe = False
         user.save()
 
         auth_login(request, user)
@@ -178,7 +188,7 @@ def login(request):
             "is_staff": user.is_staff
         }
 
-        return Response(data=response, status=status.HTTP_200_OK)
+        return Response(data=response, status=status.HTTP_202_ACCEPTED)
     else:
         error = form.errors.get_json_data()
         print(error)
@@ -194,4 +204,4 @@ def logout(request):
     user.save()
 
     auth_logout(request)
-    return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_202_ACCEPTED)
