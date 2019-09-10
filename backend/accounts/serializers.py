@@ -13,4 +13,4 @@ class UserSerializer(serializers.ModelSerializer):
                   'age', 'occupation', 'rating_cnt', 'image', 'thumbnail')
 
     def get_thumbnail(self, obj):
-        return obj.thumbnail.url
+        return obj.thumbnail.url if obj.image else None
