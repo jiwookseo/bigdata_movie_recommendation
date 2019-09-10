@@ -35,7 +35,7 @@ const actions = {
   // Login, Register
   async setLogin({ commit }, params) {
     const res = await api.login(params);
-    if (res.status === 200) {
+    if (res.status === 202) {
       commit("setIsLogin", true);
       commit("setUsername", res.data.username);
       commit("setStaff", res.data.is_staff);
@@ -65,7 +65,7 @@ const actions = {
     const res = await api.register(params);
     if (res.status === 201) {
       commit("setRegister", "sign");
-    } else if (res.status === 203) {
+    } else if (res.status === 200) {
       commit("setRegError", res.data);
     }
   },
@@ -91,7 +91,7 @@ const actions = {
   async editUserInfo({commit}, params) {
     const username = params.username;
     const res = await api.editUserInfo(username, params);
-    if (res.status === 200) {
+    if (res.status === 202) {
       commit("edited", true)
     } else {
       if (res.data.error) {
