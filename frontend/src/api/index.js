@@ -35,6 +35,9 @@ export default {
   getFollowings(username) {
     return axios.get(`${BASE_URL}/users/${username}/followings/`);
   },
+  getUserRatingMovie(username, s=0, e=10) {
+    return axios.get(`${BASE_URL}/movies/?username=${username}&start=${s}&limit=${e}`)
+  },
   login(params) {
     return axios.post(`${BASE_URL}/login/`, params);
   },
@@ -43,6 +46,9 @@ export default {
   },
   register(params) {
     return axios.post(`${BASE_URL}/signup/`, params);
+  },
+  editUserInfo(username, params) {
+    return axios.put(`${BASE_URL}/users/${username}/`, params);
   },
 
   // Clustering 결과
