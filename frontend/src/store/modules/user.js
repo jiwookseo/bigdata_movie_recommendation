@@ -13,7 +13,9 @@ const state = {
   regErrors: {},
   logErrors: {},
   checkStaff: false,
-  token: ""
+  token: "",
+  edit: false,
+  editCom: "",
 };
 
 // getters
@@ -24,7 +26,8 @@ const getters = {
   username: state => state.username,
   isLogin: state => state.isLogin,
   register: state => state.register,
-  logErrors: state => state.logErrors
+  logErrors: state => state.logErrors,
+  token: state => state.token,
 };
 
 // actions
@@ -48,7 +51,7 @@ const actions = {
       commit("setLogError", res.data);
     }
   },
-  async logout({ commit }, params) {
+  async logout({commit}, params) {
     const res = await api.logout(params);
     if (res.status === 200) {
       commit("setIsLogin", false);
@@ -58,7 +61,7 @@ const actions = {
       sessionStorage.clear();
     }
   },
-  async setRegister({ commit }, params) {
+  async setRegister({commit}, params) {
     const res = await api.register(params);
     if (res.status === 201) {
       commit("setRegister", "sign");
@@ -67,13 +70,13 @@ const actions = {
     }
   },
 
-  // User
-  async searchUsers({ commit }, params) {
+// User
+  async searchUsers({commit}, params) {
     const resp = await api.searchUsers(params);
     const users = resp.data;
     commit("setUserSearchList", users);
   },
-  async getUserByUsername({ commit }, username) {
+  async getUserByUsername({commit}, username) {
     const res1 = await api.getUser(username);
     const user = res1.data;
     commit("setUser", user);
@@ -82,8 +85,21 @@ const actions = {
     const res3 = await api.getFollowings(username);
     commit("setFollowings", res3.data);
   },
-  setEmptyUserList({ commit }) {
+  setEmptyUserList({commit}) {
     commit("setUserSearchList", []);
+  },
+  async editUserInfo({commit}, params) {
+    const username = params.username;
+    const res = await api.editUserInfo(username, params);
+    if (res.status === 200) {
+      commit("edited", true)
+    } else {
+      if (res.data.error) {
+        commit("editComment", res.data.error)
+      } else {
+        commit("editComment", "정보 수정을 실패했습니다.")
+      }
+    }
   },
 
   // Follow
@@ -109,7 +125,9 @@ const mutations = {
   setToken: (state, payload) => (state.token = payload),
   setRegister: (state, payload) => (state.register = payload),
   setRegError: (state, payload) => (state.regErrors = payload),
-  setLogError: (state, payload) => (state.logErrors = payload)
+  setLogError: (state, payload) => (state.logErrors = payload),
+  editComment: (state, payload) => (state.editCom = payload),
+  edited: (state, payload) => (state.edit = payload),
 };
 
 export default {
