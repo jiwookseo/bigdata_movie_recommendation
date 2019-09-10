@@ -48,6 +48,9 @@ export default {
   register(params) {
     return axios.post(`${BASE_URL}/signup/`, params);
   },
+  editUserInfo(username, params) {
+    return axios.put(`${BASE_URL}/users/${username}/`, params);
+  },
 
   // Clustering 결과
   getRelatedMovies(params) {

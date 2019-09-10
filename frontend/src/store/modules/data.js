@@ -20,6 +20,8 @@ const state = {
   logErrors: {},
   checkStaff: false,
   token: "",
+  edit: false,
+  editCom: "",
 };
 
 // movie shape
@@ -48,30 +50,31 @@ const getters = {
   username: state => state.username,
   isLogin: state => state.isLogin,
   register: state => state.register,
-  logErrors: state => state.logErrors
+  logErrors: state => state.logErrors,
+  token: state => state.token,
 };
 
 // actions
 const actions = {
   // Movie
-  async searchMovies({ commit }, params) {
+  async searchMovies({commit}, params) {
     const resp = await api.searchMovies(params);
     const movies = resp.data.map(d => getMovieStucture(d));
     commit("setMovieSearchList", movies);
   },
-  async getMovieById({ commit }, id) {
+  async getMovieById({commit}, id) {
     const resp = await api.getMovie(id);
     const movie = getMovieStucture(resp.data);
     commit("setMovie", movie);
     const res = await api.getAudience(id);
     commit("setAudience", res.data);
   },
-  setEmptyMovieList({ commit }) {
+  setEmptyMovieList({commit}) {
     commit("setMovieSearchList", []);
   },
 
-  // Login, Register
-  async setLogin({ commit }, params) {
+// Login, Register
+  async setLogin({commit}, params) {
     const res = await api.login(params);
     if (res.status === 200) {
       commit("setIsLogin", true);
@@ -89,7 +92,7 @@ const actions = {
       commit("setLogError", res.data)
     }
   },
-  async logout({ commit }, params) {
+  async logout({commit}, params) {
     const res = await api.logout(params);
     if (res.status === 200) {
       commit('setIsLogin', false);
@@ -99,22 +102,22 @@ const actions = {
       sessionStorage.clear();
     }
   },
-  async setRegister({ commit }, params) {
+  async setRegister({commit}, params) {
     const res = await api.register(params);
     if (res.status === 201) {
       commit("setRegister", "sign");
     } else if (res.status === 203) {
-        commit("setRegError", res.data)
+      commit("setRegError", res.data)
     }
   },
 
-  // User
-  async searchUsers({ commit }, params) {
+// User
+  async searchUsers({commit}, params) {
     const resp = await api.searchUsers(params);
     const users = resp.data;
     commit("setUserSearchList", users);
   },
-  async getUserByUsername({ commit }, username) {
+  async getUserByUsername({commit}, username) {
     const res1 = await api.getUser(username);
     const user = res1.data;
     commit("setUser", user);
@@ -123,29 +126,42 @@ const actions = {
     const res3 = await api.getFollowings(username);
     commit("setFollowings", res3.data);
   },
-  setEmptyUserList({ commit }) {
+  setEmptyUserList({commit}) {
     commit("setUserSearchList", []);
   },
+  async editUserInfo({commit}, params) {
+    const username = params.username;
+    const res = await api.editUserInfo(username, params);
+    if (res.status === 200) {
+      commit("edited", true)
+    } else {
+      if (res.data.error) {
+        commit("editComment", res.data.error)
+      } else {
+        commit("editComment", "정보 수정을 실패했습니다.")
+      }
+    }
+  },
 
-  // Recommendation
-  async getRecByAge({ commit }, age) {
-    const resp = await api.searchMovies({ age });
+// Recommendation
+  async getRecByAge({commit}, age) {
+    const resp = await api.searchMovies({age});
     const movies = resp.data.map(item => getMovieStucture(item));
     commit("setRecAge", movies);
   },
-  async getRecByOccupation({ commit }, occupation) {
-    const resp = await api.searchMovies({ occupation });
+  async getRecByOccupation({commit}, occupation) {
+    const resp = await api.searchMovies({occupation});
     const movies = resp.data.map(item => getMovieStucture(item));
     commit("setRecOccupation", movies);
   },
-  async getRecByGender({ commit }, gender) {
-    const resp = await api.searchMovies({ gender });
+  async getRecByGender({commit}, gender) {
+    const resp = await api.searchMovies({gender});
     const movies = resp.data.map(item => getMovieStucture(item));
     commit("setRecGender", movies);
   },
 
-  // Follow
-  async follow({ commit }, id) {
+// Follow
+  async follow({commit}, id) {
     if (state.isLogin) {
       await api.follow(id);
       const res = await api.getFollowings(state.username);
@@ -174,6 +190,8 @@ const mutations = {
   setRegister: (state, payload) => (state.register = payload),
   setRegError: (state, payload) => (state.regErrors = payload),
   setLogError: (state, payload) => (state.logErrors = payload),
+  editComment: (state, payload) => (state.editCom = payload),
+  edited: (state, payload) => (state.edit = payload),
 };
 
 export default {
