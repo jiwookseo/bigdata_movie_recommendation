@@ -69,7 +69,7 @@ export default {
     this.$store.dispatch('mvUi/setUserRatingMovies', username);
     this.$store.dispatch('mvUi/setSimilarUser', username);
 
-    if (this.$store.state.user.username ! "") {
+    if (this.$store.state.user.username !== "") {
       this.loginUsername = this.$store.state.user.username;
     }
   },
