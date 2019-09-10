@@ -13,27 +13,26 @@ export default {
   components: {
     ImageSliderList
   },
-  data() { return {}; },
+  data() {
+    return {};
+  },
   computed: {
-    ...mapGetters("data", ["recommendation"]),
     ...mapGetters("mvUi", ["sliderType"]),
-    sliderList(){
-      if (this.$store.state.mvUi.sliderType === "board"){
-        return this.$store.getters["mvUi/sliderBoardData"]
-      } else if (this.$store.state.mvUi.sliderType === "profile"){
-        return [{ 
-          type: '평가한 영화',
-          selectedObject: ''
-        }]
+    sliderList() {
+      if (this.$store.state.mvUi.sliderType === "board") {
+        return this.$store.getters["mvUi/sliderBoardData"];
+      } else if (this.$store.state.mvUi.sliderType === "profile") {
+        return [
+          {
+            type: "평가한 영화",
+            selectedObject: ""
+          }
+        ];
       }
     }
   },
   watch: {},
-  mounted() {
-    this.$store.dispatch("data/getRecByAge", 18);
-    this.$store.dispatch("data/getRecByOccupation", "artist");
-    this.$store.dispatch("data/getRecByGender", "M");
-  }
+  mounted() {}
 };
 </script>
 
