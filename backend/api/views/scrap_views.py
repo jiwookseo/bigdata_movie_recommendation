@@ -8,13 +8,19 @@ import webbrowser
 from api.models import Movie
 from rest_framework.response import Response
 
+
+# os.getenv("NAVER_ID")
+
+# os.getenv("NAVER_SECRET")
+
+
 def scrap_poster(request):
     movies = Movie.objects.filter(poster="")
     print(len(movies), "개 스크래핑 해야합니다.")
-    print("입력한 아이디", os.getenv("NAVER_ID"))
+    print("입력한 아이디")
     
-    headers = {"X-Naver-Client-Id": os.getenv("NAVER_ID"),
-               "X-Naver-Client-Secret": os.getenv("NAVER_SECRET")}
+    headers = {"X-Naver-Client-Id": "y4FAQL2Nx0TXIvXo41SJ",
+               "X-Naver-Client-Secret": "7HSQ8Sy1jw"}
     info_url = "https://openapi.naver.com/v1/search/movie.json"
     
     for movie in movies:

@@ -8,7 +8,7 @@
           />
         </div>
         <div>
-          <p class="profile--info-username">우와 텍스트!</p>
+          <p class="profile--info-username">{{ this.$route.params.username }}</p>
           <p class="profile--info-description">여기에 간단한 소개글이 들어갑니다.</p>
         </div>
       </div>
