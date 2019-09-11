@@ -385,9 +385,10 @@ def related_movies(request):
             related_movies = Movie.objects.filter(Q(cluster__exact=movie.cluster) & ~Q(ratings__user__username=username)).order_by("-avg_rating")[:10]
             serializer = MovieSerializer(related_movies, many=True)
 
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
 
         user.refresh_token = ""
         user.save()
+        auth_logout(request)
         return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
     return Response(data={"error": "user 정보 없음"}, status=status.HTTP_204_NO_CONTENT)
