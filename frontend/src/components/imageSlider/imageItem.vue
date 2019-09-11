@@ -96,7 +96,7 @@ export default {
     handleToggleClose: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
     }
-  }
+  },
 };
 </script>
 

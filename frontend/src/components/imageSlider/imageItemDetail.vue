@@ -8,13 +8,14 @@
         <span @click="handleToggle">&times;</span>
       </div>
       <h2 class="detail--title">
-        <router-link :to="{name: 'detail', params: { id: movie.mvId } }">
+        <router-link :to="{name: 'detail', params: { id: movie.movie_id } }">
           {{ movie.title }}
         </router-link>
       </h2>
       <div class="detail--score">
         <span>평균별점</span>
-        <span>{{ movie.rating }}</span>
+        <span>{{ movie.avg_rating }}</span>
+        <rating-user :id="movie.movie_id" :username="$route.params.username" :rating="movie.rating"/>
       </div>
       <div v-if="active.base" class="detail--description">
         <p>{{ ellipsisDescription }}</p>
@@ -53,6 +54,7 @@
 </template>
 
 <script>
+import ratingUser from "../detail/ratingUser"
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
@@ -61,7 +63,7 @@ library.add(faArrowLeft, faArrowRight);
 import ImageRelated from "./imageRelated"
 export default {
   name: "ImageItemDetail",
-  components: { ImageRelated, FontAwesomeIcon },
+  components: { ImageRelated, FontAwesomeIcon, ratingUser },
   data() {
     return {
       active: {
