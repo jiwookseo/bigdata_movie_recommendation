@@ -1,18 +1,11 @@
 <template>
   <div class="image-slider__list">
     <div class="image-slider__title">
-      <h2 v-if="sliderType==='board'">
-        <select v-model="selected" name="target">
-          <option class="movie-option" value>{{ data.type }} 선택</option>
-          <option
-            class="movie-option"
-            v-for="(key, value) in data.selectObject"
-            :key="key"
-            :value="value"
-          >{{ key }}</option>
-        </select> 좋아하는 영화
-      </h2>
-      <h2 v-if="sliderType==='profile'">{{ data.type }}</h2>
+      <ImageSliderTitle
+        :data="data"
+        :sliderType="sliderType"
+        :type="type"
+      />
     </div>
     <div class="image-slider__wrapper">
       <div class="image-slider__box" :style="{ transform: 'translateX(' + slideNum * 16 +'vw)' }">
@@ -21,18 +14,20 @@
           :key="type + movie.id"
           :movie="movie"
           :type="type"
+          :expand="expand"
           class="image-slider__item"
         />
       </div>
       <div v-if="slideNum != 0" class="image-slider__arrow-left" @click="handleClick(1)">
         <span>&#60;</span>
       </div>
-      <div class="image-slider__arrow-right" @click="handleClick(-1)">
+      <div v-show="loadAble" class="image-slider__arrow-right" @click="handleClick(-1)">
         <span>&#62;</span>
       </div>
+      <div v-show="!loadAble">spinner?</div>
     </div>
     <transition name="bounce">
-      <ImageItemDetail v-if="toggleDetail" />
+      <ImageItemDetail v-if="expand && toggleDetail" />
     </transition>
   </div>
 </template>
@@ -40,24 +35,27 @@
 <script>
 import ImageItem from "./imageItem";
 import ImageItemDetail from "./imageItemDetail";
+import ImageSliderTitle from "./imageSliderTitle"
 import { mapGetters } from "vuex";
 
 export default {
   name: "ImageSliderList",
-  components: {
-    ImageItem,
-    ImageItemDetail
+  components: { ImageItem, ImageItemDetail, ImageSliderTitle },
+  props: { 
+    data: { type: Object, default: () => ({ type: "연령대" }) },
+    sliderType: { type: String, default: () => ""},
+    expand: { type: Boolean, default: () => true}
   },
-  props: { data: { type: Object, default: () => ({ type: "연령대" }) } },
   data() {
     return {
       slideNum: 0,
       detailToggle: false,
-      selected: 18
+      selected: 18,
+      loadAble: true
     };
   },
   computed: {
-    ...mapGetters("mvUi", ["detailToggler", "detailType", "sliderType"]),
+    ...mapGetters("mvUi", ["detailToggler", "detailType"]),
     type() {
       if (this.data.type === "연령대") {
         return "Age";
@@ -95,21 +93,18 @@ export default {
     }
   },
   watch: {
-    selected() {
-      if (this.selected !== "") this.load();
+    movieList() {
+      this.loadAble = true;
     }
   },
-  mounted() {
-    if (this.type === "Age") {
-      this.selected = "1";
-    } else {
-      this.selected = this.type === "Occupation" ? "programmer" : "M";
-    }
-  },
+  
   methods: {
     handleClick: function(n) {
       this.slideNum += n;
-      if (this.slideNum < -this.movieList.length + 4) this.load();
+      if (this.slideNum < -this.movieList.length + 5) {
+        this.load();
+        this.loadAble = false;
+      }
     },
     handleDetailToggler: function() {
       this.$store.dispatch("mvUi/setDetailToggler");
@@ -133,54 +128,6 @@ export default {
   align-items: center;
 }
 
-.image-slider__title {
-  padding: 20px 0 20px 30px;
-  display: flex;
-  h2 {
-    display: inline-block;
-    margin-right: 14px;
-    color: #fff;
-    font-size: 28px;
-    font-weight: 700;
-  }
-  select {
-    outline: none;
-    border: none;
-    color: rgb(255, 177, 1);
-    padding: 10px;
-    cursor: pointer;
-    font-weight: 700;
-    &:hover {
-      background-color: rgba(255, 177, 1);
-      color: #111;
-      border: none;
-      outline: none;
-    }
-  }
-
-  .movie-option {
-    outline: none;
-    border: none;
-    font-family: "Ubuntu", sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    text-align: center;
-    cursor: pointer;
-
-    &:first-child {
-      color: #111;
-      font-size: 18px;
-    }
-    &:active,
-    &:focus {
-      border: none;
-      outline: none;
-      background-color: #111;
-      font-weight: 700;
-      color: rgba(255, 177, 1);
-    }
-  }
-}
 .image-slider__box {
   width: 80%;
   margin-left: 30px;
@@ -231,31 +178,15 @@ export default {
   animation: bounce-out 0.4s;
 }
 @keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.3);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(0); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
 }
 @keyframes bounce-out {
-  0% {
-    transform: scaleY(0.8);
-  }
-  25% {
-    transform: scaleY(0.6);
-  }
-  50% {
-    transform: scaleY(0.4);
-  }
-  75% {
-    transform: scaleY(0.2);
-  }
-  100% {
-    transform: scaleY(0);
-  }
+  0% { transform: scaleY(0.8); }
+  25% { transform: scaleY(0.6); }
+  50% { transform: scaleY(0.4); }
+  75% { transform: scaleY(0.2); }
+  100% { transform: scaleY(0); }
 }
 </style>
