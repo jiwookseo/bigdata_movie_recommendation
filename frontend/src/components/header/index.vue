@@ -32,6 +32,9 @@ export default {
       if (sessionStorage.getItem("isStaff") !== null) {
         this.$store.state.user.checkStaff = sessionStorage.getItem("isStaff");
       }
+      if (sessionStorage.getItem("subscribe") !== null) {
+        this.$store.state.user.subscribe = sessionStorage.getItem("subscribe");
+      }
     }
   }
 };

@@ -30,7 +30,7 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 library.add(faSortDown, faSortUp);
 
@@ -51,6 +51,10 @@ export default {
   },
   computed: {
     ...mapGetters("mvUi", ["detailToggler", "detailType"]),
+    ...mapState({
+      getname: state => state.user.username,
+      getToken: state => state.user.token,
+    }),
       toggle() {
         return this.detailToggler && this.detailType === this.type;
       },
@@ -60,7 +64,13 @@ export default {
       this.showDescription = !this.showDescription;
       if (this.detailType === this.type) {
         this.$store.commit("mvUi/setActivateMovie", this.movie);
-        this.$store.dispatch("mvUi/setRelatedMovies", { movieId: this.movie.id })
+        const data = {
+          "movieId": this.movie.id,
+          "token": this.$store.user.token,
+          "username": this.$store.user.username,
+          "name": this.$route.params.username
+        };
+        this.$store.dispatch("mvUi/setRelatedMovies", data);
       }
     },
     handleMouseLeave: function() {
@@ -70,7 +80,13 @@ export default {
     handleToggleOpen: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
       this.$store.commit("mvUi/setActivateMovie", this.movie);
-      this.$store.dispatch("mvUi/setRelatedMovies", { movieId: this.movie.id })
+      const data = {
+        "movieId": this.movie.id,
+        "token": this.getToken,
+        "username": this.getname,
+        "name": this.$route.params.username
+      };
+      this.$store.dispatch("mvUi/setRelatedMovies", data);
     },
     handleToggleClose: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);

@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'is_staff', 'gender',
-                  'age', 'occupation', 'rating_cnt', 'image', 'thumbnail')
+                  'age', 'occupation', 'rating_cnt', 'image', 'thumbnail', 'subscribe')
 
     def get_thumbnail(self, obj):
         return obj.thumbnail.url if obj.image else None
