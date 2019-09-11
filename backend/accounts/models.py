@@ -15,6 +15,8 @@ class User(AbstractUser):
     occupation = models.CharField(max_length=200)
     cluster = models.IntegerField(default=-1)
     refresh_token = models.TextField(default="")
+    subscribe = models.BooleanField(default=False)
+    subscribe_at = models.DateTimeField(null=True, blank=True)
     image = ProcessedImageField(
         upload_to=image_path,
         processors=[ResizeToFit(width=150, upscale=False)],
