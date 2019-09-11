@@ -85,8 +85,8 @@ const actions = {
     const res3 = await api.getFollowings(username);
     commit("setFollowings", res3.data);
   },
-  async setUserProfileByUsername({ commit }, username, data) {
-    const res = await api.setProfile(username, data);
+  async setUserProfileByUsername({ commit }, payload) {
+    const res = await api.setProfile(payload.username, payload.data);
     if (res.status === 200) {
       commit("setUserImage", res.data.image);
     }

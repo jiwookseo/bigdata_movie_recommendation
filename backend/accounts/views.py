@@ -147,7 +147,8 @@ def profile_image(request, username):
     if image:
         user.image = image
         user.save()
-        return Response(data={"image": 'http://localhost:8000' + image}, status=status.HTTP_200_OK)
+        print('http://localhost:8000' + user.image.url)
+        return Response(data={"image": 'http://localhost:8000' + user.image.url}, status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_204_NO_CONTENT)
 

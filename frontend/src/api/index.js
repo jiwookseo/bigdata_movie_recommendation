@@ -35,8 +35,8 @@ export default {
   getFollowings(username) {
     return axios.get(`${BASE_URL}/users/${username}/followings/`);
   },
-  setProfile(username, data) {
-    return axios.post(`/api/users/${username}/profile/`, data);
+  setProfile(username, formData) {
+    return axios.post(`${BASE_URL}/users/${username}/profile/`, formData);
   },
   login(params) {
     return axios.post(`${BASE_URL}/login/`, params);
