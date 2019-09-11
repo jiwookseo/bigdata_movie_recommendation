@@ -65,7 +65,7 @@ export default {
       this.showDescription = !this.showDescription;
       if (this.detailType === this.type) {
         this.$store.commit("mvUi/setActivateMovie", this.movie);
-        this.$store.dispatch("mvUi/setRelatedMovies", {movieId: this.movie.id})
+        this.$store.dispatch("mvUi/setRelatedMovies", { movieId: this.movie.id })
       }
     },
     handleMouseLeave: function() {
@@ -75,7 +75,7 @@ export default {
     handleToggleOpen: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
       this.$store.commit("mvUi/setActivateMovie", this.movie);
-      this.$store.dispatch("mvUi/setRelatedMovies", {movieId: this.movie.id})
+      this.$store.dispatch("mvUi/setRelatedMovies", { movieId: this.movie.id })
     },
     handleToggleClose: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);

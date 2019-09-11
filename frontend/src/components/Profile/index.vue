@@ -8,7 +8,13 @@
           />
         </div>
         <div class="profile--div">
-          <p class="profile--info-username">{{ user.username }}<button class="material-icons edit-button" @click="editInfo = true">create</button></p>
+          <p class="profile--info-username">
+            {{ user.username }}
+            <button
+              class="material-icons edit-button"
+              @click="editInfo = true"
+            >create</button>
+          </p>
           <p class="profile--info-description">여기에 간단한 소개글이 들어갑니다.</p>
         </div>
       </div>
@@ -25,7 +31,7 @@
             <span>평가한 영화</span>
           </div>
           <div v-if="editInfo">
-            <editUserInfo :user="user" :back="editChange"/>
+            <editUserInfo :user="user" :back="editChange" />
           </div>
         </div>
       </div>
@@ -42,47 +48,47 @@
 
 <script>
 import ImageSlider from "../imageSlider";
-import SimilarUserList from './similarUserList';
+import SimilarUserList from "./similarUserList";
 import editUserInfo from "./editUserInfo";
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 export default {
   name: "Profile",
   components: { ImageSlider, SimilarUserList, editUserInfo },
   watch: {
-    '$route.params.username': function(username) {
-      this.$store.commit('user/setUsername', username);
-      this.$store.dispatch('user/getUserByUsername', username);
-      this.$store.dispatch('mvUi/setUserRatingMovies', username);
-      this.$store.dispatch('mvUi/setSimilarUser', username);
-    },
+    "$route.params.username": function(username) {
+      this.$store.commit("user/setUsername", username);
+      this.$store.dispatch("user/getUserByUsername", username);
+      this.$store.dispatch("mvUi/setUserRatingMovies", username);
+      this.$store.dispatch("mvUi/setSimilarUser", username);
+    }
   },
   computed: {
-    ...mapGetters('user', ['user']),
+    ...mapGetters("user", ["user"])
   },
-  created(){
-    this.$store.commit('mvUi/setSliderType', "profile");
+  created() {
+    this.$store.commit("mvUi/setSliderType", "profile");
   },
-  mounted(){
+  mounted() {
     const username = this.$route.params.username;
-    this.$store.commit('user/setUsername', username);
-    this.$store.dispatch('user/getUserByUsername', username);
-    this.$store.dispatch('mvUi/setUserRatingMovies', username);
-    this.$store.dispatch('mvUi/setSimilarUser', username);
+    this.$store.commit("user/setUsername", username);
+    this.$store.dispatch("user/getUserByUsername", username);
+    this.$store.dispatch("mvUi/setUserRatingMovies", username);
+    this.$store.dispatch("mvUi/setSimilarUser", username);
 
-    if (this.$store.state.user.username !== "") {
+    if (this.$store.state.user.username) {
       this.loginUsername = this.$store.state.user.username;
     }
   },
   data: () => ({
     editInfo: false,
-    loginUsername: "",
+    loginUsername: ""
   }),
   methods: {
     editChange() {
       this.editInfo = false;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -130,13 +136,13 @@ export default {
     }
     p {
       font-weight: 700;
-    &.profile--info-username {
+      &.profile--info-username {
         color: #fff;
 
         font-size: 20px;
         letter-spacing: 2px;
       }
-    &.profile--info-description {
+      &.profile--info-description {
         color: #aaa;
         font-size: 16px;
         letter-spacing: 1.6px;
@@ -162,14 +168,14 @@ export default {
     justify-content: space-around;
     padding: 10px 20px 5px;
 
-  &.profile-info-data-num {
+    &.profile-info-data-num {
       span {
         font-size: 20px;
         font-weight: 700;
         color: #fff;
       }
     }
-  &.profile-info-data-text {
+    &.profile-info-data-text {
       span {
         font-size: 14px;
         color: #ccc;
@@ -184,5 +190,4 @@ export default {
   min-height: calc(100vh - 64px);
   overflow-x: hidden;
 }
-
 </style>

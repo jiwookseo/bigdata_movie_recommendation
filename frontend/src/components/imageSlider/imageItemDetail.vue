@@ -7,10 +7,14 @@
       <div class="detail--close-box">
         <span @click="handleToggle">&times;</span>
       </div>
-      <h2 class="detail--title">{{ movie.title }}</h2>
+      <h2 class="detail--title">
+        <router-link :to="{name: 'detail', params: { id: movie.mvId } }">
+          {{ movie.title }}
+        </router-link>
+      </h2>
       <div class="detail--score">
         <span>평균별점</span>
-        <span>4.0</span>
+        <span>{{ movie.rating }}</span>
       </div>
       <div v-if="active.base" class="detail--description">
         <p>{{ ellipsisDescription }}</p>
@@ -170,9 +174,12 @@ export default {
   }
 
   h2 {
-    color: #fff;
     font-weight: 700;
     font-size: 36px;
+  }
+  a {
+    text-decoration: none;
+    color: #fff;
   }
 }
 
