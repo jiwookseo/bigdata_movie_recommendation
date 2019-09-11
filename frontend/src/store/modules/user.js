@@ -14,6 +14,7 @@ const state = {
   logErrors: {},
   checkStaff: false,
   token: "",
+  subscribe: false,
   edit: false,
   editCom: "",
 };
@@ -35,15 +36,18 @@ const actions = {
   // Login, Register
   async setLogin({ commit }, params) {
     const res = await api.login(params);
+    console.log(res)
     if (res.status === 202) {
       commit("setIsLogin", true);
       commit("setUsername", res.data.username);
       commit("setStaff", res.data.is_staff);
       commit("setToken", res.data.token);
+      commit("setSubscribe", res.data.subscribe);
       sessionStorage.setItem("username", res.data.username);
       sessionStorage.setItem("isStaff", res.data.is_staff);
       sessionStorage.setItem("jwt", res.data.token);
       sessionStorage.setItem("isLogin", true);
+      sessionStorage.setItem("subscribe", res.data.subscribe);
       const res2 = await api.getFollowings(state.username);
       commit("setUserFollowings", res2.data);
     } else {
@@ -53,11 +57,12 @@ const actions = {
   },
   async logout({commit}, params) {
     const res = await api.logout(params);
-    if (res.status === 200) {
+    if (res.status === 202) {
       commit("setIsLogin", false);
       commit("setUsername", "");
       commit("setStaff", false);
       commit("setToken", "");
+      commit("setSubscribe", false);
       sessionStorage.clear();
     }
   },
@@ -123,6 +128,7 @@ const mutations = {
   setUsername: (state, payload) => (state.username = payload),
   setStaff: (state, payload) => (state.checkStaff = payload),
   setToken: (state, payload) => (state.token = payload),
+  setSubscribe: (state, payload) => (state.subscribe = payload),
   setRegister: (state, payload) => (state.register = payload),
   setRegError: (state, payload) => (state.regErrors = payload),
   setLogError: (state, payload) => (state.logErrors = payload),

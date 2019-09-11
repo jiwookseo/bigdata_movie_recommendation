@@ -361,25 +361,31 @@ def related_movies(request):
     movie_id = request.data.get('movieId', None)
     username = request.data.get("username", None)
     token = request.data.get("token", None)
+    name = request.data.get("name", None)
 
+    print(request.data)
     if username:
+        if username != name:
+            return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
         user = get_object_or_404(User, username=username)
 
-        if not user.is_staff or not user.subscribe:
+        if not user.is_staff and not user.subscribe:
             return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
         response = verify_token(token)
         if response.status_code != 200:
             response = refresh_token(token)
-            new_token = json.loads(response.text)["token"]
-            user.refresh_token = new_token
+            if response.status_code == 200:
+                new_token = json.loads(response.text)["token"]
+                user.refresh_token = new_token
 
-            if response and response.status_code == 200:
-                movie = get_object_or_404(Movie, id=movie_id)
-                related_movies = Movie.objects.filter(Q(cluster__exact=movie.cluster) & ~Q(ratings__user__username=username)).order_by("-avg_rating")[:10]
-                serializer = MovieSerializer(related_movies, many=True)
+        if response and response.status_code == 200:
+            movie = get_object_or_404(Movie, id=movie_id)
+            related_movies = Movie.objects.filter(Q(cluster__exact=movie.cluster) & ~Q(ratings__user__username=username)).order_by("-avg_rating")[:10]
+            serializer = MovieSerializer(related_movies, many=True)
 
-                return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
 
         user.refresh_token = ""
         user.save()

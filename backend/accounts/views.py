@@ -175,9 +175,10 @@ def login(request):
         user = form.get_user()
         user.refresh_token = token
 
-        if user.subscribe:
-            if datetime.datetime.now() - user.subscribe_at > datetime.timedelta(30):
-                user.subscribe = False
+        # if user.subscribe:
+        #     if datetime.datetime.now() - user.subscribe_at > datetime.timedelta(30):
+        #         user.subscribe = False
+
         user.save()
 
         auth_login(request, user)
@@ -185,7 +186,8 @@ def login(request):
         response = {
             "token": token,
             "username": user.username,
-            "is_staff": user.is_staff
+            "is_staff": user.is_staff,
+            "subscribe": user.subscribe
         }
 
         return Response(data=response, status=status.HTTP_202_ACCEPTED)
