@@ -10,5 +10,5 @@ urlpatterns = [
 
     # User
     path('users/', user_views.user_clustering, name="user_clustering"),
-    # path('users/expected_ratings/<str:method>/', user_views.expected_ratings, name="expected_ratings"),
+    path('users/recm_movies/<str:method>/', user_views.recm_movies, name="recm_movies"),
 ]
