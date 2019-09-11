@@ -35,20 +35,22 @@ def data_preprocessing(table):
     # return rating matrix
     if table == 'm':
         movies_data = np.zeros((ml, ul))
-        print("movies_data를 받아오는 중입니다.")
+        print("영화-평점 데이터를 받아오는 중입니다.")
         for movie in movies:
             for rating in movie.ratings.all():
-                movies_data[movie.id-1][rating.user.id-1] += rating.rating
+                movies_data[movie.id-1, rating.user.id-1] += rating.rating
         
+        print("영화-평점 데이터를 받아왔습니다.")
         return movies_data
 
     elif table == 'u':
         users_data = np.zeros((ul, ml))
-        print("users_data를 받아오는 중입니다.")
+        print("유저-평점 데이터를 받아오는 중입니다.")
         for user in users:
             for rating in user.ratings.all():
-                users_data[user.id-1][rating.movie.id-1] += rating.rating
+                users_data[user.id-1, rating.movie.id-1] += rating.rating
         
+        print("유저-평점 데이터를 받아왔습니다.")
         return users_data
 
     else:
