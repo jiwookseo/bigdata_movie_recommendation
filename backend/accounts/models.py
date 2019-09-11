@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from imagekit.models import ProcessedImageField, ImageSpecField
-from imagekit.processors import ResizeToFit
+from imagekit.processors import ResizeToFill
 
 
 def image_path(instance, filename):
@@ -17,13 +17,13 @@ class User(AbstractUser):
     refresh_token = models.TextField(default="")
     image = ProcessedImageField(
         upload_to=image_path,
-        processors=[ResizeToFit(width=150, upscale=False)],
+        processors=[ResizeToFill(width=150, height=150, upscale=True)],
         format='JPEG',
         blank=True
     )
     thumbnail = ImageSpecField(
         source='image',
-        processors=[ResizeToFit(width=50, upscale=False)],
+        processors=[ResizeToFill(width=50, height=50, upscale=True)],
         format='JPEG',
         options={'quality': 60}
     )

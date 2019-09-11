@@ -5,6 +5,7 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     rating_cnt = serializers.ReadOnlyField()
+    image = serializers.SerializerMethodField('get_image')
     thumbnail = serializers.SerializerMethodField('get_thumbnail')
 
     class Meta:
@@ -12,5 +13,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'is_staff', 'gender',
                   'age', 'occupation', 'rating_cnt', 'image', 'thumbnail')
 
+    def get_image(self, obj):
+        return 'http://localhost:8000' + obj.image.url if obj.image else None
+
     def get_thumbnail(self, obj):
-        return obj.thumbnail.url if obj.image else None
+        return 'http://localhost:8000' + obj.thumbnail.url if obj.image else None
