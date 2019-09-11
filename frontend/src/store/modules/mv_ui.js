@@ -6,7 +6,6 @@ const state = {
   activateMovie: {},
   relatedMovies: {},
   sliderType: "",
-  userRatingMovies: [],
   similarUser: [],
   sliderProfileData: [
     {
@@ -68,7 +67,6 @@ const getters = {
   sliderType: state => state.sliderType,
   sliderBoardData: state => state.sliderBoardData,
   sliderProfileData: state => state.sliderProfileData,
-  userRatingMovies: state => state.userRatingMovies,
   similarUser: state => state.similarUser
 };
 
@@ -85,12 +83,6 @@ const actions = {
     const data = await api.getRelatedMovies(param);
     commit("setRelatedMovie", data.data);
   },
-  async setUserRatingMovies({ commit }, param){
-    const data = await api.getUserRatingMovie(param)
-    console.log("파람", param)
-    console.log('유저레이팅', data)
-    commit("setUserRatingMovies", data.data)
-  },
   async setSimilarUser({ commit }, param) {
     const data = await api.getRelatedUsers(param);
     commit("setSimilarUser", data.data);
@@ -103,7 +95,6 @@ const mutations = {
   setDetailType: (state, payload) => (state.detailType = payload),
   setRelatedMovie: (state, payload) => (state.relatedMovies = payload),
   setSliderType: (state, payload) => (state.sliderType = payload),
-  setUserRatingMovies: (state, payload) => (state.userRatingMovies = payload),
   setSimilarUser: (state, payload) => (state.similarUser = payload)
 };
 
