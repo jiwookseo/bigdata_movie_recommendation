@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import movie_views, scrap_views, clustering_views, admin_views
+from .views import movie_views, scrap_views, admin_views
 from accounts import views
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
 
