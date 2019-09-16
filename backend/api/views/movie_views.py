@@ -167,8 +167,13 @@ def movie_detail(request, movie_id):
         token = request.data.get("token", None)
         user = User.objects.get(username=username)
 
-        if not user.is_staff or user.refresh_token != token:
+        if not user.is_staff:
             return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
+        if user.refresh_token != token:
+            user.refresh_token = ""
+            user.save()
+            return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
         response = verify_token(token)
         if response.status_code != 200:
@@ -179,7 +184,7 @@ def movie_detail(request, movie_id):
 
         if response and response.status_code == 200:
             movie.delete()
-            return Response(status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_202_ACCEPTED)
         user.refresh_token = ""
         user.save()
         return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
@@ -370,8 +375,13 @@ def related_movies(request):
 
         user = get_object_or_404(User, username=username)
 
-        if not user.is_staff and not user.subscribe:
+        if not user.is_staff:
             return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
+        if user.refresh_token != token:
+            user.refresh_token = ""
+            user.save()
+            return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
         response = verify_token(token)
         if response.status_code != 200:
