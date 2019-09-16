@@ -146,12 +146,25 @@ def user_followings(request, username):
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
+@api_view(['POST'])
+def profile_image(request, username):
+    user = get_object_or_404(User, username=username)
+    image = request.data.get('image', None)
+    if image:
+        user.image = image
+        user.save()
+        print('http://localhost:8000' + user.image.url)
+        return Response(data={"image": 'http://localhost:8000' + user.image.url}, status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 @api_view(['GET'])
 def related_users(request, username):
     user = get_object_or_404(User, username=username)
     query = Q(cluster__exact=user.cluster)
     query.add(~Q(username=username), query.AND)
-    
+
     related_users = User.objects.filter(query)[:10]
     serializer = UserSerializer(related_users, many=True)
     return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
