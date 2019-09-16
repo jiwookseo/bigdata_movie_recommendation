@@ -1,4 +1,5 @@
 import api from "../../api";
+import User from "./user";
 
 const state = {
   detailToggler: false,
@@ -81,6 +82,14 @@ const actions = {
   },
   async setRelatedMovies({ commit }, param) {
     const data = await api.getRelatedMovies(param);
+    console.log(data)
+    if (data.status === 203 && data.data.error === "token") {
+      const req = {
+        "username": param.username
+      }
+      await api.logout(req)
+    }
+
     commit("setRelatedMovie", data.data);
   },
   async setSimilarUser({ commit }, param) {

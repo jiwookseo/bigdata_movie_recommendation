@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'is_staff', 'gender',
-                  'age', 'occupation', 'rating_cnt', 'image', 'thumbnail')
+                  'age', 'occupation', 'rating_cnt', 'image', 'thumbnail', 'subscribe')
 
     def get_image(self, obj):
         return 'http://localhost:8000' + obj.image.url if obj.image else None

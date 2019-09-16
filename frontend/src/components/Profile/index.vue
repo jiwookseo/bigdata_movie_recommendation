@@ -43,7 +43,9 @@
 
     <div class="profile--detail">
       <div>
-        <ImageSlider />
+        <ImageSlider 
+        :sliderList="sliderList"
+        :expand="false" />
         <SimilarUserList />
       </div>
     </div>
@@ -68,7 +70,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("user", ["user"])
+    ...mapGetters("user", ["user"]),
+    sliderList(){
+      return [
+          {
+            type: "평가한 영화",
+            selectedObject: ""
+          }
+        ];
+    }
   },
   created() {
     this.$store.commit("mvUi/setSliderType", "profile");

@@ -16,5 +16,5 @@ class CustomUserAuthenticationForm(AuthenticationForm):
 class CustomUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm):
         model = User
-        fields = ["age", "occupation", "gender"]
+        fields = ["age", "occupation", "gender", "is_staff"]
 
