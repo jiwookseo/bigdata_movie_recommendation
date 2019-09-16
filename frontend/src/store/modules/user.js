@@ -76,45 +76,46 @@ const actions = {
   },
 
 // User
-  async searchUsers({commit}, params) {
-    const resp = await api.searchUsers(params);
-    const users = resp.data;
-    commit("setUserSearchList", users);
-  },
-  async getUserByUsername({commit}, username) {
-    const res1 = await api.getUser(username);
-    const user = res1.data;
-    commit("setUser", user);
-    const res2 = await api.getRatings(username);
-    commit("setRatings", res2.data);
-    const res3 = await api.getFollowings(username);
-    commit("setFollowings", res3.data);
-  },
-  setEmptyUserList({commit}) {
-    commit("setUserSearchList", []);
-  },
-  async editUserInfo({commit}, params) {
-    const username = params.username;
-    const res = await api.editUserInfo(username, params);
-    if (res.status === 202) {
-      commit("edited", true)
-    } else {
-      if (res.data.error) {
-        commit("editComment", res.data.error)
-      } else {
-        commit("editComment", "정보 수정을 실패했습니다.")
-      }
-    }
-  },
-
-  // Follow
-  async follow({ commit }, id) {
-    if (state.isLogin) {
-      await api.follow(id);
-      const res = await api.getFollowings(state.username);
-      commit("setUserFollowings", res.data);
-    }
+async searchUsers({commit}, params) {
+  const resp = await api.searchUsers(params);
+  const users = resp.data;
+  commit("setUserSearchList", users);
+},
+async getUserByUsername({commit}, username) {
+  const res1 = await api.getUser(username);
+  const user = res1.data;
+  commit("setUser", user);
+  const res2 = await api.getRatings(username);
+  commit("setRatings", res2.data);
+  const res3 = await api.getFollowings(username);
+  commit("setFollowings", res3.data);
+},
+setEmptyUserList({commit}) {
+  commit("setUserSearchList", []);
+},
+async editUserInfo({commit}, params) {
+  const username = params.username;
+  const res = await api.editUserInfo(username, params);
+  if (res.status === 202) {
+    commit("edited", true);
+  } else if (res.status === 203) {
+    const req = {
+      "username": username
+    };
+    await api.logout(req);
+  } else {
+    commit("editComment", "정보 수정을 실패했습니다.");
   }
+},
+
+// Follow
+async follow({ commit }, id) {
+  if (state.isLogin) {
+    await api.follow(id);
+    const res = await api.getFollowings(state.username);
+    commit("setUserFollowings", res.data);
+  }
+}
 };
 
 // mutations
