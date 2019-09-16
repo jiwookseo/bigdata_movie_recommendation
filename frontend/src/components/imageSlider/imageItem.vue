@@ -13,7 +13,7 @@
         <p>{{ movie.description }}</p>
       </div>
       <!-- 아래 화살표 -->
-      <div class="image-item--under-expand">
+      <div v-if="expand" class="image-item--under-expand">
         <span v-show="!toggle" @click="handleToggleOpen">
           <font-awesome-icon icon="sort-down" size="2x" />
         </span>
@@ -40,14 +40,9 @@ export default {
     FontAwesomeIcon
   },
   props: {
-    movie: {
-      type: Object,
-      default: () => ({ id: 0, title: "", img: "", description: "", genre: "" })
-    },
-    type: {
-      type: String,
-      default: "Age"
-    }
+    movie: { type: Object, default: () => ({ id: 0, title: "", img: "", description: "", genre: "" }) },
+    type: { type: String, default: "Age" },
+    expand: { type: Boolean, default: true }
   },
   data() {
     return {

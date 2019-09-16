@@ -1,19 +1,25 @@
 <template>
   <div>
     <Jumbotron />
-    <ImageSlider />
+    <ImageSlider :sliderList="sliderList" :expnad="true"/>
   </div>
 </template>
 
 <script>
 import Jumbotron from '../header/Jumbotron'
 import ImageSlider from '../imageSlider/index'
+import { mapGetters } from 'vuex'
 
 export default {
   name: "BoardingPage",
   components: {
     Jumbotron,
     ImageSlider
+  },
+  computed: {
+    sliderList(){
+      return this.$store.getters["mvUi/sliderBoardData"];
+    }
   },
   created(){
     this.$store.commit('mvUi/setSliderType', "board")
