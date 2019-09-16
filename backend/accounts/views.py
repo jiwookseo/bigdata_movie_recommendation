@@ -123,7 +123,7 @@ def user_detail(request, username):
 
             if response and response.status_code == 200:
                 user.delete()
-                return Response(status=status.HTTP_200_OK)
+                return Response(status=status.HTTP_202_ACCEPTED)
 
             user.refresh_token = ""
             user.save()
