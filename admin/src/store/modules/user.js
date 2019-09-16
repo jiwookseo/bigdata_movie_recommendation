@@ -69,7 +69,7 @@ const actions = {
   async editUserInfo({ commit }, params) {
   const username = params.name;
   const res = await api.editUser(username, params);
-  if (res.status === 200) {
+  if (res.status === 202) {
     commit("editComment", "유저 정보가 변경되었습니다.")
   } else {
     if (res.data.error) {
@@ -83,7 +83,7 @@ const actions = {
   async deleteUser({ commit }, params) {
   const username = params.name;
   const res = await api.deleteUser(username, params);
-  if (res.status === 200) {
+  if (res.status === 202) {
     commit("delComment", "유저가 삭제되었습니다.")
   } else {
     if (res.data.error) {
@@ -97,7 +97,7 @@ const actions = {
 // login
   async setLogin({ commit }, params) {
     const res = await api.login(params);
-    if (res.status === 200 && res.data.is_staff) {
+    if (res.status === 202 && res.data.is_staff) {
       commit("setIsLogin", true);
       commit("setUsername", res.data.username);
       commit("setStaff", res.data.is_staff);
