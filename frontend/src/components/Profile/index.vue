@@ -14,9 +14,9 @@
         <div class="profile--div">
           <p class="profile--info-username">
             {{ user.username }}
-            <button
-              class="material-icons edit-button"
-              @click="editInfo = true"
+            <button v-if="loginUsername === $route.params.username"
+                    class="material-icons edit-button"
+                    @click="editInfo = true"
             >create</button>
           </p>
           <p class="profile--info-description">여기에 간단한 소개글이 들어갑니다.</p>

@@ -83,6 +83,7 @@ const actions = {
   async setRelatedMovies({ commit }, param) {
     const data = await api.getRelatedMovies(param);
     console.log(data)
+    console.log(1)
     if (data.status === 203 && data.data.error === "token") {
       const req = {
         "username": param.username

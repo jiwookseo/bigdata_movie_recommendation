@@ -30,126 +30,126 @@
       </div>
       <span>{{ err_occupation }}</span>
     </div>
-    <span>{{ err_edit }}</span>
     <div class="buttons">
       <button v-if="checkEdit" class="edit_button" @click="editInfo">Edit Info</button>
       <button v-else class="disabled_button" disabled>Edit Info</button>
     </div>
+    <span class="edit_err">{{ err_edit }}</span>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapState, mapActions } from "vuex"
+  import { mapGetters, mapState, mapActions } from "vuex"
 
-export default {
-  name: "editUserInfo",
-  props: {
-    user: {
-      type: Object
+  export default {
+    name: "editUserInfo",
+    props: {
+      user: {
+        type: Object
+      },
+      back: {
+        type: Function,
+        default: () => {}
+      }
     },
-    back: {
-      type: Function,
-      default: () => {}
-    }
-  },
-  watch: {
-    user_age: function() {
-      this.chkAge();
+    watch: {
+      user_age: function() {
+        this.chkAge();
+      },
+      user_gender: function() {
+        this.chkGender();
+      },
+      user_occupation: function() {
+        this.chkOccupation();
+      },
     },
-    user_gender: function() {
-      this.chkGender();
+    computed: {
+      ...mapGetters('user', ['token', 'username']),
+      ...mapState({
+        getEdit: state => state.user.editCom,
+        getBool: state => state.user.edit,
+      }),
     },
-    user_occupation: function() {
-      this.chkOccupation();
+    mounted() {
+      this.user_gender = this.user.gender;
+      this.user_age = this.ages.indexOf(this.user.age);
+      this.user_occupation = this.occupationList.indexOf(this.user.occupation);
     },
-  },
-  computed: {
-    ...mapGetters('user', ['token', 'username']),
-    ...mapState({
-      getEdit: state => state.user.editCom,
-      getBool: state => state.user.edit,
+    data: () => ({
+      user_gender: "",
+      user_age: 0,
+      user_occupation: 0,
+      err_gender: "",
+      err_age: "",
+      err_occupation: "",
+      err_edit: "",
+      ageList: ["Under 18", "18-24", "25-34", "35-44", "45-49", "50-55", "56+"],
+      ages: [1, 18, 25, 35, 45, 50, 56],
+      occupationList: [
+        "other", "academic/educator", "artist", "clerical/admin", "college/grad student", "customer service", "doctor/health care",
+        "executive/managerial", "farmer", "homemaker", "K-12 student", "lawyer", "programmer", "retired", "sales/marketing",
+        "scientist", "self-employed", "technician/engineer", "tradesman/craftsman", "unemployed", "writer"
+      ],
+      checkEdit: false,
     }),
-  },
-  mounted() {
-    this.user_gender = this.user.gender;
-    this.user_age = this.ages.indexOf(this.user.age);
-    this.user_occupation = this.occupationList.indexOf(this.user.occupation);
-  },
-  data: () => ({
-    user_gender: "",
-    user_age: 0,
-    user_occupation: 0,
-    err_gender: "",
-    err_age: "",
-    err_occupation: "",
-    err_edit: "",
-    ageList: ["Under 18", "18-24", "25-34", "35-44", "45-49", "50-55", "56+"],
-    ages: [1, 18, 25, 35, 45, 50, 56],
-    occupationList: [
-      "other", "academic/educator", "artist", "clerical/admin", "college/grad student", "customer service", "doctor/health care",
-      "executive/managerial", "farmer", "homemaker", "K-12 student", "lawyer", "programmer", "retired", "sales/marketing",
-      "scientist", "self-employed", "technician/engineer", "tradesman/craftsman", "unemployed", "writer"
-    ],
-    checkEdit: false,
-  }),
-  methods: {
-    ...mapActions('user', ['editUserInfo', 'getUserByUsername']),
-    backTo() {
-      this.back();
-    },
-    chkAge() {
-      if (typeof(this.user_age) === "number" && this.ages[this.user_age] !== undefined) {
-        this.err_age = "";
-      } else {
-        this.err_age = "age를 선택해주세요.";
-      }
-      this.chkEdit();
-    },
-    chkGender() {
-      if (this.user_gender === "M" || this.user_gender === "F") {
-        this.err_gender = "";
-      } else {
-        this.err_gender = "gender를 선택해주세요.";
-      }
-      this.chkEdit();
-    },
-    chkOccupation() {
-      if (typeof(this.user_occupation) === "number" && this.occupationList[this.user_occupation] !== undefined) {
-        this.err_occupation = "";
-      } else {
-        this.err_occupation = "occupation을 선택해주세요.";
-      }
-      this.chkEdit();
-    },
-    chkEdit() {
-      if (this.ages[this.user_age] !== undefined && this.user_gender && this.occupationList[this.user_occupation] !== undefined && !this.err_age && !this.err_gender && !this.err_occupation) {
-        this.checkEdit = true;
-      } else {
-        this.checkEdit = false;
-      }
-    },
-    async editInfo() {
-      const params = {
-        "token": this.token,
-        "username": this.username,
-        "changeInfo": {
-          "age": this.ages[this.user_age],
-          "gender": this.user_gender,
-          "occupation": this.occupationList[this.user_occupation]
+    methods: {
+      ...mapActions('user', ['editUserInfo', 'getUserByUsername']),
+      backTo() {
+        this.back();
+      },
+      chkAge() {
+        if (typeof(this.user_age) === "number" && this.ages[this.user_age] !== undefined) {
+          this.err_age = "";
+        } else {
+          this.err_age = "age를 선택해주세요.";
         }
-      };
-      await this.editUserInfo(params);
-      const s = this.getBool;
-      if (s === true) {
-        this.backTo();
-        this.getUserByUsername(this.user.username);
-        this.$store.commit('user/edited', false);
-      } else {
-        this.err_edit = this.getEdit;
+        this.chkEdit();
+      },
+      chkGender() {
+        if (this.user_gender === "M" || this.user_gender === "F") {
+          this.err_gender = "";
+        } else {
+          this.err_gender = "gender를 선택해주세요.";
+        }
+        this.chkEdit();
+      },
+      chkOccupation() {
+        if (typeof(this.user_occupation) === "number" && this.occupationList[this.user_occupation] !== undefined) {
+          this.err_occupation = "";
+        } else {
+          this.err_occupation = "occupation을 선택해주세요.";
+        }
+        this.chkEdit();
+      },
+      chkEdit() {
+        if (this.ages[this.user_age] !== undefined && this.user_gender && this.occupationList[this.user_occupation] !== undefined && !this.err_age && !this.err_gender && !this.err_occupation) {
+          this.checkEdit = true;
+        } else {
+          this.checkEdit = false;
+        }
+      },
+      async editInfo() {
+        const params = {
+          "token": this.token,
+          "username": this.username,
+          "changeInfo": {
+            "age": this.ages[this.user_age],
+            "gender": this.user_gender,
+            "occupation": this.occupationList[this.user_occupation]
+          }
+        };
+        await this.editUserInfo(params);
+        const s = this.getBool;
+        if (s === true) {
+          this.backTo();
+          this.getUserByUsername(this.user.username);
+          this.$store.commit('user/edited', false);
+        } else {
+          this.err_edit = this.getEdit;
+        }
       }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -241,7 +241,6 @@ export default {
     padding: 5px 10px 10px 10px;
     line-height: 1.2em;
     border-radius: 15px;
-    margin-bottom: 30px;
     outline: none;
   }
 
@@ -301,6 +300,11 @@ export default {
 
   .buttons {
     margin: 0 auto;
+  }
+
+  .edit_err {
+    color: red;
+    text-align: center;
   }
 
 </style>

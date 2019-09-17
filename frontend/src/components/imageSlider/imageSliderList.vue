@@ -70,7 +70,7 @@ export default {
         return this.$store.getters[`movie/rec${this.type}`].map(movie => ({
           ...movie,
           description: movie.story.slice(0, 500),
-          mvId: movie.id,
+          avg_rating: movie.avg_rating,
           img:
             movie.stillCut ||
             movie.poster ||
@@ -80,7 +80,7 @@ export default {
         return this.$store.getters["user/ratings"].map(movie => ({
           ...movie,
           description: movie.story.slice(0, 500),
-          mvId: movie.movie_id,
+          avg_rating: movie.avg_rating,
           img:
             movie.stillCut ||
             movie.poster ||
