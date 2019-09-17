@@ -8,7 +8,6 @@ const state = {
   activateMovie: {},
   relatedMovies: {},
   sliderType: "",
-  userRatingMovies: [],
   similarUser: [],
   sliderProfileData: [
     {
@@ -70,7 +69,6 @@ const getters = {
   sliderType: state => state.sliderType,
   sliderBoardData: state => state.sliderBoardData,
   sliderProfileData: state => state.sliderProfileData,
-  userRatingMovies: state => state.userRatingMovies,
   similarUser: state => state.similarUser
 };
 
@@ -89,8 +87,7 @@ const actions = {
     if (data.status === 202) {
       commit("setRelatedMovie", data.data);
       commit("setRelatedStatus", true)
-    }
-    if (data.status === 203 && data.data.error === "token") {
+    } else if (data.status === 203 && data.data.error === "token") {
       User.state.isLogin = false;
       User.state.username = "";
       User.state.is_staff = false;
@@ -99,12 +96,6 @@ const actions = {
       sessionStorage.clear();
       this.$router.push("/")
     }
-  },
-  async setUserRatingMovies({ commit }, param){
-    const data = await api.getUserRatingMovie(param)
-    console.log("파람", param)
-    console.log('유저레이팅', data)
-    commit("setUserRatingMovies", data.data)
   },
   async setSimilarUser({ commit }, param) {
     const data = await api.getRelatedUsers(param);
@@ -119,7 +110,6 @@ const mutations = {
   setRelatedMovie: (state, payload) => (state.relatedMovies = payload),
   setRelatedStatus: (state, payload) => (state.relatedStatus = payload),
   setSliderType: (state, payload) => (state.sliderType = payload),
-  setUserRatingMovies: (state, payload) => (state.userRatingMovies = payload),
   setSimilarUser: (state, payload) => (state.similarUser = payload)
 };
 

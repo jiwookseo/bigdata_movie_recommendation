@@ -35,8 +35,8 @@ export default {
   getFollowings(username) {
     return axios.get(`${BASE_URL}/users/${username}/followings/`);
   },
-  getUserRatingMovie(username, s=0, e=10) {
-    return axios.get(`${BASE_URL}/movies/?username=${username}&start=${s}&limit=${e}`)
+  setProfile(username, formData) {
+    return axios.post(`${BASE_URL}/users/${username}/profile/`, formData);
   },
   login(params) {
     return axios.post(`${BASE_URL}/login/`, params);
