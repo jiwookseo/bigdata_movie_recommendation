@@ -66,9 +66,9 @@ export default {
         this.$store.commit("mvUi/setActivateMovie", this.movie);
         const data = {
           "movieId": this.movie.id,
-          "token": this.$store.user.token,
-          "username": this.$store.user.username,
-          "name": this.$route.params.username
+          // "token": this.$store.user.token,
+          // "username": this.$store.user.username,
+          // "name": this.$route.params.username
         };
         this.$store.dispatch("mvUi/setRelatedMovies", data);
       }
