@@ -5,7 +5,7 @@ const state = {
   detailToggler: false,
   detailType: "",
   activateMovie: {},
-  relatedMovies: {},
+  relatedMovies: [],
   sliderType: "",
   similarUser: [],
   sliderProfileData: [
@@ -80,19 +80,17 @@ const actions = {
       commit("setDetailToggler");
     }
   },
+
   async setRelatedMovies({ commit }, param) {
     const data = await api.getRelatedMovies(param);
-    console.log(data)
-    console.log(1)
+    console.log('setRelatedMovies on Error', data)
     if (data.status === 203 && data.data.error === "token") {
-      const req = {
-        "username": param.username
-      }
+      const req = { "username": param.username }
       await api.logout(req)
     }
-
     commit("setRelatedMovie", data.data);
   },
+
   async setSimilarUser({ commit }, param) {
     const data = await api.getRelatedUsers(param);
     commit("setSimilarUser", data.data);

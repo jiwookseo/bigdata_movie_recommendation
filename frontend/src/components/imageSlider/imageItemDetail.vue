@@ -90,7 +90,7 @@
         return temp.join(" ") + "...";
       },
       relativeMovie(){
-        return this.$store.getters[`mvUi/relatedMovie`].map(movie => ({
+        return this.$store.getters["mvUi/relatedMovie"].map(movie => ({
           ...movie,
           description: movie.story.slice(0, 100),
           img:
