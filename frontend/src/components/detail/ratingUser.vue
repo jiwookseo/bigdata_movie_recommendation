@@ -34,8 +34,11 @@ export default {
 }
 </script>
 
-<style>
-span {
+<style lang="scss">
+.rating-user-div {
+  display: inline-flex;
+}
+.rating-user-div span {
   color: white;
 }
 </style>
