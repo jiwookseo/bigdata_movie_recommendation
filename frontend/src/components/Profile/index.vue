@@ -43,9 +43,10 @@
 
     <div class="profile--detail">
       <div>
-        <ImageSlider 
-        :sliderList="sliderList"
-        :expand="false" />
+        <ImageSlider v-if="ratings.length" :sliderList="sliderList" :expand="false" />
+        <div v-else class="profile--rating--empty">
+          <h2>아직 평가한 영화가 없습니다.</h2>
+        </div>
         <SimilarUserList />
       </div>
     </div>
@@ -70,14 +71,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("user", ["user"]),
-    sliderList(){
+    ...mapGetters("user", ["user", "ratings"]),
+    sliderList() {
       return [
-          {
-            type: "평가한 영화",
-            selectedObject: ""
-          }
-        ];
+        {
+          type: "평가한 영화",
+          selectedObject: ""
+        }
+      ];
     }
   },
   created() {
@@ -222,5 +223,17 @@ export default {
   width: 80%;
   min-height: calc(100vh - 64px);
   overflow-x: hidden;
+
+  .profile--rating--empty {
+    padding: 60px 0 20px 30px;
+    display: flex;
+    h2 {
+      display: inline-block;
+      margin-right: 14px;
+      color: #fff;
+      font-size: 28px;
+      font-weight: 700;
+    }
+  }
 }
 </style>
