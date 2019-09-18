@@ -1,27 +1,29 @@
 from django.urls import path
 from .views import movie_views, scrap_views, clustering_views, admin_views
-from accounts import views
+from accounts import views as account_views
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
 
 app_name = "api"
 
 urlpatterns = [
     # Auth
-    path("signup/", views.signup, name="signup"),
-    path("users/", views.user_list, name="user_list"),
-    path("users/<str:username>/", views.user_detail, name="user_detail"),
+    path("signup/", account_views.signup, name="signup"),
+    path("users/", account_views.user_list, name="user_list"),
+    path("users/<str:username>/", account_views.user_detail, name="user_detail"),
     path('users/<str:username>/ratings/',
-         views.user_ratings, name='user_ratings'),
+         account_views.user_ratings, name='user_ratings'),
     path('users/<str:username>/followings/',
-         views.user_followings, name='user_followings'),
+         account_views.user_followings, name='user_followings'),
+    path('users/<str:username>/profile/',
+         account_views.profile_image, name="profile_image"),
     path('users/related_users/<str:username>/',
-         views.related_users, name="related_users"),
-    
-    
-    path("login/", views.login, name="login"),
-    path("logout/", views.logout, name="logout"),
-    
-    
+         account_views.related_users, name="related_users"),
+
+
+    path("login/", account_views.login, name="login"),
+    path("logout/", account_views.logout, name="logout"),
+
+
     # jwt
     path("token/create/", obtain_jwt_token),
     path("token/verify/", verify_jwt_token),
@@ -40,7 +42,7 @@ urlpatterns = [
     path('ratings/<int:rating_id>/',
          movie_views.rating_detail, name='rating_detail'),
 
-    path('movies/related_movies/', 
+    path('movies/related_movies/',
          movie_views.related_movies, name="related_movies"),
 
 
@@ -49,12 +51,12 @@ urlpatterns = [
     path('admin/users/', admin_views.users, name="admin_users"),
 
 
-#     # clustering
-#     path('clustering/movies/', clustering_views.movie_clustering, 
-#           name="movie_clustering"),
-#     path('clustering/users/', clustering_views.user_clustering, 
-#           name="user_clustering"),
-    
+    #     # clustering
+    #     path('clustering/movies/', clustering_views.movie_clustering,
+    #           name="movie_clustering"),
+    #     path('clustering/users/', clustering_views.user_clustering,
+    #           name="user_clustering"),
+
     # scrap
     path('scrap/', scrap_views.scrap_poster),
 ]

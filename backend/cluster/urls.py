@@ -4,9 +4,9 @@ from .views import movie_views, user_views
 app_name = "cluster"
 
 urlpatterns = [
-    # clustering Movies
+    # Movie
     path('movies/', movie_views.movie_clustering, name="movie_clustering"),
 
-    # clustering Users
+    # User
     path('users/', user_views.user_clustering, name="user_clustering"),
 ]

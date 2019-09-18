@@ -8,11 +8,11 @@ from rest_framework.response import Response
 
 # Models
 from accounts.models import User
-from api.models import Movie, Rating
+from api.models import Movie
 
 # Variables and Functions For Data Processing : data_views.py
 from .data_views import data_preprocessing, update_clustering_data, kmeans_custom_clustering_movies
-
+from .data_views import cos_sim
 
 # Data Processing & Clustering Libs 
 import numpy as np
@@ -53,7 +53,7 @@ def movie_clustering(request):
 
         # K-Means Customized
         elif method == 'kmc':
-            clustering_data = kmeans_custom_clustering_movies(k, 100)
+            clustering_data = kmeans_custom_clustering_movies(k, 100, movies_data)
 
         else:
             print("method를 정확히 표기해주세요.")

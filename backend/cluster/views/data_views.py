@@ -1,12 +1,19 @@
 # django
 from django.shortcuts import get_object_or_404
 
+# rest_framework
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 # Models
 from accounts.models import User
 from api.models import Movie, Rating
 
 # Data Processing & Clustering Libs 
 import numpy as np
+from numpy import dot
+from numpy.linalg import norm
 
 
 '''
@@ -14,18 +21,21 @@ movie_views, user_views에서 처리시에 필요한 데이터, 변수들을 저
 '''
 
 # Variables
-movies_count = Movie.objects.last().id
-users_count = User.objects.last().id
+
 
 # Data Preprocessing
 def data_preprocessing(table):
     movies = Movie.objects.all()
     users = User.objects.all()
 
-    print("number of movies: {}, users: {}".format(movies_count, users_count))
+    # define Index Variables
+    ml = movies.last().id
+    ul = users.last().id
 
+    # return rating matrix
     if table == 'm':
-        movies_data = np.zeros((movies_count, users_count))
+        movies_data = np.zeros((ml, ul))
+        print("movies_data를 받아오는 중입니다.")
         for movie in movies:
             for rating in movie.ratings.all():
                 movies_data[movie.id-1][rating.user.id-1] += rating.rating
@@ -33,7 +43,8 @@ def data_preprocessing(table):
         return movies_data
 
     elif table == 'u':
-        users_data = np.zeros((users_count, movies_count))
+        users_data = np.zeros((ul, ml))
+        print("users_data를 받아오는 중입니다.")
         for user in users:
             for rating in user.ratings.all():
                 users_data[user.id-1][rating.movie.id-1] += rating.rating
@@ -41,9 +52,7 @@ def data_preprocessing(table):
         return users_data
 
     else:
-        print("Movie, User 중 하나를 인자로 넣어야 합니다.")
-        return
-
+        print("table 인자를 정확히 입력해주세요.")
 
 
 # Update Clustering Data in DB
@@ -64,11 +73,12 @@ def update_clustering_data(table, clustering_data):
 
 
 # K-Means Customized Api (Movie)
-def kmeans_custom_clustering_movies(k, iters):
-   
+def kmeans_custom_clustering_movies(k, iters, movies_data):
+
     # define variables, data, and function
-    ml = movies_count
-    ul = users_count
+    ml = Movie.objects.last().id
+    ul = User.objects.last().id
+   
     clustering_data = np.full((1, ml), -1)[0]
     div = np.vectorize(lambda a, b: round(a/b, 4))
     
@@ -111,11 +121,12 @@ def kmeans_custom_clustering_movies(k, iters):
 
 
 # K-Means Customized Api (User)
-def kmeans_custom_clustering_users(k, iters):
-    
+def kmeans_custom_clustering_users(k, iters, users_data):
+
     # define variables, functions and data
-    ml = movies_count
-    ul = users_count
+    ml = Movie.objects.last().id
+    ul = User.objects.last().id
+    
     clustering_data = np.full((1, ul), -1)[0]
     div = np.vectorize(lambda a, b: round(a/b, 4))
     
@@ -154,3 +165,9 @@ def kmeans_custom_clustering_users(k, iters):
             centroids[i] = div(centroids[i], cnt)
             
     return clustering_data
+
+
+
+# cosine similarity
+def cos_sim(a, b):
+    return round(dot(a, b)/(norm(a)*norm(b)), 2)

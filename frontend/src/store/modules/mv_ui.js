@@ -1,12 +1,13 @@
 import api from "../../api";
+import User from "./user";
 
 const state = {
+  relatedStatus: false,
   detailToggler: false,
   detailType: "",
   activateMovie: {},
   relatedMovies: {},
   sliderType: "",
-  userRatingMovies: [],
   similarUser: [],
   sliderProfileData: [
     {
@@ -68,7 +69,6 @@ const getters = {
   sliderType: state => state.sliderType,
   sliderBoardData: state => state.sliderBoardData,
   sliderProfileData: state => state.sliderProfileData,
-  userRatingMovies: state => state.userRatingMovies,
   similarUser: state => state.similarUser
 };
 
@@ -81,19 +81,25 @@ const actions = {
       commit("setDetailToggler");
     }
   },
-  async setRelatedMovies({ commit }, param){
-    const data = await api.getRelatedMovies(param)
-    commit("setRelatedMovie", data.data)
+  async setRelatedMovies({ commit }, param) {
+    const data = await api.getRelatedMovies(param);
+    console.log(data)
+    if (data.status === 202) {
+      commit("setRelatedMovie", data.data);
+      commit("setRelatedStatus", true)
+    } else if (data.status === 203 && data.data.error === "token") {
+      User.state.isLogin = false;
+      User.state.username = "";
+      User.state.is_staff = false;
+      User.state.token = "";
+      User.state.subscribe = false;
+      sessionStorage.clear();
+      this.$router.push("/")
+    }
   },
-  async setUserRatingMovies({ commit }, param){
-    const data = await api.getUserRatingMovie(param)
-    console.log("파람", param)
-    console.log('유저레이팅', data)
-    commit("setUserRatingMovies", data.data)
-  },
-  async setSimilarUser({ commit }, param){
-    const data = await api.getRelatedUsers(param)
-    commit("setSimilarUser", data.data)
+  async setSimilarUser({ commit }, param) {
+    const data = await api.getRelatedUsers(param);
+    commit("setSimilarUser", data.data);
   }
 };
 
@@ -102,8 +108,8 @@ const mutations = {
   setActivateMovie: (state, payload) => (state.activateMovie = payload),
   setDetailType: (state, payload) => (state.detailType = payload),
   setRelatedMovie: (state, payload) => (state.relatedMovies = payload),
+  setRelatedStatus: (state, payload) => (state.relatedStatus = payload),
   setSliderType: (state, payload) => (state.sliderType = payload),
-  setUserRatingMovies: (state, payload) => (state.userRatingMovies = payload),
   setSimilarUser: (state, payload) => (state.similarUser = payload)
 };
 
