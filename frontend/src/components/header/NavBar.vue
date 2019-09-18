@@ -47,6 +47,13 @@ export default {
   components: {
     FontAwesomeIcon
   },
+  watch: {
+    isLogin: function() {
+      if (this.isLogin === false) {
+        this.redirectHome();
+      }
+    }
+  },
   data: () => ({
     sign() {
       const modal = document.getElementsByClassName("sign_modal")[0];
@@ -65,7 +72,6 @@ export default {
         username: this.username
       };
       await this.logout(params);
-      this.redirectHome();
     },
     redirectHome() {
       this.$router.push("/");

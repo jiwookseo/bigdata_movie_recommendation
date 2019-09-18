@@ -36,7 +36,6 @@ const actions = {
   // Login, Register
   async setLogin({ commit }, params) {
     const res = await api.login(params);
-    console.log(res)
     if (res.status === 202) {
       commit("setIsLogin", true);
       commit("setUsername", res.data.username);
@@ -56,15 +55,13 @@ const actions = {
     }
   },
   async logout({ commit }, params) {
-    const res = await api.logout(params);
-    if (res.status === 202) {
-      commit("setIsLogin", false);
-      commit("setUsername", "");
-      commit("setStaff", false);
-      commit("setToken", "");
-      commit("setSubscribe", false);
-      sessionStorage.clear();
-    }
+    commit("setIsLogin", false);
+    commit("setUsername", "");
+    commit("setStaff", false);
+    commit("setToken", "");
+    commit("setSubscribe", false);
+    sessionStorage.clear();
+    await api.logout(params);
   },
   async setRegister({ commit }, params) {
     const res = await api.register(params);
@@ -75,7 +72,7 @@ const actions = {
     }
   },
 
-  // User
+// User
   async searchUsers({ commit }, params) {
     const resp = await api.searchUsers(params);
     const users = resp.data;
@@ -102,9 +99,16 @@ const actions = {
   async editUserInfo({ commit }, params) {
     const username = params.username;
     const res = await api.editUserInfo(username, params);
+    // console.log(res)
     if (res.status === 202) {
       commit("edited", true);
     } else if (res.status === 203) {
+      commit("setIsLogin", false);
+      commit("setUsername", "");
+      commit("setStaff", false);
+      commit("setToken", "");
+      commit("setSubscribe", false);
+      sessionStorage.clear();
       const req = {
         "username": username
       };
