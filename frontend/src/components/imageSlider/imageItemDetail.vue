@@ -91,9 +91,7 @@ export default {
         ...movie,
         description: movie.story.slice(0, 100),
         img:
-          movie.stillCut ||
-          movie.poster ||
-          "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
+          movie.stillCut || movie.poster || "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
       }));
     }
   },
