@@ -47,6 +47,7 @@
         <div v-else class="profile--rating--empty">
           <h2>아직 평가한 영화가 없습니다.</h2>
         </div>
+      </div>
     </div>
   </div>
 </template>
@@ -56,7 +57,6 @@ import ImageSlider from "../imageSlider";
 import SimilarUserList from "./similarUserList";
 import editUserInfo from "./editUserInfo";
 import { mapGetters } from "vuex";
-import axios from "axios";
 
 export default {
   name: "Profile",

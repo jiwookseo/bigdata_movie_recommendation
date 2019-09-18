@@ -9,9 +9,11 @@ from api.serializers import MovieSerializer, RatingSerializer
 from .jwt import create_token, verify_token, refresh_token
 from .serializers import UserSerializer
 from .models import User
+from api.models import Movie
 from .forms import CustomUserAuthenticationForm, CustomUserCreateForm, CustomUserChangeForm
 from django.db.models import Q
 import json, datetime
+
 
 # 회원가입
 @api_view(["POST"])
@@ -135,16 +137,16 @@ def user_detail(request, username):
 @api_view(['GET'])
 def user_ratings(request, username):
     user = get_object_or_404(User, username=username)
+    id = request.GET.get("movieId", None)
+    if id:
+        movie = get_object_or_404(Movie, id=id)
+        rating = user.ratings.filter(movie=movie)
+
+        serializer = RatingSerializer(rating, many=True)
+        return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
+
     serializer = RatingSerializer(user.ratings.all(), many=True)
-    return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-
-@api_view(['GET'])
-def user_followings(request, username):
-    user = get_object_or_404(User, username=username)
-    serializer = MovieSerializer(user.followings, many=True)
-    return Response(data=serializer.data, status=status.HTTP_200_OK)
-
+    return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
 
 @api_view(['POST'])
 def profile_image(request, username):
@@ -157,6 +159,12 @@ def profile_image(request, username):
         return Response(data={"image": 'http://localhost:8000' + user.image.url}, status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def user_followings(request, username):
+    user = get_object_or_404(User, username=username)
+    serializer = MovieSerializer(user.followings, many=True)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -213,6 +221,7 @@ def login(request):
 @login_required
 @api_view(["POST"])
 def logout(request):
+    print(request.data)
     username = request.data.get("username", None)
     user = get_object_or_404(User, username=username)
     user.refresh_token = ""
