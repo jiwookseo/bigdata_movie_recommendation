@@ -36,7 +36,6 @@ const actions = {
   // Login, Register
   async setLogin({ commit }, params) {
     const res = await api.login(params);
-    console.log(res)
     if (res.status === 202) {
       commit("setIsLogin", true);
       commit("setUsername", res.data.username);
@@ -103,24 +102,25 @@ const actions = {
     const username = params.username;
     const res = await api.editUserInfo(username, params);
     if (res.status === 202) {
-      commit("edited", true)
+      commit("edited", true);
+    } else if (res.status === 203) {
+      const req = {
+        "username": username
+      };
+      await api.logout(req);
     } else {
-      if (res.data.error) {
-        commit("editComment", res.data.error);
-      } else {
-        commit("editComment", "정보 수정을 실패했습니다.");
-      }
+      commit("editComment", "정보 수정을 실패했습니다.");
     }
   },
 
-  // Follow
-  async follow({ commit }, id) {
-    if (state.isLogin) {
-      await api.follow(id);
-      const res = await api.getFollowings(state.username);
-      commit("setUserFollowings", res.data);
-    }
+// Follow
+async follow({ commit }, id) {
+  if (state.isLogin) {
+    await api.follow(id);
+    const res = await api.getFollowings(state.username);
+    commit("setUserFollowings", res.data);
   }
+}
 };
 
 // mutations

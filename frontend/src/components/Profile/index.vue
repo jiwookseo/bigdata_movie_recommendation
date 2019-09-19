@@ -14,9 +14,9 @@
         <div class="profile--div">
           <p class="profile--info-username">
             {{ user.username }}
-            <button
-              class="material-icons edit-button"
-              @click="editInfo = true"
+            <button v-if="loginUsername === $route.params.username"
+                    class="material-icons edit-button"
+                    @click="editInfo = true"
             >create</button>
           </p>
           <p class="profile--info-description">여기에 간단한 소개글이 들어갑니다.</p>
@@ -43,10 +43,10 @@
 
     <div class="profile--detail">
       <div>
-        <ImageSlider 
-        :sliderList="sliderList"
-        :expand="false" />
-        <SimilarUserList />
+        <ImageSlider v-if="ratings.length" :sliderList="sliderList" :expand="false" />
+        <div v-else class="profile--rating--empty">
+          <h2>아직 평가한 영화가 없습니다.</h2>
+        </div>
       </div>
     </div>
   </div>
@@ -57,7 +57,6 @@ import ImageSlider from "../imageSlider";
 import SimilarUserList from "./similarUserList";
 import editUserInfo from "./editUserInfo";
 import { mapGetters } from "vuex";
-import axios from "axios";
 
 export default {
   name: "Profile",
@@ -70,14 +69,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("user", ["user"]),
-    sliderList(){
+    ...mapGetters("user", ["user", "ratings"]),
+    sliderList() {
       return [
-          {
-            type: "평가한 영화",
-            selectedObject: ""
-          }
-        ];
+        {
+          type: "평가한 영화",
+          selectedObject: ""
+        }
+      ];
     }
   },
   created() {
@@ -222,5 +221,17 @@ export default {
   width: 80%;
   min-height: calc(100vh - 64px);
   overflow-x: hidden;
+
+  .profile--rating--empty {
+    padding: 60px 0 20px 30px;
+    display: flex;
+    h2 {
+      display: inline-block;
+      margin-right: 14px;
+      color: #fff;
+      font-size: 28px;
+      font-weight: 700;
+    }
+  }
 }
 </style>

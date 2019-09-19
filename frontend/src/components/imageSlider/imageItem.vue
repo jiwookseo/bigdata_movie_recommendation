@@ -66,9 +66,6 @@ export default {
         this.$store.commit("mvUi/setActivateMovie", this.movie);
         const data = {
           "movieId": this.movie.id,
-          "token": this.$store.user.token,
-          "username": this.$store.user.username,
-          "name": this.$route.params.username
         };
         this.$store.dispatch("mvUi/setRelatedMovies", data);
       }
@@ -82,16 +79,13 @@ export default {
       this.$store.commit("mvUi/setActivateMovie", this.movie);
       const data = {
         "movieId": this.movie.id,
-        "token": this.getToken,
-        "username": this.getname,
-        "name": this.$route.params.username
       };
       this.$store.dispatch("mvUi/setRelatedMovies", data);
     },
     handleToggleClose: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
     }
-  }
+  },
 };
 </script>
 
