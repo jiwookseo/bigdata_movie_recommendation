@@ -29,6 +29,9 @@ export default {
   getUser(username) {
     return axios.get(`${BASE_URL}/users/${username}`);
   },
+  getRating(username, id) {
+    return axios.get(`${BASE_URL}/users/${username}/ratings/?movieId=${id}`)
+  },
   getRatings(username) {
     return axios.get(`${BASE_URL}/users/${username}/ratings/`);
   },
@@ -51,7 +54,7 @@ export default {
     return axios.put(`${BASE_URL}/users/${username}/`, params);
   },
 
-  // Clustering 결과
+// Clustering 결과
   getRelatedMovies(params) {
     return axios.post(`${BASE_URL}/movies/related_movies/`, params);
   },

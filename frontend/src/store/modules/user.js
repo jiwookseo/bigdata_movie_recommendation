@@ -16,7 +16,8 @@ const state = {
   token: "",
   subscribe: false,
   edit: false,
-  editCom: ""
+  editCom: "",
+  rating: 0
 };
 
 // getters
@@ -117,6 +118,15 @@ const actions = {
       commit("editComment", "정보 수정을 실패했습니다.");
     }
   },
+  async setUserRating({ commit }, params) {
+    const username = params.username;
+    const id = params.movieId;
+    const res = await api.getRating(username, id);
+    console.log(res)
+    if (res.status === 202) {
+      commit("userRating", res.data[0].rating)
+    }
+  },
 
 // Follow
 async follow({ commit }, id) {
@@ -145,7 +155,8 @@ const mutations = {
   setRegError: (state, payload) => (state.regErrors = payload),
   setLogError: (state, payload) => (state.logErrors = payload),
   editComment: (state, payload) => (state.editCom = payload),
-  edited: (state, payload) => (state.edit = payload)
+  edited: (state, payload) => (state.edit = payload),
+  userRating: (state, payload) => (state.rating = payload)
 };
 
 export default {
