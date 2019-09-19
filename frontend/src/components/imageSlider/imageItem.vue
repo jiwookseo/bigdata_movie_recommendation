@@ -4,6 +4,7 @@
     :style="{'backgroundImage':`url('${movie.img}')`}"
     @mouseenter="handleMouseOver"
     @mouseleave="handleMouseLeave"
+    @click="openDetail"
   >
     <div class="image-item--title">
       <span>{{ movie.title }}</span>
@@ -37,7 +38,7 @@ library.add(faSortDown, faSortUp);
 export default {
   name: "ImageItem",
   components: {
-    FontAwesomeIcon
+    FontAwesomeIcon,
   },
   props: {
     movie: { type: Object, default: () => ({ id: 0, title: "", img: "", description: "", genre: "" }) },
@@ -47,14 +48,11 @@ export default {
   data() {
     return {
       showDescription: false,
+      detail: false,
     };
   },
   computed: {
     ...mapGetters("mvUi", ["detailToggler", "detailType"]),
-    ...mapState({
-      getname: state => state.user.username,
-      getToken: state => state.user.token,
-    }),
       toggle() {
         return this.detailToggler && this.detailType === this.type;
       },
@@ -84,6 +82,12 @@ export default {
     },
     handleToggleClose: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
+    },
+    openDetail() {
+      if (this.detail) {
+        const popup = document.getElementById(`detail${this.movie.id}`);
+        popup.style.display = "flex";
+      }
     }
   },
 };

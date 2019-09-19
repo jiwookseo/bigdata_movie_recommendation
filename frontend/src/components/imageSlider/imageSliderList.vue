@@ -17,6 +17,7 @@
           :expand="expand"
           class="image-slider__item"
         />
+        <userRelatedMovie v-for="movie in movieList" :id="'detail' + movie.id" :key="'detail' + movie.id" :movie="movie" />
       </div>
       <div v-if="slideNum != 0" class="image-slider__arrow-left" @click="handleClick(1)">
         <span>&#60;</span>
@@ -36,11 +37,12 @@
 import ImageItem from "./imageItem";
 import ImageItemDetail from "./imageItemDetail";
 import ImageSliderTitle from "./imageSliderTitle"
+import userRelatedMovie from "../Profile/userRelatedMovie";
 import { mapGetters } from "vuex";
 
 export default {
   name: "ImageSliderList",
-  components: { ImageItem, ImageItemDetail, ImageSliderTitle },
+  components: { ImageItem, ImageItemDetail, ImageSliderTitle, userRelatedMovie },
   props: { 
     data: { type: Object, default: () => ({ type: "연령대" }) },
     sliderType: { type: String, default: () => ""},
@@ -90,14 +92,13 @@ export default {
     },
     toggleDetail() {
       return this.detailToggler && this.detailType === this.type;
-    }
+    },
   },
   watch: {
     movieList() {
       this.loadAble = true;
     }
   },
-  
   methods: {
     handleClick: function(n) {
       this.slideNum += n;
@@ -111,7 +112,7 @@ export default {
     },
     load: function() {
       this.$store.dispatch(`movie/getRecBy${this.type}`, this.selected);
-    }
+    },
   }
 };
 </script>
