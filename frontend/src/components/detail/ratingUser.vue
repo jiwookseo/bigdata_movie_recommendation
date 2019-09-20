@@ -5,6 +5,7 @@
     <span>{{ rating }}</span>
   </div>
 </template>
+
 <script>
 import { mapState, mapActions } from "vuex";
 export default {
@@ -45,6 +46,7 @@ export default {
   }
 }
 </script>
+
 <style lang="scss">
 .rating-user-div {
   display: inline-flex;
