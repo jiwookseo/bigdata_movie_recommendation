@@ -6,7 +6,6 @@
 export default {
   name: "subscribe",
   data: () => ({
-
   }),
   methods: {
 
