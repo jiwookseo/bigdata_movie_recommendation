@@ -1,11 +1,7 @@
 <template>
   <div class="image-slider__list">
     <div class="image-slider__title">
-      <ImageSliderTitle
-        :data="data"
-        :sliderType="sliderType"
-        :type="type"
-      />
+      <ImageSliderTitle :data="data" :sliderType="sliderType" :type="type" />
     </div>
     <div class="image-slider__wrapper">
       <div class="image-slider__box" :style="{ transform: 'translateX(' + slideNum * 16 +'vw)' }">
@@ -35,27 +31,32 @@
 <script>
 import ImageItem from "./imageItem";
 import ImageItemDetail from "./imageItemDetail";
-import ImageSliderTitle from "./imageSliderTitle"
+import ImageSliderTitle from "./imageSliderTitle";
 import { mapGetters } from "vuex";
 
 export default {
   name: "ImageSliderList",
   components: { ImageItem, ImageItemDetail, ImageSliderTitle },
-  props: { 
+  props: {
     data: { type: Object, default: () => ({ type: "연령대" }) },
-    sliderType: { type: String, default: () => ""},
-    expand: { type: Boolean, default: () => true}
+    sliderType: { type: String, default: () => "" },
+    expand: { type: Boolean, default: () => true }
   },
   data() {
     return {
       slideNum: 0,
       detailToggle: false,
-      selected: 18,
       loadAble: true
     };
   },
   computed: {
     ...mapGetters("mvUi", ["detailToggler", "detailType"]),
+    selected() {
+      if (this.type === "Age") return this.$store.getters["movie/selectedAge"];
+      else if (this.type === "Occupation")
+        return this.$store.getters["movie/selectedOccupation"];
+      else return this.$store.getters["movie/selectedGender"];
+    },
     type() {
       if (this.data.type === "연령대") {
         return "Age";
@@ -94,10 +95,13 @@ export default {
   },
   watch: {
     movieList() {
+      if (this.movieList.length === 10) {
+        this.slideNum = 0;
+      }
       this.loadAble = true;
     }
   },
-  
+
   methods: {
     handleClick: function(n) {
       this.slideNum += n;
@@ -178,15 +182,31 @@ export default {
   animation: bounce-out 0.4s;
 }
 @keyframes bounce-in {
-  0% { transform: scale(0); }
-  50% { transform: scale(1.3); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 @keyframes bounce-out {
-  0% { transform: scaleY(0.8); }
-  25% { transform: scaleY(0.6); }
-  50% { transform: scaleY(0.4); }
-  75% { transform: scaleY(0.2); }
-  100% { transform: scaleY(0); }
+  0% {
+    transform: scaleY(0.8);
+  }
+  25% {
+    transform: scaleY(0.6);
+  }
+  50% {
+    transform: scaleY(0.4);
+  }
+  75% {
+    transform: scaleY(0.2);
+  }
+  100% {
+    transform: scaleY(0);
+  }
 }
 </style>
