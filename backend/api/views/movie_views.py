@@ -427,6 +427,8 @@ def related_movies(request):
     username = request.data.get("username", None)
     token = request.data.get("token", None)
     name = request.data.get("name", None)
+    print(request.data)
+
     if not movie_id:
         return Response(data={"error": "정보 없음"}, status=status.HTTP_400_BAD_REQUEST)
 
