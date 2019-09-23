@@ -5,13 +5,8 @@ const state = {
   relatedStatus: false,
   detailToggler: false,
   detailType: "",
-<<<<<<< HEAD
-  activateMovie: {},
-  relatedMovies: [],
-=======
   activateMovie: { id: 0 },
   relatedMovies: {},
->>>>>>> 67e0326fca5521009673aca8e2a414dd48feee22
   sliderType: "",
   similarUser: [],
   sliderProfileData: [
@@ -90,14 +85,6 @@ const actions = {
 
   async setRelatedMovies({ commit }, param) {
     const data = await api.getRelatedMovies(param);
-<<<<<<< HEAD
-    console.log('setRelatedMovies on Error', data)
-    if (data.status === 203 && data.data.error === "token") {
-      const req = { "username": param.username }
-      await api.logout(req)
-    }
-    commit("setRelatedMovie", data.data);
-=======
     if (data.status === 202) {
       commit("setRelatedMovie", data.data);
       commit("setRelatedStatus", true);
@@ -110,7 +97,6 @@ const actions = {
       sessionStorage.clear();
       this.$router.push("/");
     }
->>>>>>> 67e0326fca5521009673aca8e2a414dd48feee22
   },
 
   async setSimilarUser({ commit }, param) {

@@ -23,7 +23,7 @@ export default {
     imgUrl(){
       return this.movie.still_cut||
              this.movie.poster||
-             'https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg'
+             'http://mblogthumb1.phinf.naver.net/MjAxNzA5MjVfMTI0/MDAxNTA2MzI1NzQ4Njg1.r4crcwa5oKG1PrcnvEaQ59jz4KmG8vKpqKFxry51dk0g.9-c8fA3RT6lKXBI-2saAKmOaRDpr9k2sstHkLkCgK-kg.JPEG.white8081/599637c326f7d273826d.jpg?type=w800'
     }
   }
 }

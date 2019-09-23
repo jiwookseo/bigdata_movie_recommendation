@@ -8,7 +8,7 @@
         <span @click="handleToggle">&times;</span>
       </div>
       <h2 class="detail--title">
-        <router-link :to="{name: 'detail', params: { id: movie.movie_id } }">
+        <router-link :to="{name: 'detail', params: { id: movie.id } }">
           {{ movie.title }}
         </router-link>
       </h2>

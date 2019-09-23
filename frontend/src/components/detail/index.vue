@@ -66,7 +66,6 @@ export default {
   },
   watch: {
     "$route.params.id": function(id){
-      console.log("시계는 왓치")
       this.$store.dispatch("movie/getMovieById", id)
     }
   },
