@@ -85,17 +85,17 @@ const actions = {
 
   async setRelatedMovies({ commit }, param) {
     const data = await api.getRelatedMovies(param);
-    if (data.status === 202) {
-      commit("setRelatedMovie", data.data);
-      commit("setRelatedStatus", true);
-    } else if (data.status === 203 && data.data.error === "token") {
-      User.state.isLogin = false;
-      User.state.username = "";
-      User.state.is_staff = false;
-      User.state.token = "";
-      User.state.subscribe = false;
-      sessionStorage.clear();
-      this.$router.push("/");
+      if (data.status === 202) {
+        commit("setRelatedMovie", data.data);
+        commit("setRelatedStatus", true);
+      } else if (data.status === 203 && data.data.error === "token") {
+        User.state.isLogin = false;
+        User.state.username = "";
+        User.state.is_staff = false;
+        User.state.token = "";
+        User.state.subscribe = false;
+        sessionStorage.clear();
+        this.$router.push("/");
     }
   },
 
