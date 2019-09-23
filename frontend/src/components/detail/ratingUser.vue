@@ -9,18 +9,22 @@
 <script>
 import { mapState, mapActions } from "vuex";
 export default {
+  name: "ratingUser",
   props: {
     movieId: {
       type: Number,
+      default: 0,
     },
     username: {
       type: String,
       default: "",
     },
   },
-  name: "ratingUser",
-  created() {
-    this.check();
+  data: () => ({
+    rating: 0,
+  }),
+  mounted() {
+    console.log(this.movieId)
   },
   computed: {
     ...mapState({
@@ -28,9 +32,9 @@ export default {
       getRating: state => state.user.rating
     })
   },
-  data: () => ({
-    rating: 0,
-  }),
+  created() {
+    this.check();
+  },
   methods: {
     ...mapActions("user", ["setUserRating"]),
     async check() {
@@ -39,6 +43,7 @@ export default {
           "username": this.username,
           "movieId": this.movieId
         };
+        console.log(this.movieId)
         await this.setUserRating(data);
         this.rating = this.getRating
       }
