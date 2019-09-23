@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span>{{ id }}</span>
+<!--    <span>{{ id }}</span>-->
     <span>{{ username }}</span>
     <span>{{ rating }}</span>
   </div>

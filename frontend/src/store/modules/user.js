@@ -36,7 +36,6 @@ const actions = {
   // Login, Register
   async setLogin({ commit }, params) {
     const res = await api.login(params);
-    console.log(res)
     if (res.status === 202) {
       commit("setIsLogin", true);
       commit("setUsername", res.data.username);

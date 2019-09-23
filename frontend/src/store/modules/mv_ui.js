@@ -2,10 +2,16 @@ import api from "../../api";
 import User from "./user";
 
 const state = {
+  relatedStatus: false,
   detailToggler: false,
   detailType: "",
+<<<<<<< HEAD
   activateMovie: {},
   relatedMovies: [],
+=======
+  activateMovie: { id: 0 },
+  relatedMovies: {},
+>>>>>>> 67e0326fca5521009673aca8e2a414dd48feee22
   sliderType: "",
   similarUser: [],
   sliderProfileData: [
@@ -68,7 +74,8 @@ const getters = {
   sliderType: state => state.sliderType,
   sliderBoardData: state => state.sliderBoardData,
   sliderProfileData: state => state.sliderProfileData,
-  similarUser: state => state.similarUser
+  similarUser: state => state.similarUser,
+  activateMovie: state => state.activateMovie
 };
 
 const actions = {
@@ -83,12 +90,27 @@ const actions = {
 
   async setRelatedMovies({ commit }, param) {
     const data = await api.getRelatedMovies(param);
+<<<<<<< HEAD
     console.log('setRelatedMovies on Error', data)
     if (data.status === 203 && data.data.error === "token") {
       const req = { "username": param.username }
       await api.logout(req)
     }
     commit("setRelatedMovie", data.data);
+=======
+    if (data.status === 202) {
+      commit("setRelatedMovie", data.data);
+      commit("setRelatedStatus", true);
+    } else if (data.status === 203 && data.data.error === "token") {
+      User.state.isLogin = false;
+      User.state.username = "";
+      User.state.is_staff = false;
+      User.state.token = "";
+      User.state.subscribe = false;
+      sessionStorage.clear();
+      this.$router.push("/");
+    }
+>>>>>>> 67e0326fca5521009673aca8e2a414dd48feee22
   },
 
   async setSimilarUser({ commit }, param) {
@@ -102,6 +124,7 @@ const mutations = {
   setActivateMovie: (state, payload) => (state.activateMovie = payload),
   setDetailType: (state, payload) => (state.detailType = payload),
   setRelatedMovie: (state, payload) => (state.relatedMovies = payload),
+  setRelatedStatus: (state, payload) => (state.relatedStatus = payload),
   setSliderType: (state, payload) => (state.sliderType = payload),
   setSimilarUser: (state, payload) => (state.similarUser = payload)
 };

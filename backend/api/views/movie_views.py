@@ -369,7 +369,12 @@ def related_movies(request):
     name = request.data.get("name", None)
 
     print(request.data)
+    if not movie_id:
+        return Response(data={"error": "정보 없음"}, status=status.HTTP_400_BAD_REQUEST)
+
+    movie = get_object_or_404(Movie, id=movie_id)
     if username:
+        print(1)
         if username != name:
             return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
@@ -391,13 +396,16 @@ def related_movies(request):
                 user.refresh_token = new_token
 
         if response and response.status_code == 200:
-            movie = get_object_or_404(Movie, id=movie_id)
             related_movies = Movie.objects.filter(Q(cluster__exact=movie.cluster) & ~Q(ratings__user__username=username)).order_by("-avg_rating")[:10]
             serializer = MovieSerializer(related_movies, many=True)
-
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
 
         user.refresh_token = ""
         user.save()
+        auth_logout(request)
         return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
-    return Response(data={"error": "user 정보 없음"}, status=status.HTTP_204_NO_CONTENT)
+
+    related_movies = Movie.objects.filter(
+        Q(cluster__exact=movie.cluster) & ~Q(ratings__user__username=username)).order_by("-avg_rating")[:10]
+    serializer = MovieSerializer(related_movies, many=True)
+    return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
