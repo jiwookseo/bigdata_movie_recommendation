@@ -8,7 +8,6 @@
 <script>
 import Jumbotron from '../header/Jumbotron'
 import ImageSlider from '../imageSlider/index'
-import { mapGetters } from 'vuex'
 
 export default {
   name: "BoardingPage",
