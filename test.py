@@ -26,6 +26,7 @@ def test(request):
     # for i in range(len(movies)):
     #     for rating in movies[i].ratings.all():
     #         data[i, rating.user_id - 17] = rating.score
+    # 한줄의 커밋
     n = r = 10
     if method == "hierarchical":
         clustering = AgglomerativeClustering(n_clusters=n).fit(data)
