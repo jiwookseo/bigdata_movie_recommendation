@@ -81,7 +81,6 @@ export default {
   },
   watch: {
     "$route.params.username": function(username) {
-      this.$store.commit("user/setUsername", username);
       this.$store.dispatch("user/getUserByUsername", username);
       this.$store.dispatch("mvUi/setSimilarUser", username);
     }
