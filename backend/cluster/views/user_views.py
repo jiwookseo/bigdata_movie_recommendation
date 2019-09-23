@@ -9,6 +9,7 @@ from rest_framework.response import Response
 # Models
 from accounts.models import User
 from api.models import Movie
+from cluster.models import RecommendedMovie
 
 # Variables and Functions For Data Processing : data_views.py
 from .data_views import data_preprocessing, update_clustering_data, kmeans_custom_clustering_users
@@ -100,8 +101,7 @@ def recm_movies(request, method):
                 movie_similarity[i, j] = cosine_similarity
                 movie_similarity[j, i] = cosine_similarity
 
-            print("{}/{}".format(i, ml))   
-                    
+            print("2/4, {}/{}".format(i, ml))                 
         print("2/4, 영화 유사도 데이터 생성 완료")
 
         # Step 3. 평점 계산 및 입력
@@ -147,7 +147,8 @@ def recm_movies(request, method):
                     exp_rating = round((total / cnt), 2)
 
                 users_data_exp_rating[i, j] = exp_rating
-
+            
+            print("3/4, {}/{}".format(i, ul))
         print("3/4, 평점 계산 및 입력 완료")
 
         # Step 4. 구한 예상 평점과 영화를 DB에 등록
@@ -188,16 +189,108 @@ def recm_movies(request, method):
                     exp_rating.save()
                 except Movie.DoesNotExist:
                     continue
-        
+
+            print("4/4, {}/{}".format(i, ul))
         print("4/4, 예상 평점 및 영화 DB 등록 완료")
+        return Response(status=status.HTTP_201_CREATED)
 
                 
     # KNN - User Based
     elif method == 'ub':
-        # 유저 유사도 데이터 생성
+        users_data_origin = data_preprocessing('u')
+        users_data_exp_rating = np.copy(users_data_origin)
+        print("1/4, 변수 및 데이터 생성 완료.")
+
+
+        # Step 2. 영화 유사도 데이터 생성
         user_similarity = np.zeros((ul, ul))
-        # 평점 계산 및 입력
-        pass
+        for i in range(ul):
+            for j in range(i+1, ul):      
+                cosine_similarity = cos_sim(users_data_origin[i], users_data_origin[j])
+                user_similarity[i, j] = cosine_similarity
+                user_similarity[j, i] = cosine_similarity
+            
+            print("2/4, {}/{}".format(i, ul))                  
+        print("2/4, 유저 유사도 데이터 생성 완료")   
+
+
+        # Step 3. 평점 계산 및 입력
+        for i in range(ul):
+            for j in range(ml):
+                # user i+1 -> movie j+1
+                
+                # 만약 평점을 남겼다면, 예상평점을 구할 이유가 없으므로 패스, 
+                if users_data_origin[i, j] > 0:
+                    continue
+                
+                # 유사한 유저들 순으로 정렬, 평점을 위한 cnt와 total 변수 초기화
+                similar_users = np.argsort(user_similarity[i])[::-1]
+                cnt = 0
+                total = 0
+                
+                for user in similar_users:
+                    # k명 까지만 계산에 포함한다.
+                    if cnt > k:
+                        break
+                        
+                    # 해당 유저가 평점을 남겼다면?
+                    if users_data_origin[user, j] > 0:
+                        total += users_data_origin[user, j]
+                        cnt += 1
+            
+                # 평점 구하기 (total / cnt), division by zero 예외 처리
+                if cnt == 0:
+                    exp_rating = 0
+                else:
+                    exp_rating = round((total / cnt), 2)
+                
+                # 구한 평점을 users_data에 넣기
+                users_data_exp_rating[i, j] = exp_rating
+
+            print("3/4, {}/{}".format(i, ul))
+        print("3/4, 평점 계산 및 입력 완료")
+
+
+        # Step 4. 구한 예상 평점과 영화를 DB에 등록
+        for i in range(ul):
+            # user 없을 시 예외 처리
+            try:
+                user = User.objects.get(pk=i+1)
+            except User.DoesNotExist:
+                continue
+                
+            movie_info_data = np.argsort(users_data_exp_rating[i])[::-1]
+            
+            k = 5
+            cnt = 1
+            mv_rating_list = []
+            
+            for mv in movie_info_data:
+                if cnt > k:
+                    break
+                
+                if users_data_origin[i, mv] > 0 or users_data_exp_rating[i, mv] == 5:
+                    continue
+                else:
+                    mv_rating_list.append([mv+1, users_data_exp_rating[i, mv]])
+                    cnt += 1
+                    
+            for mv, rating in mv_rating_list:
+                try:
+                    recm_movie = RecommendedMovie.objects.get(user=user, movie=Movie.objects.get(pk=mv+1))
+                    if recm_movie.exp_rating < rating:
+                        recm_movie.exp_rating = rating
+                        recm_movie.save()
+                except RecommendedMovie.DoesNotExist:
+                    exp_rating = RecommendedMovie(user=user, movie=Movie.objects.get(pk=mv+1), exp_rating=rating)
+                    exp_rating.save()
+                except Movie.DoesNotExist:
+                    continue
+
+
+            print("4/4, {}/{}".format(i, ul))
+        print("4/4, 예상 평점 및 영화 DB 등록 완료")
+        return Response(status=status.HTTP_201_CREATED)
 
     else:
         print("메소드를 정확히 입력해주세요.")

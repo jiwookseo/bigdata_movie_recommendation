@@ -23,7 +23,7 @@ movie_views, user_views에서 처리시에 필요한 데이터, 변수들을 저
 # Variables
 
 
-# Data Preprocessing
+# Data Preprocessing : Create Movie-Rating / User-Rating Matrix
 def data_preprocessing(table):
     movies = Movie.objects.all()
     users = User.objects.all()
@@ -57,7 +57,7 @@ def data_preprocessing(table):
         print("table 인자를 정확히 입력해주세요.")
 
 
-# Update Clustering Data in DB
+# Update Clustering Data
 def update_clustering_data(table, clustering_data):
 
     if table == 'm':

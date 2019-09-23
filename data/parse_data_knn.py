@@ -14,6 +14,11 @@ def recm_movies(method):
 
 
 if __name__ == '__main__':
+    print("Movie-Based KNN 진행 중")
     recm_movies('mb')
+    print("Movie-Based KNN 완료")
+    print("User-Based KNN 진행 중")
+    recm_movies('ub')
+    print("User-Based KNN 완료")
 
-    print('FINISH')
+    print('KNN-Based를 통한 추천 영화 정보가 모두 데이터베이스에 저장되었습니다.')
