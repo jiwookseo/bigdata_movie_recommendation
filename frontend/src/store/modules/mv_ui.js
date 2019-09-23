@@ -83,7 +83,6 @@ const actions = {
   },
   async setRelatedMovies({ commit }, param) {
     const data = await api.getRelatedMovies(param);
-    console.log(data)
     if (data.status === 202) {
       commit("setRelatedMovie", data.data);
       commit("setRelatedStatus", true)

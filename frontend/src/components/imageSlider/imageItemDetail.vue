@@ -8,14 +8,14 @@
         <span @click="handleToggle">&times;</span>
       </div>
       <h2 class="detail--title">
-        <router-link :to="{name: 'detail', params: { id: movie.movie_id } }">
+        <router-link :to="{name: 'detail', params: { id: movie.id } }">
           {{ movie.title }}
         </router-link>
       </h2>
       <div class="detail--score">
         <span>평균별점</span>
         <span>{{ movie.rating }}</span>
-        <rating-user v-if="username" :id="movie.movie_id" :username="username" />
+        <rating-user v-if="username" :id="movie.id" :username="username" />
       </div>
       <div v-if="active.base" class="detail--description">
         <p>{{ ellipsisDescription }}</p>
@@ -29,9 +29,9 @@
       <div v-if="active.cluster" class="detail--related-movie">
         <div class="cluster--wrapper" :style="{ transform: 'translateX(' + -slideIndex*20 +'vw)' }">
           <ImageRelated
-                  v-for="rMovie in relativeMovie"
-                  :key="rMovie.id"
-                  :movie="rMovie"
+            v-for="rMovie in relativeMovie"
+            :key="rMovie.id"
+            :movie="rMovie"
           />
         </div>
         <div v-if="slideIndex >= 1" class="cluster--arrow-left">
@@ -48,7 +48,7 @@
     </div>
     <div class="detail--movie-menu">
       <span :class="{ active: active.base }" @click="handleActive('base')">기본 정보</span>
-      <span :class="{ active: active.cluster }" @click="handleActive('cluster')">비슷한 작품</span>
+      <span v-if="related" :class="{ active: active.cluster }" @click="handleActive('cluster')">비슷한 작품</span>
     </div>
   </div>
 </template>
@@ -65,6 +65,9 @@
   export default {
     name: "ImageItemDetail",
     components: { ImageRelated, FontAwesomeIcon, ratingUser },
+    props: {
+      related: {type: Boolean, default: false}
+    },
     data() {
       return {
         active: {
@@ -89,15 +92,17 @@
         temp.splice(temp.length - 1, temp.length);
         return temp.join(" ") + "...";
       },
-      relativeMovie(){
-        return this.$store.getters[`mvUi/relatedMovie`].map(movie => ({
-          ...movie,
-          description: movie.story.slice(0, 100),
-          img:
-                  movie.stillCut ||
-                  movie.poster ||
-                  "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
-        }));
+      relativeMovie() {
+        if (this.related) {
+          return this.$store.getters[`mvUi/relatedMovie`].map(movie => ({
+            ...movie,
+            description: movie.story.slice(0, 100),
+            img:
+                    movie.stillCut ||
+                    movie.poster ||
+                    "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
+          }));
+        }
       },
       ...mapGetters("user", ["username"]),
     },

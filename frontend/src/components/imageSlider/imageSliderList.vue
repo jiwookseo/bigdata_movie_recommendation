@@ -15,9 +15,9 @@
           :movie="movie"
           :type="type"
           :expand="expand"
+          :related="related"
           class="image-slider__item"
         />
-        <userRelatedMovie v-for="movie in movieList" :id="'detail' + movie.id" :key="'detail' + movie.id" :movie="movie" />
       </div>
       <div v-if="slideNum != 0" class="image-slider__arrow-left" @click="handleClick(1)">
         <span>&#60;</span>
@@ -27,8 +27,11 @@
       </div>
       <div v-show="!loadAble">spinner?</div>
     </div>
+    <div v-if="!expand">
+      <subscribe />
+    </div>
     <transition name="bounce">
-      <ImageItemDetail v-if="expand && toggleDetail" />
+      <ImageItemDetail v-if="expand && toggleDetail" :related="related" />
     </transition>
   </div>
 </template>
@@ -37,16 +40,17 @@
 import ImageItem from "./imageItem";
 import ImageItemDetail from "./imageItemDetail";
 import ImageSliderTitle from "./imageSliderTitle"
-import userRelatedMovie from "../Profile/userRelatedMovie";
+import subscribe from "../detail/subscribe";
 import { mapGetters } from "vuex";
 
 export default {
   name: "ImageSliderList",
-  components: { ImageItem, ImageItemDetail, ImageSliderTitle, userRelatedMovie },
+  components: { ImageItem, ImageItemDetail, ImageSliderTitle, subscribe },
   props: { 
     data: { type: Object, default: () => ({ type: "연령대" }) },
     sliderType: { type: String, default: () => ""},
-    expand: { type: Boolean, default: () => true}
+    expand: { type: Boolean, default: () => true},
+    related: {type: Boolean, default: false}
   },
   data() {
     return {

@@ -43,16 +43,17 @@ export default {
   props: {
     movie: { type: Object, default: () => ({ id: 0, title: "", img: "", description: "", genre: "" }) },
     type: { type: String, default: "Age" },
-    expand: { type: Boolean, default: true }
+    expand: { type: Boolean, default: true },
+    related: {type: Boolean, default: false}
   },
   data() {
     return {
       showDescription: false,
-      detail: false,
     };
   },
   computed: {
     ...mapGetters("mvUi", ["detailToggler", "detailType"]),
+    ...mapGetters("user", ["username", "token"]),
       toggle() {
         return this.detailToggler && this.detailType === this.type;
       },
@@ -62,9 +63,12 @@ export default {
       this.showDescription = !this.showDescription;
       if (this.detailType === this.type) {
         this.$store.commit("mvUi/setActivateMovie", this.movie);
-        const data = {
-          "movieId": this.movie.id,
-        };
+        const data = {"movieId": this.movie.movie_id};
+        if (this.related) {
+          data["username"] = this.username;
+          data["token"] = this.token;
+          data["name"] = this.$route.params.username
+        }
         this.$store.dispatch("mvUi/setRelatedMovies", data);
       }
     },
@@ -76,15 +80,20 @@ export default {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
       this.$store.commit("mvUi/setActivateMovie", this.movie);
       const data = {
-        "movieId": this.movie.id,
+        "movieId": this.movie.movie_id,
       };
+      if (this.related) {
+        data["username"] = this.username;
+        data["token"] = this.token;
+        data["name"] = this.$route.params.username
+      }
       this.$store.dispatch("mvUi/setRelatedMovies", data);
     },
     handleToggleClose: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
     },
     openDetail() {
-      if (this.detail) {
+      if (!this.expand) {
         const popup = document.getElementById(`detail${this.movie.id}`);
         popup.style.display = "flex";
       }

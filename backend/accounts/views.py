@@ -182,7 +182,7 @@ def related_users(request, username):
 def login(request):
     user = request.data.get("login", None)
     admin = request.data.get("admin", None)
-
+    print(request.data)
     form = CustomUserAuthenticationForm(request, data=user)
     if form.is_valid():
 
