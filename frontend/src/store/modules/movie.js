@@ -56,51 +56,54 @@ const actions = {
 
   // Recommendation
   async getRecByAge({ commit }, age) {
-    const resp = await api.searchMovies({
-      age,
-      start: state.recAge.length
-    });
-    if (state.selectedAge == resp.data.value) {
+    if (state.selectedAge == age) {
+      const resp = await api.searchMovies({
+        age,
+        start: state.recAge.length
+      });
       const movies = [
         ...state.recAge,
         ...resp.data.data.map(item => getMovieStucture(item))
       ];
       commit("setRecAge", movies);
     } else {
+      const resp = await api.searchMovies({ age });
       const movies = resp.data.data.map(item => getMovieStucture(item));
       commit("setRecAge", movies);
     }
     commit("setSelectedAge", age);
   },
   async getRecByOccupation({ commit }, occupation) {
-    const resp = await api.searchMovies({
-      occupation,
-      start: state.recOccupation.length
-    });
-    if (state.selectedOccupation == resp.data.value) {
+    if (state.selectedOccupation == occupation) {
+      const resp = await api.searchMovies({
+        occupation,
+        start: state.recOccupation.length
+      });
       const movies = [
         ...state.recOccupation,
         ...resp.data.data.map(item => getMovieStucture(item))
       ];
       commit("setRecOccupation", movies);
     } else {
+      const resp = await api.searchMovies({ occupation });
       const movies = resp.data.data.map(item => getMovieStucture(item));
       commit("setRecOccupation", movies);
     }
     commit("setSelectedOccupation", occupation);
   },
   async getRecByGender({ commit }, gender) {
-    const resp = await api.searchMovies({
-      gender,
-      start: state.recGender.length
-    });
-    if (state.selectedGender == resp.data.value) {
+    if (state.selectedGender == gender) {
+      const resp = await api.searchMovies({
+        gender,
+        start: state.recGender.length
+      });
       const movies = [
         ...state.recGender,
         ...resp.data.data.map(item => getMovieStucture(item))
       ];
       commit("setRecGender", movies);
     } else {
+      const resp = await api.searchMovies({ gender });
       const movies = resp.data.data.map(item => getMovieStucture(item));
       commit("setRecGender", movies);
     }
