@@ -55,10 +55,6 @@ export default {
     }
   },
   data: () => ({
-    sign() {
-      const modal = document.getElementsByClassName("sign_modal")[0];
-      modal.style.display = "flex";
-    },
     userState: false,
     profile: "profile",
     admin: "http://localhost:8081/admin"
@@ -67,6 +63,10 @@ export default {
     ...mapGetters("user", ["isLogin", "username"])
   },
   methods: {
+    sign() {
+      const modal = document.getElementsByClassName("sign_modal")[0];
+      modal.style.display = "flex";
+    },
     async signout() {
       const params = {
         username: this.username

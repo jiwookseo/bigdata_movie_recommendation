@@ -4,6 +4,7 @@
     :style="{'backgroundImage':`url('${movie.img}')`}"
     @mouseenter="handleMouseOver"
     @mouseleave="handleMouseLeave"
+    @click="openDetail"
   >
     <div class="image-item--title">
       <span>{{ movie.title }}</span>
@@ -37,7 +38,7 @@ library.add(faSortDown, faSortUp);
 export default {
   name: "ImageItem",
   components: {
-    FontAwesomeIcon
+    FontAwesomeIcon,
   },
   props: {
     movie: {
@@ -45,7 +46,8 @@ export default {
       default: () => ({ id: 0, title: "", img: "", description: "", genre: "" })
     },
     type: { type: String, default: "Age" },
-    expand: { type: Boolean, default: true }
+    expand: { type: Boolean, default: true },
+    related: {type: Boolean, default: false}
   },
   data() {
     return {
@@ -67,9 +69,12 @@ export default {
       this.showDescription = !this.showDescription;
       if (this.detailType === this.type && this.activateMovie !== this.movie) {
         this.$store.commit("mvUi/setActivateMovie", this.movie);
-        const data = {
-          movieId: this.movie.id
-        };
+        const data = {"movieId": this.movie.id};
+        if (this.related) {
+          data["username"] = this.getname;
+          data["token"] = this.getToken;
+          data["name"] = this.$route.params.username
+        }
         this.$store.dispatch("mvUi/setRelatedMovies", data);
       }
     },
@@ -81,12 +86,23 @@ export default {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
       this.$store.commit("mvUi/setActivateMovie", this.movie);
       const data = {
-        movieId: this.movie.id
+        "movieId": this.movie.id,
       };
+      if (this.related) {
+        data["username"] = this.getname;
+        data["token"] = this.getToken;
+        data["name"] = this.$route.params.username
+      }
       this.$store.dispatch("mvUi/setRelatedMovies", data);
     },
     handleToggleClose: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
+    },
+    openDetail() {
+      if (!this.expand) {
+        const popup = document.getElementById(`detail${this.movie.id}`);
+        popup.style.display = "flex";
+      }
     }
   }
 };

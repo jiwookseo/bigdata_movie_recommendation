@@ -29,7 +29,7 @@ const getters = {
   isLogin: state => state.isLogin,
   register: state => state.register,
   logErrors: state => state.logErrors,
-  token: state => state.token
+  token: state => state.token,
 };
 
 // actions

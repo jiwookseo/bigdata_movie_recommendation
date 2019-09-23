@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import movie_views, scrap_views, clustering_views, admin_views
+from .views import movie_views, scrap_views, admin_views
 from accounts import views as account_views
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
 
@@ -41,21 +41,14 @@ urlpatterns = [
     path('ratings/', movie_views.rating_list, name='rating_list'),
     path('ratings/<int:rating_id>/',
          movie_views.rating_detail, name='rating_detail'),
-
     path('movies/related_movies/',
          movie_views.related_movies, name="related_movies"),
-
+    path('movies/recommendations/',
+         movie_views.refresh_recommendations, name='refresh_recommendations'),
 
     # admin
     path('admin/movies/', admin_views.movies, name="admin_movies"),
     path('admin/users/', admin_views.users, name="admin_users"),
-
-
-    #     # clustering
-    #     path('clustering/movies/', clustering_views.movie_clustering,
-    #           name="movie_clustering"),
-    #     path('clustering/users/', clustering_views.user_clustering,
-    #           name="user_clustering"),
 
     # scrap
     path('scrap/', scrap_views.scrap_poster),
