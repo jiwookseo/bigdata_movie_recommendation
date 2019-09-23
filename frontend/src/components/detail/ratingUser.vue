@@ -1,34 +1,52 @@
 <template>
   <div>
-<!--    <span>{{ id }}</span>-->
+    <span>{{ movieId }}</span>
     <span>{{ username }}</span>
     <span>{{ rating }}</span>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
+  name: "ratingUser",
   props: {
-    id: {
+    movieId: {
       type: Number,
-      default: 0
+      default: 0,
     },
     username: {
       type: String,
       default: "",
     },
-    rating: {
-      type: Number,
-      default: 0,
-    }
   },
-  name: "ratingUser",
-  date: () => ({
+  data: () => ({
     rating: 0,
   }),
+  mounted() {
+    console.log(this.movieId)
+  },
+  computed: {
+    ...mapState({
+      getLogin: state => state.user.isLogin,
+      getRating: state => state.user.rating
+    })
+  },
+  created() {
+    this.check();
+  },
   methods: {
-    check() {
-
+    ...mapActions("user", ["setUserRating"]),
+    async check() {
+      if (this.getLogin) {
+        const data = {
+          "username": this.username,
+          "movieId": this.movieId
+        };
+        console.log(this.movieId)
+        await this.setUserRating(data);
+        this.rating = this.getRating
+      }
     }
   }
 }

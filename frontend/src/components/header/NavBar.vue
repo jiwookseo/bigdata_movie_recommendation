@@ -47,11 +47,14 @@ export default {
   components: {
     FontAwesomeIcon
   },
+  watch: {
+    isLogin: function() {
+      if (this.isLogin === false) {
+        this.redirectHome();
+      }
+    }
+  },
   data: () => ({
-    sign() {
-      const modal = document.getElementsByClassName("sign_modal")[0];
-      modal.style.display = "flex";
-    },
     userState: false,
     profile: "profile",
     admin: "http://localhost:8081/admin"
@@ -60,12 +63,15 @@ export default {
     ...mapGetters("user", ["isLogin", "username"])
   },
   methods: {
+    sign() {
+      const modal = document.getElementsByClassName("sign_modal")[0];
+      modal.style.display = "flex";
+    },
     async signout() {
       const params = {
         username: this.username
       };
       await this.logout(params);
-      this.redirectHome();
     },
     redirectHome() {
       this.$router.push("/");

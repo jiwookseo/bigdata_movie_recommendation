@@ -13,7 +13,7 @@
       <div class="detail--score">
         <span>평균별점</span>
         <span>{{ movie.rating }}</span>
-        <rating-user v-if="username" :id="movie.id" :username="username" />
+        <rating-user v-if="username" :movie-id="movie.id" :username="username" />
       </div>
       <div v-if="active.base" class="detail--description">
         <p>{{ ellipsisDescription }}</p>
@@ -42,7 +42,7 @@
     </div>
     <div class="detail--movie-menu">
       <span :class="{ active: active.base }" @click="handleActive('base')">기본 정보</span>
-      <span :class="{ active: active.cluster }" @click="handleActive('cluster')">비슷한 작품</span>
+      <span v-if="related" :class="{ active: active.cluster }" @click="handleActive('cluster')">비슷한 작품</span>
     </div>
   </div>
 </template>
@@ -59,6 +59,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "ImageItemDetail",
   components: { ImageRelated, FontAwesomeIcon, ratingUser },
+  props: {related: {type: Boolean, default: false}},
   data() {
     return {
       active: {
@@ -84,16 +85,18 @@ export default {
       return temp.join(" ") + "...";
     },
     relativeMovie() {
-      return this.$store.getters[`mvUi/relatedMovie`].map(movie => ({
-        ...movie,
-        description: movie.story.slice(0, 100),
-        img:
-          movie.stillCut ||
-          movie.poster ||
-          "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
-      }));
+      if (this.related) {
+        return this.$store.getters[`mvUi/relatedMovie`].map(movie => ({
+          ...movie,
+          description: movie.story.slice(0, 100),
+          img:
+                  movie.stillCut ||
+                  movie.poster ||
+                  "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
+        }));
+      }
     },
-    ...mapGetters("user", ["username"])
+    ...mapGetters("user", ["username"]),
   },
   methods: {
     handleToggle: function() {
@@ -209,22 +212,20 @@ export default {
     font-size: 18px;
     padding: 5px;
 
-    &:first-child {
-      border: 1px solid #fff;
-      background-color: #111;
-      color: #fff;
-    }
-
-    &:nth-child(2) {
-      background-color: #fff;
-      color: #111;
-      border: 1px solid #fff;
-    }
-  }
-
-  div {
+  &:first-child {
+    border: 1px solid #fff;
+    background-color: #111;
+    color: #fff;
   }
 }
+
+  &:nth-child(2) {
+    background-color: #fff;
+    color: #111;
+    border: 1px solid #fff;
+  }
+}
+
 
 .detail--description {
   padding: 30px 20px 0 40px;
