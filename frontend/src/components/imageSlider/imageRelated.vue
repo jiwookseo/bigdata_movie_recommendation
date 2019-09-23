@@ -1,7 +1,7 @@
 <template>
   <div class="cluster--movie">
     <div class="cluster--movie-img">
-      <img :src="imgUrl">
+      <img :src="movie.img">
     </div>
     <div class="cluster--movie-info">
       <div class="cluster--movie-info-basic">
@@ -19,13 +19,6 @@
 export default {
   name: "ImageRelated",
   props: { movie: { type: Object, default: () => {} } },
-  computed: {
-    imgUrl(){
-      return this.movie.still_cut||
-             this.movie.poster||
-             'http://mblogthumb1.phinf.naver.net/MjAxNzA5MjVfMTI0/MDAxNTA2MzI1NzQ4Njg1.r4crcwa5oKG1PrcnvEaQ59jz4KmG8vKpqKFxry51dk0g.9-c8fA3RT6lKXBI-2saAKmOaRDpr9k2sstHkLkCgK-kg.JPEG.white8081/599637c326f7d273826d.jpg?type=w800'
-    }
-  }
 }
 </script>
 
