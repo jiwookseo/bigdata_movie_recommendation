@@ -4,6 +4,7 @@
     :style="{'backgroundImage':`url('${movie.img}')`}"
     @mouseenter="handleMouseOver"
     @mouseleave="handleMouseLeave"
+    @click="openDetail"
   >
     <div class="image-item--title">
       <span>{{ movie.title }}</span>
@@ -13,7 +14,7 @@
         <p>{{ movie.description }}</p>
       </div>
       <!-- 아래 화살표 -->
-      <div class="image-item--under-expand">
+      <div v-if="expand" class="image-item--under-expand">
         <span v-show="!toggle" @click="handleToggleOpen">
           <font-awesome-icon icon="sort-down" size="2x" />
         </span>
@@ -30,42 +31,51 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 library.add(faSortDown, faSortUp);
 
 export default {
   name: "ImageItem",
   components: {
-    FontAwesomeIcon
+    FontAwesomeIcon,
   },
   props: {
     movie: {
       type: Object,
       default: () => ({ id: 0, title: "", img: "", description: "", genre: "" })
     },
-    type: {
-      type: String,
-      default: "Age"
-    }
+    type: { type: String, default: "Age" },
+    expand: { type: Boolean, default: true },
+    related: {type: Boolean, default: false}
   },
   data() {
     return {
-      showDescription: false,
+      showDescription: false
     };
   },
   computed: {
-    ...mapGetters("mvUi", ["detailToggler", "detailType"]),
-      toggle() {
-        return this.detailToggler && this.detailType === this.type;
-      },
+    ...mapGetters("mvUi", ["detailToggler", "detailType", "activateMovie"]),
+    ...mapState({
+      getname: state => state.user.username,
+      getToken: state => state.user.token
+    }),
+    toggle() {
+      return this.detailToggler && this.detailType === this.type;
+    }
   },
   methods: {
     handleMouseOver: function() {
       this.showDescription = !this.showDescription;
-      if (this.detailType === this.type) {
+      if (this.detailType === this.type && this.activateMovie !== this.movie) {
         this.$store.commit("mvUi/setActivateMovie", this.movie);
-        this.$store.dispatch("mvUi/setRelatedMovies", {movieId: this.movie.id})
+        const data = {"movieId": this.movie.id};
+        if (this.related) {
+          data["username"] = this.getname;
+          data["token"] = this.getToken;
+          data["name"] = this.$route.params.username
+        }
+        this.$store.dispatch("mvUi/setRelatedMovies", data);
       }
     },
     handleMouseLeave: function() {
@@ -75,17 +85,31 @@ export default {
     handleToggleOpen: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
       this.$store.commit("mvUi/setActivateMovie", this.movie);
-      this.$store.dispatch("mvUi/setRelatedMovies", {movieId: this.movie.id})
+      const data = {
+        "movieId": this.movie.id,
+      };
+      if (this.related) {
+        data["username"] = this.getname;
+        data["token"] = this.getToken;
+        data["name"] = this.$route.params.username
+      }
+      this.$store.dispatch("mvUi/setRelatedMovies", data);
     },
     handleToggleClose: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
+    },
+    openDetail() {
+      if (!this.expand) {
+        const popup = document.getElementById(`detail${this.movie.id}`);
+        popup.style.display = "flex";
+      }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import url('https://fonts.googleapis.com/css?family=Jua|Ubuntu&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Jua|Ubuntu&display=swap");
 
 .image-item--box {
   display: flex;
@@ -109,7 +133,7 @@ export default {
     color: #fff;
     font-weight: 500;
     font-size: 18px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: "Ubuntu", sans-serif;
   }
 }
 
@@ -126,7 +150,7 @@ export default {
   background-color: rgba(33, 33, 33, 0.7);
 
   color: #ddd;
-  font-family: 'Ubuntu', sans-serif;
+  font-family: "Ubuntu", sans-serif;
   font-weight: 400;
   font-size: 13px;
 
@@ -147,7 +171,7 @@ export default {
     &:hover {
       color: #f1ac1e;
     }
-    &:nth-child(2){
+    &:nth-child(2) {
       padding-top: 20px;
       margin-bottom: -20px;
     }

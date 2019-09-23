@@ -1,7 +1,7 @@
 <template>
   <div>
     <Jumbotron />
-    <ImageSlider />
+    <ImageSlider :sliderList="sliderList" :expnad="true" :related="true" />
   </div>
 </template>
 
@@ -14,6 +14,11 @@ export default {
   components: {
     Jumbotron,
     ImageSlider
+  },
+  computed: {
+    sliderList(){
+      return this.$store.getters["mvUi/sliderBoardData"];
+    }
   },
   created(){
     this.$store.commit('mvUi/setSliderType', "board")

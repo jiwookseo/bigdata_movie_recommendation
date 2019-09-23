@@ -31,3 +31,9 @@ class Rating(models.Model):
         Movie, on_delete=models.CASCADE, related_name="ratings")
     rating = models.IntegerField(default=0)
     timestamp = models.DateTimeField(default=timezone.now)
+
+
+class Recommendation(models.Model):
+    type = models.CharField(max_length=50, default="")
+    value = models.CharField(max_length=50, default="")
+    movies = models.ManyToManyField(Movie, related_name="recommendations")

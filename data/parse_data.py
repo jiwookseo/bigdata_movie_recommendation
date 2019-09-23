@@ -67,8 +67,10 @@ def create_ratings(num_users):
             "rating": rating,
             "timestamp": timestamp
         })
-
     requests.post(API_URL + "ratings/", data=json.dumps(request_data), headers=headers)
+    request_data = {"ratings": []}
+
+    
 
 
 def create_story(num_movies):

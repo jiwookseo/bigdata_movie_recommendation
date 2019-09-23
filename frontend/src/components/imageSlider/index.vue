@@ -1,6 +1,22 @@
 <template>
   <section class="image-slider">
-    <ImageSliderList v-for="slider in sliderList" :key="slider.type" :data="slider" />
+    <!-- 
+      ImageSilder 사용시 import를 하고 사용 하실 때 
+      expand에 boolean value와 data에 movieList data를 넣어주면 됩니다.
+      movieList의 형식은 Array 이며, 각 Array는 2개의 object를 요소로 가집니다.
+      Array = [ selectedObj, type] 이며
+      selectedObj: select box를 사용할 경우 각 값에 대해 key - value(String) 으로 사용하시면 됩니다.
+      type : String 으로, imageSlider의 타이틀로 사용됩니다.
+      
+      <ImageSlider :sliderList="sliderList" :expnad="true"/>
+     -->
+    <ImageSliderList 
+      v-for="slider in sliderList" 
+      :key="slider.type" 
+      :data="slider"
+      :sliderType="sliderType"
+      :expand="expand"
+      :related="related" />
   </section>
 </template>
 
@@ -13,27 +29,14 @@ export default {
   components: {
     ImageSliderList
   },
-  data() { return {}; },
-  computed: {
-    ...mapGetters("data", ["recommendation"]),
-    ...mapGetters("mvUi", ["sliderType"]),
-    sliderList(){
-      if (this.$store.state.mvUi.sliderType === "board"){
-        return this.$store.getters["mvUi/sliderBoardData"]
-      } else if (this.$store.state.mvUi.sliderType === "profile"){
-        return [{ 
-          type: '평가한 영화',
-          selectedObject: ''
-        }]
-      }
-    }
+  props: {
+    sliderList: {type: Array, default: () => []},
+    expand: {type: Boolean, default: true},
+    related: {type: Boolean, default: false},
   },
-  watch: {},
-  mounted() {
-    this.$store.dispatch("data/getRecByAge", 18);
-    this.$store.dispatch("data/getRecByOccupation", "artist");
-    this.$store.dispatch("data/getRecByGender", "M");
-  }
+  computed: {
+    ...mapGetters("mvUi", ["sliderType"])
+  },
 };
 </script>
 

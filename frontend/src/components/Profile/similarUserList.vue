@@ -1,12 +1,12 @@
 <template>
   <div class="similar-user-list">
-    <h2><span>{{ username }}</span>님과 유사한 사람들</h2>
+    <h2>
+      <span>{{ username }}</span>님과 유사한 사람들
+    </h2>
     <div class="similar-user-list-wrapper">
       <div class="similar-user-list-item" v-for="user in similarUser" :key="user.id">
         <router-link :to="{name: 'profile', params: {username: user.username}}">
-        <p>
-          {{ user.username }}
-        </p>
+          <p>{{ user.username }}</p>
         </router-link>
       </div>
     </div>
@@ -14,14 +14,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 export default {
-  name: 'SimilarUserList',
+  name: "SimilarUserList",
   computed: {
-    ...mapGetters('data',['username']),
-    ...mapGetters('mvUi', ['similarUser'])
+    ...mapGetters("user", ["username"]),
+    ...mapGetters("mvUi", ["similarUser"])
   }
-}
+};
 </script>
 
 <style lang="scss" scoepd>
@@ -38,7 +38,7 @@ export default {
     font-weight: 700;
     letter-spacing: 1.8px;
     span {
-      color: rgba(255, 177, 1)
+      color: rgba(255, 177, 1);
     }
   }
   p {

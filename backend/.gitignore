@@ -1,11 +1,14 @@
+# Mac OS
 .DS_Store
-node_modules
+
+# Django / Python
 *.sqlite3
 __pycache__
 /dist
 venv/
 .ipynb_checkpoints/
 migrations/
+media/
 
 # local env files
 .env.local

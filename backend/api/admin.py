@@ -1,5 +1,5 @@
 from django.contrib import admin
-from api.models import Movie, Rating
+from api.models import Movie, Rating, Recommendation
 
 
 @admin.register(Movie)
@@ -22,3 +22,12 @@ class RatingAdmin(admin.ModelAdmin):
     def movie(self, rating):
         return rating.movie.title
     movie.short_description = 'Movie'
+
+
+@admin.register(Recommendation)
+class RecommendationAdmin(admin.ModelAdmin):
+    list_display = ['type', 'value', 'movies_cnt']
+    list_per_page = 50
+
+    def movies_cnt(self, recommendation):
+        return len(recommendation.movies.all())
