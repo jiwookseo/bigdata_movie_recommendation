@@ -166,6 +166,7 @@ export default {
       width: 60%;
       object-fit: contain;
       border-radius: 50%;
+      cursor: pointer;
     }
     p {
       font-weight: 700;
