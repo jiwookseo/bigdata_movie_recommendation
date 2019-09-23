@@ -41,10 +41,10 @@ urlpatterns = [
     path('ratings/', movie_views.rating_list, name='rating_list'),
     path('ratings/<int:rating_id>/',
          movie_views.rating_detail, name='rating_detail'),
-
     path('movies/related_movies/',
          movie_views.related_movies, name="related_movies"),
-
+    path('movies/recommendations/',
+         movie_views.refresh_recommendations, name='refresh_recommendations'),
 
     # admin
     path('admin/movies/', admin_views.movies, name="admin_movies"),
