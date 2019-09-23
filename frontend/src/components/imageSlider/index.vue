@@ -15,7 +15,8 @@
       :key="slider.type" 
       :data="slider"
       :sliderType="sliderType"
-      :expand="expand" />
+      :expand="expand"
+      :related="related" />
   </section>
 </template>
 
@@ -28,10 +29,14 @@ export default {
   components: {
     ImageSliderList
   },
-  props: ['sliderList', 'expand'],
+  props: {
+    sliderList: {type: Array, default: () => []},
+    expand: {type: Boolean, default: true},
+    related: {type: Boolean, default: false},
+  },
   computed: {
     ...mapGetters("mvUi", ["sliderType"])
-  }
+  },
 };
 </script>
 

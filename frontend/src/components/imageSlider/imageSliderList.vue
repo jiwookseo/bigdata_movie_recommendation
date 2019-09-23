@@ -15,6 +15,7 @@
           :movie="movie"
           :type="type"
           :expand="expand"
+          :related="related"
           class="image-slider__item"
         />
       </div>
@@ -26,8 +27,11 @@
       </div>
       <div v-show="!loadAble">spinner?</div>
     </div>
+    <div v-if="!expand">
+      <subscribe />
+    </div>
     <transition name="bounce">
-      <ImageItemDetail v-if="expand && toggleDetail" />
+      <ImageItemDetail v-if="expand && toggleDetail" :related="related" />
     </transition>
   </div>
 </template>
@@ -36,15 +40,17 @@
 import ImageItem from "./imageItem";
 import ImageItemDetail from "./imageItemDetail";
 import ImageSliderTitle from "./imageSliderTitle"
+import subscribe from "../detail/subscribe";
 import { mapGetters } from "vuex";
 
 export default {
   name: "ImageSliderList",
-  components: { ImageItem, ImageItemDetail, ImageSliderTitle },
+  components: { ImageItem, ImageItemDetail, ImageSliderTitle, subscribe },
   props: { 
     data: { type: Object, default: () => ({ type: "연령대" }) },
     sliderType: { type: String, default: () => ""},
-    expand: { type: Boolean, default: () => true}
+    expand: { type: Boolean, default: () => true},
+    related: {type: Boolean, default: false}
   },
   data() {
     return {
@@ -90,14 +96,13 @@ export default {
     },
     toggleDetail() {
       return this.detailToggler && this.detailType === this.type;
-    }
+    },
   },
   watch: {
     movieList() {
       this.loadAble = true;
     }
   },
-  
   methods: {
     handleClick: function(n) {
       this.slideNum += n;
@@ -111,7 +116,7 @@ export default {
     },
     load: function() {
       this.$store.dispatch(`movie/getRecBy${this.type}`, this.selected);
-    }
+    },
   }
 };
 </script>

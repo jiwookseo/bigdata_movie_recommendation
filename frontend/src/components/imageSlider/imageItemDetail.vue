@@ -42,7 +42,7 @@
     </div>
     <div class="detail--movie-menu">
       <span :class="{ active: active.base }" @click="handleActive('base')">기본 정보</span>
-      <span :class="{ active: active.cluster }" @click="handleActive('cluster')">비슷한 작품</span>
+      <span v-if="related" :class="{ active: active.cluster }" @click="handleActive('cluster')">비슷한 작품</span>
     </div>
   </div>
 </template>
@@ -59,6 +59,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "ImageItemDetail",
   components: { ImageRelated, FontAwesomeIcon, ratingUser },
+  props: {related: {type: Boolean, default: false}},
   data() {
     return {
       active: {
@@ -84,16 +85,18 @@ export default {
       return temp.join(" ") + "...";
     },
     relativeMovie() {
-      return this.$store.getters[`mvUi/relatedMovie`].map(movie => ({
-        ...movie,
-        description: movie.story.slice(0, 100),
-        img:
-          movie.stillCut ||
-          movie.poster ||
-          "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
-      }));
+      if (this.related) {
+        return this.$store.getters[`mvUi/relatedMovie`].map(movie => ({
+          ...movie,
+          description: movie.story.slice(0, 100),
+          img:
+                  movie.stillCut ||
+                  movie.poster ||
+                  "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
+        }));
+      }
     },
-    ...mapGetters("user", ["username"])
+    ...mapGetters("user", ["username"]),
   },
   methods: {
     handleToggle: function() {

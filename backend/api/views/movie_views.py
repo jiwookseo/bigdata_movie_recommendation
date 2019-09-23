@@ -427,20 +427,18 @@ def related_movies(request):
     username = request.data.get("username", None)
     token = request.data.get("token", None)
     name = request.data.get("name", None)
-
-    print(request.data)
     if not movie_id:
         return Response(data={"error": "정보 없음"}, status=status.HTTP_400_BAD_REQUEST)
 
     movie = get_object_or_404(Movie, id=movie_id)
     if username:
         print(1)
-        if username != name:
-            return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
-
         user = get_object_or_404(User, username=username)
 
-        if not user.is_staff:
+        if not user.is_staff or name and username != name:
+            return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
+        if not user.subscribe:
             return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
         if user.refresh_token != token:
@@ -467,6 +465,6 @@ def related_movies(request):
         return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
     related_movies = Movie.objects.filter(
-        Q(cluster__exact=movie.cluster) & ~Q(ratings__user__username=username)).order_by("-avg_rating")[:10]
+        cluster__exact=movie.cluster).order_by("-avg_rating")[:10]
     serializer = MovieSerializer(related_movies, many=True)
     return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
