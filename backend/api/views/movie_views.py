@@ -466,7 +466,18 @@ def related_movies(request):
         auth_logout(request)
         return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
+
+
+    # 메인 페이지의 영화 별 유사한 영화 추천
+    genres = movie.genres_array
+    query = Q()
+
+    for genre in genres:
+        query.add(Q(genres__icontains=genre), query.OR)
+    query.add(Q(cluster__exact=movie.cluster), query.AND)
+    query.add(~Q(id__exact=movie.id), query.AND)
+
     related_movies = Movie.objects.filter(
-        cluster__exact=movie.cluster).order_by("-avg_rating")[:10]
+        query).order_by("-avg_rating")[:10]
     serializer = MovieSerializer(related_movies, many=True)
     return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
