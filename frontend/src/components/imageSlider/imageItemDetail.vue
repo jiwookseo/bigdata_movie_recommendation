@@ -59,6 +59,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "ImageItemDetail",
   components: { ImageRelated, FontAwesomeIcon, ratingUser },
+  props: {related: {type: Boolean, default: false}},
   data() {
     return {
       active: {
@@ -78,46 +79,24 @@ export default {
         cluster: this.active.cluster
       };
     },
-    computed: {
-      movie: function() {
-        return this.$store.state.mvUi.activateMovie;
-      },
-      classChanger: function() {
-        return {
-          base: this.active.base,
-          cluster: this.active.cluster
-        };
-      },
-      ellipsisDescription() {
-        const temp = this.movie.description.split(" ");
-        temp.splice(temp.length - 1, temp.length);
-        return temp.join(" ") + "...";
-      },
-      relativeMovie() {
-        if (this.related) {
-          return this.$store.getters[`mvUi/relatedMovie`].map(movie => ({
-            ...movie,
-            description: movie.story.slice(0, 100),
-            img:
-                    movie.stillCut ||
-                    movie.poster ||
-                    "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
-          }));
-        }
-      },
-      ...mapGetters("user", ["username"]),
+    ellipsisDescription() {
+      const temp = this.movie.description.split(" ");
+      temp.splice(temp.length - 1, temp.length);
+      return temp.join(" ") + "...";
     },
     relativeMovie() {
-      return this.$store.getters[`mvUi/relatedMovie`].map(movie => ({
-        ...movie,
-        description: movie.story.slice(0, 100),
-        img:
-          movie.stillCut ||
-          movie.poster ||
-          "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
-      }));
+      if (this.related) {
+        return this.$store.getters[`mvUi/relatedMovie`].map(movie => ({
+          ...movie,
+          description: movie.story.slice(0, 100),
+          img:
+                  movie.stillCut ||
+                  movie.poster ||
+                  "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
+        }));
+      }
     },
-    ...mapGetters("user", ["username"])
+    ...mapGetters("user", ["username"]),
   },
   methods: {
     handleToggle: function() {

@@ -435,7 +435,7 @@ def related_movies(request):
         print(1)
         user = get_object_or_404(User, username=username)
 
-        if not user.is_staff or username != name:
+        if not user.is_staff or name and username != name:
             return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
         if not user.subscribe:

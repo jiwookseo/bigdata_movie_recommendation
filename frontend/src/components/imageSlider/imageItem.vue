@@ -69,10 +69,10 @@ export default {
       this.showDescription = !this.showDescription;
       if (this.detailType === this.type && this.activateMovie !== this.movie) {
         this.$store.commit("mvUi/setActivateMovie", this.movie);
-        const data = {"movieId": this.movie.movie_id};
+        const data = {"movieId": this.movie.id};
         if (this.related) {
-          data["username"] = this.username;
-          data["token"] = this.token;
+          data["username"] = this.getname;
+          data["token"] = this.getToken;
           data["name"] = this.$route.params.username
         }
         this.$store.dispatch("mvUi/setRelatedMovies", data);
@@ -86,11 +86,11 @@ export default {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
       this.$store.commit("mvUi/setActivateMovie", this.movie);
       const data = {
-        "movieId": this.movie.movie_id,
+        "movieId": this.movie.id,
       };
       if (this.related) {
-        data["username"] = this.username;
-        data["token"] = this.token;
+        data["username"] = this.getname;
+        data["token"] = this.getToken;
         data["name"] = this.$route.params.username
       }
       this.$store.dispatch("mvUi/setRelatedMovies", data);
