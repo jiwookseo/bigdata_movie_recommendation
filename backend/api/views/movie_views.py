@@ -16,14 +16,12 @@ from rest_framework.response import Response
 from accounts.jwt import verify_token, refresh_token
 
 # Models
-from api.models import Movie, Rating
+from api.models import Movie, Rating, Recommendation
 from accounts.models import User
 
 # Serializers
 from accounts.serializers import UserSerializer
 from api.serializers import MovieSerializer, RatingSerializer
-
-
 
 
 @api_view(['GET', 'POST'])
@@ -52,31 +50,30 @@ def movie_list(request):
             return Response(data=data, status=status.HTTP_200_OK)
 
         elif age:
-            movies = movies.annotate(
-                age_count=Count(
-                    'ratings', filter=Q(ratings__user__age=age))
-            ).order_by('-age_count')[start: start + limit]
+            rec = get_object_or_404(Recommendation, type="age", value=age)
+            total = len(rec.movies.all())
+            movies = rec.movies.all()[start: start + limit]
             serializer = MovieSerializer(movies, many=True)
             data = {"data": serializer.data,
-                    "total": total, "start": start, "limit": limit}
+                    "total": total, "start": start, "limit": limit, "value": age}
             return Response(data=data, status=status.HTTP_200_OK)
         elif occupation:
-            movies = movies.annotate(
-                occupation_count=Count(
-                    'ratings', filter=Q(ratings__user__occupation=occupation))
-            ).order_by('-occupation_count')[start: start + limit]
+            rec = get_object_or_404(
+                Recommendation, type="occupation", value=occupation)
+            total = len(rec.movies.all())
+            movies = rec.movies.all()[start: start + limit]
             serializer = MovieSerializer(movies, many=True)
             data = {"data": serializer.data,
-                    "total": total, "start": start, "limit": limit}
+                    "total": total, "start": start, "limit": limit, "value": occupation}
             return Response(data=data, status=status.HTTP_200_OK)
         elif gender:
-            movies = Movie.objects.annotate(
-                gender_count=Count(
-                    'ratings', filter=Q(ratings__user__gender=gender))
-            ).order_by('-gender_count')[start: start + limit]
+            rec = get_object_or_404(
+                Recommendation, type="gender", value=gender)
+            total = len(rec.movies.all())
+            movies = rec.movies.all()[start: start + limit]
             serializer = MovieSerializer(movies, many=True)
             data = {"data": serializer.data,
-                    "total": total, "start": start, "limit": limit}
+                    "total": total, "start": start, "limit": limit, "value": gender}
             return Response(data=data, status=status.HTTP_200_OK)
         else:
             # filter movies
@@ -360,6 +357,69 @@ def movie_followers(request, movie_id):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
+@api_view(['POST'])
+def refresh_recommendations(request):
+    age = [1, 18, 25, 35, 45, 50, 56]
+    occupation = [
+        "academic/educator",
+        "artist",
+        "clerical/admin",
+        "college/grad student",
+        "K-12 student",
+        "customer service",
+        "doctor/health care",
+        "executive/managerial",
+        "farmer",
+        "homemaker",
+        "lawyer",
+        "programmer",
+        "sales/marketing",
+        "scientist",
+        "self-employed",
+        "technician/engineer",
+        "tradesman/craftsman",
+        "writer"
+    ]
+    gender = ["M", "F"]
+
+    movies = Movie.objects.all()
+    created = False
+
+    for value in age:
+        temp = movies.annotate(
+            age_count=Count(
+                'ratings', filter=Q(ratings__user__age=value))
+        ).order_by('-age_count')[:100]
+        rec, check = Recommendation.objects.get_or_create(
+            type="age", value=value)
+        created = check or created
+        rec.movies.set(temp)
+        rec.save()
+    for value in occupation:
+        temp = movies.annotate(
+            occupation_count=Count(
+                'ratings', filter=Q(ratings__user__occupation=value))
+        ).order_by('-occupation_count')[:100]
+        rec, check = Recommendation.objects.get_or_create(
+            type="occupation", value=value)
+        created = check or created
+        rec.movies.set(temp)
+        rec.save()
+    for value in gender:
+        temp = Movie.objects.annotate(
+            gender_count=Count(
+                'ratings', filter=Q(ratings__user__gender=value))
+        ).order_by('-gender_count')[:100]
+        rec, check = Recommendation.objects.get_or_create(
+            type="gender", value=value)
+        created = check or created
+        rec.movies.set(temp)
+        rec.save()
+    if created:
+        return Response(status=status.HTTP_201_CREATED)
+    else:
+        return Response(status=status.HTTP_202_ACCEPTED)
+
 # 유사한 영화 추천 알고리즘 (영화 클러스터링)
 @api_view(['POST'])
 def related_movies(request):
@@ -394,7 +454,8 @@ def related_movies(request):
                 user.refresh_token = new_token
 
         if response and response.status_code == 200:
-            related_movies = Movie.objects.filter(Q(cluster__exact=movie.cluster) & ~Q(ratings__user__username=username)).order_by("-avg_rating")[:10]
+            related_movies = Movie.objects.filter(Q(cluster__exact=movie.cluster) & ~Q(
+                ratings__user__username=username)).order_by("-avg_rating")[:10]
             serializer = MovieSerializer(related_movies, many=True)
             return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
 

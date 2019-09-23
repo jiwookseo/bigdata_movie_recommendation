@@ -41,27 +41,33 @@ export default {
     FontAwesomeIcon,
   },
   props: {
-    movie: { type: Object, default: () => ({ id: 0, title: "", img: "", description: "", genre: "" }) },
+    movie: {
+      type: Object,
+      default: () => ({ id: 0, title: "", img: "", description: "", genre: "" })
+    },
     type: { type: String, default: "Age" },
     expand: { type: Boolean, default: true },
     related: {type: Boolean, default: false}
   },
   data() {
     return {
-      showDescription: false,
+      showDescription: false
     };
   },
   computed: {
-    ...mapGetters("mvUi", ["detailToggler", "detailType"]),
-    ...mapGetters("user", ["username", "token"]),
-      toggle() {
-        return this.detailToggler && this.detailType === this.type;
-      },
+    ...mapGetters("mvUi", ["detailToggler", "detailType", "activateMovie"]),
+    ...mapState({
+      getname: state => state.user.username,
+      getToken: state => state.user.token
+    }),
+    toggle() {
+      return this.detailToggler && this.detailType === this.type;
+    }
   },
   methods: {
     handleMouseOver: function() {
       this.showDescription = !this.showDescription;
-      if (this.detailType === this.type) {
+      if (this.detailType === this.type && this.activateMovie !== this.movie) {
         this.$store.commit("mvUi/setActivateMovie", this.movie);
         const data = {"movieId": this.movie.movie_id};
         if (this.related) {
@@ -98,12 +104,12 @@ export default {
         popup.style.display = "flex";
       }
     }
-  },
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-@import url('https://fonts.googleapis.com/css?family=Jua|Ubuntu&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Jua|Ubuntu&display=swap");
 
 .image-item--box {
   display: flex;
@@ -127,7 +133,7 @@ export default {
     color: #fff;
     font-weight: 500;
     font-size: 18px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: "Ubuntu", sans-serif;
   }
 }
 
@@ -144,7 +150,7 @@ export default {
   background-color: rgba(33, 33, 33, 0.7);
 
   color: #ddd;
-  font-family: 'Ubuntu', sans-serif;
+  font-family: "Ubuntu", sans-serif;
   font-weight: 400;
   font-size: 13px;
 
@@ -165,7 +171,7 @@ export default {
     &:hover {
       color: #f1ac1e;
     }
-    &:nth-child(2){
+    &:nth-child(2) {
       padding-top: 20px;
       margin-bottom: -20px;
     }
