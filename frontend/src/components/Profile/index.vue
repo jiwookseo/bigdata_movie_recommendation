@@ -63,11 +63,13 @@ export default {
   components: {ImageSlider, SimilarUserList, editUserInfo },
   data: () => ({
     editInfo: false,
-    loginUsername: ""
   }),
   computed: {
     ...mapGetters("user", ["user", "ratings"]),
-    ...mapState({getSubscribe: state => Boolean(state.user.subscribe)}),
+    ...mapState({
+      getSubscribe: state => Boolean(state.user.subscribe),
+      loginUsername: state => state.user.username
+    }),
     sliderList() {
       return [
         {
@@ -89,12 +91,10 @@ export default {
   },
   mounted() {
     const username = this.$route.params.username;
-    this.$store.commit("user/setUsername", username);
+    // this.$store.commit("user/setUsername", username);
     this.$store.dispatch("user/getUserByUsername", username);
     this.$store.dispatch("mvUi/setSimilarUser", username);
-    if (this.$store.state.user.username) {
-      this.loginUsername = this.$store.state.user.username;
-    }
+    console.log(this.$route.params.username, this.loginUsername)
   },
   methods: {
     editChange() {
