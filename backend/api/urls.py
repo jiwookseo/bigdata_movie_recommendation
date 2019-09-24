@@ -37,10 +37,12 @@ urlpatterns = [
          movie_views.movie_ratings, name='movie_ratings'),
     path('movies/<int:movie_id>/followers/',
          movie_views.movie_followers, name='movie_followers'),
-
+    path('movies/<int:movie_id>/recommendations/',
+         movie_views.movie_recommendations, name='movie_recommendations'),
     path('ratings/', movie_views.rating_list, name='rating_list'),
     path('ratings/<int:rating_id>/',
          movie_views.rating_detail, name='rating_detail'),
+
     path('movies/related_movies/',
          movie_views.related_movies, name="related_movies"),
     path('movies/recommendations/',
