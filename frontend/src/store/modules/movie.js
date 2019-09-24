@@ -5,12 +5,13 @@ const state = {
   movieSearchList: [],
   movie: {},
   audience: [],
-  recAge: [],
-  selectedAge: "",
-  recOccupation: [],
-  selectedOccupation: "",
-  recGender: [],
-  selectedGender: ""
+  recommendations: [],
+  recAge: { value: "", data: [] },
+  selectedAge: "25",
+  recOccupation: { value: "", data: [] },
+  selectedOccupation: "programmer",
+  recGender: { value: "", data: [] },
+  selectedGender: "M"
 };
 
 // movie shape
@@ -30,9 +31,13 @@ const getters = {
   movieSearchList: state => state.movieSearchList,
   movie: state => state.movie,
   audience: state => state.audience,
-  recAge: state => state.recAge,
-  recOccupation: state => state.recOccupation,
-  recGender: state => state.recGender
+  recommendations: state => state.recommendations,
+  recAge: state => state.recAge.data,
+  selectedAge: state => state.selectedAge,
+  recOccupation: state => state.recOccupation.data,
+  selectedOccupation: state => state.selectedOccupation,
+  recGender: state => state.recGender.data,
+  selectedGender: state => state.selectedGender
 };
 
 // actions
@@ -44,67 +49,90 @@ const actions = {
     commit("setMovieSearchList", movies);
   },
   async getMovieById({ commit }, id) {
-    const resp = await api.getMovie(id);
-    const movie = getMovieStucture(resp.data);
+    const res1 = await api.getMovie(id);
+    const movie = getMovieStucture(res1.data);
     commit("setMovie", movie);
-    const res = await api.getAudience(id);
-    commit("setAudience", res.data);
+    const res2 = await api.getAudience(id);
+    commit("setAudience", res2.data);
+    const res3 = await api.getRecommendations(id);
+    commit("setRecommendations", res3.data);
   },
   setEmptyMovieList({ commit }) {
     commit("setMovieSearchList", []);
   },
 
   // Recommendation
-  async getRecByAge({ commit }, age) {
-    if (state.selectedAge == age) {
-      const resp = await api.searchMovies({
+  async getRecByAge({ commit }) {
+    const age = state.selectedAge;
+    if (age == state.recAge.value) {
+      const res = await api.searchMovies({
         age,
-        start: state.recAge.length
+        start: state.recAge.data.length
       });
-      const movies = [
-        ...state.recAge,
-        ...resp.data.data.map(item => getMovieStucture(item))
-      ];
+      const movies = {
+        value: age,
+        data: [
+          ...state.recAge.data,
+          ...res.data.data.map(item => getMovieStucture(item))
+        ]
+      };
       commit("setRecAge", movies);
     } else {
-      const resp = await api.searchMovies({ age });
-      const movies = resp.data.data.map(item => getMovieStucture(item));
+      const res = await api.searchMovies({ age });
+      const movies = {
+        value: age,
+        data: res.data.data.map(item => getMovieStucture(item))
+      };
       commit("setRecAge", movies);
     }
     commit("setSelectedAge", age);
   },
-  async getRecByOccupation({ commit }, occupation) {
-    if (state.selectedOccupation == occupation) {
+  async getRecByOccupation({ commit }) {
+    const occupation = state.selectedOccupation;
+    if (occupation == state.recOccupation.value) {
       const resp = await api.searchMovies({
         occupation,
-        start: state.recOccupation.length
+        start: state.recOccupation.data.length
       });
-      const movies = [
-        ...state.recOccupation,
-        ...resp.data.data.map(item => getMovieStucture(item))
-      ];
+      const movies = {
+        value: occupation,
+        data: [
+          ...state.recOccupation.data,
+          ...resp.data.data.map(item => getMovieStucture(item))
+        ]
+      };
       commit("setRecOccupation", movies);
     } else {
       const resp = await api.searchMovies({ occupation });
-      const movies = resp.data.data.map(item => getMovieStucture(item));
+      const movies = {
+        value: occupation,
+        data: resp.data.data.map(item => getMovieStucture(item))
+      };
       commit("setRecOccupation", movies);
     }
     commit("setSelectedOccupation", occupation);
   },
-  async getRecByGender({ commit }, gender) {
-    if (state.selectedGender == gender) {
+  async getRecByGender({ commit }) {
+    const gender = state.selectedGender;
+    if (gender == state.recGender.value) {
       const resp = await api.searchMovies({
         gender,
-        start: state.recGender.length
+        start: state.recGender.data.length
       });
-      const movies = [
-        ...state.recGender,
-        ...resp.data.data.map(item => getMovieStucture(item))
-      ];
+      const movies = {
+        value: gender,
+        data: [
+          ...state.recGender.data,
+          ...resp.data.data.map(item => getMovieStucture(item))
+        ]
+      };
       commit("setRecGender", movies);
     } else {
       const resp = await api.searchMovies({ gender });
-      const movies = resp.data.data.map(item => getMovieStucture(item));
+      const movies = {
+        value: gender,
+        data: resp.data.data.map(item => getMovieStucture(item))
+      };
       commit("setRecGender", movies);
     }
     commit("setSelectedGender", gender);
@@ -116,6 +144,7 @@ const mutations = {
   setMovieSearchList: (state, payload) => (state.movieSearchList = payload),
   setMovie: (state, payload) => (state.movie = payload),
   setAudience: (state, payload) => (state.audience = payload),
+  setRecommendations: (state, payload) => (state.recommendations = payload),
   setRecAge: (state, payload) => (state.recAge = payload),
   setSelectedAge: (state, payload) => (state.selectedAge = payload),
   setRecOccupation: (state, payload) => (state.recOccupation = payload),

@@ -82,6 +82,7 @@ const actions = {
       commit("setDetailToggler");
     }
   },
+
   async setRelatedMovies({ commit }, param) {
     const data = await api.getRelatedMovies(param);
     if (data.status === 202) {
@@ -97,6 +98,7 @@ const actions = {
       this.$router.push("/");
     }
   },
+
   async setSimilarUser({ commit }, param) {
     const data = await api.getRelatedUsers(param);
     commit("setSimilarUser", data.data);

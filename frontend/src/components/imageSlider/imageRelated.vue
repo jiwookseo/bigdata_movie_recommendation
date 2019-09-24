@@ -1,7 +1,7 @@
 <template>
   <div class="cluster--movie">
     <div class="cluster--movie-img">
-      <img :src="imgUrl">
+      <img :src="movie.img">
     </div>
     <div class="cluster--movie-info">
       <div class="cluster--movie-info-basic">
@@ -19,13 +19,6 @@
 export default {
   name: "ImageRelated",
   props: { movie: { type: Object, default: () => {} } },
-  computed: {
-    imgUrl(){
-      return this.movie.still_cut||
-             this.movie.poster||
-             'https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg'
-    }
-  }
 }
 </script>
 
