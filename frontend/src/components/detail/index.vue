@@ -24,7 +24,7 @@
         <p>{{ movie.story }}</p>
       </div>
     </div>
-    <div v-if="recommendations.length" class="detail--recommendations">
+    <div v-if="recommendations.length" class="detail--recommendationsg">
       <p class="detail--recommendations-title">이런 분들께 추천합니다</p>
       <div class="detail--recommendations-list">
         <v-chip
