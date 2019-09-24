@@ -21,7 +21,7 @@ from accounts.models import User
 
 # Serializers
 from accounts.serializers import UserSerializer
-from api.serializers import MovieSerializer, RatingSerializer
+from api.serializers import MovieSerializer, RatingSerializer, RecommendationSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -350,6 +350,13 @@ def movie_followers(request, movie_id):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
+@api_view(['GET'])
+def movie_recommendations(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    serializer = RecommendationSerializer(movie.recommendations, many=True)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
 @api_view(['POST'])
 def refresh_recommendations(request):
     age = [1, 18, 25, 35, 45, 50, 56]
@@ -448,7 +455,16 @@ def related_movies(request):
         auth_logout(request)
         return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
+    # 메인 페이지의 영화 별 유사한 영화 추천
+    genres = movie.genres_array
+    query = Q()
+
+    for genre in genres:
+        query.add(Q(genres__icontains=genre), query.OR)
+    query.add(Q(cluster__exact=movie.cluster), query.AND)
+    query.add(~Q(id__exact=movie.id), query.AND)
+
     related_movies = Movie.objects.filter(
-        cluster__exact=movie.cluster).order_by("-avg_rating")[:10]
+        query).order_by("-avg_rating")[:10]
     serializer = MovieSerializer(related_movies, many=True)
     return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)

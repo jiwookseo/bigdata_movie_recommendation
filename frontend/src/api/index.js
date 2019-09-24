@@ -3,6 +3,7 @@ import axios from "axios";
 const BASE_URL = "/api";
 
 export default {
+  // Movies
   searchMovies(params) {
     return axios.get(`${BASE_URL}/movies/`, {
       params
@@ -17,17 +18,24 @@ export default {
   getFollowers(id) {
     return axios.get(`${BASE_URL}/movies/${id}/followers/`);
   },
+  getRecommendations(id) {
+    return axios.get(`${BASE_URL}/movies/${id}/recommendations/`);
+  },
   follow(id) {
     return axios.post(`${BASE_URL}/movies/${id}/followers/`);
   },
+
+  // Users
   searchUsers(params) {
     return axios.get(`${BASE_URL}/users/`, {
       params
     });
   },
-
   getUser(username) {
     return axios.get(`${BASE_URL}/users/${username}`);
+  },
+  getRating(username, id) {
+    return axios.get(`${BASE_URL}/users/${username}/ratings/?movieId=${id}`);
   },
   getRatings(username) {
     return axios.get(`${BASE_URL}/users/${username}/ratings/`);

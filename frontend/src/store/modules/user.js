@@ -16,7 +16,8 @@ const state = {
   token: "",
   subscribe: false,
   edit: false,
-  editCom: ""
+  editCom: "",
+  rating: 0
 };
 
 // getters
@@ -55,15 +56,13 @@ const actions = {
     }
   },
   async logout({ commit }, params) {
-    const res = await api.logout(params);
-    if (res.status === 202) {
-      commit("setIsLogin", false);
-      commit("setUsername", "");
-      commit("setStaff", false);
-      commit("setToken", "");
-      commit("setSubscribe", false);
-      sessionStorage.clear();
-    }
+    commit("setIsLogin", false);
+    commit("setUsername", "");
+    commit("setStaff", false);
+    commit("setToken", "");
+    commit("setSubscribe", false);
+    sessionStorage.clear();
+    await api.logout(params);
   },
   async setRegister({ commit }, params) {
     const res = await api.register(params);
@@ -74,7 +73,7 @@ const actions = {
     }
   },
 
-  // User
+// User
   async searchUsers({ commit }, params) {
     const resp = await api.searchUsers(params);
     const users = resp.data;
@@ -101,6 +100,7 @@ const actions = {
   async editUserInfo({ commit }, params) {
     const username = params.username;
     const res = await api.editUserInfo(username, params);
+    // console.log(res)
     if (res.status === 202) {
       commit("edited", true);
     } else if (res.status === 203) {
@@ -116,6 +116,15 @@ const actions = {
       await api.logout(req);
     } else {
       commit("editComment", "정보 수정을 실패했습니다.");
+    }
+  },
+  async setUserRating({ commit }, params) {
+    const username = params.username;
+    const id = params.movieId;
+    const res = await api.getRating(username, id);
+    console.log(res)
+    if (res.status === 202) {
+      commit("userRating", res.data[0].rating)
     }
   },
 
@@ -167,7 +176,8 @@ const mutations = {
   setRegError: (state, payload) => (state.regErrors = payload),
   setLogError: (state, payload) => (state.logErrors = payload),
   editComment: (state, payload) => (state.editCom = payload),
-  edited: (state, payload) => (state.edit = payload)
+  edited: (state, payload) => (state.edit = payload),
+  userRating: (state, payload) => (state.rating = payload)
 };
 
 export default {

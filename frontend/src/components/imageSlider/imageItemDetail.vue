@@ -13,7 +13,7 @@
       <div class="detail--score">
         <span>평균별점</span>
         <span>{{ movie.rating }}</span>
-        <rating-user v-if="username" :id="movie.id" :username="username" />
+        <rating-user v-if="username" :movie-id="movie.id" :username="username" />
       </div>
       <div v-if="active.base" class="detail--description">
         <p>{{ ellipsisDescription }}</p>
@@ -245,22 +245,20 @@ export default {
     font-size: 18px;
     padding: 5px;
 
-    &:first-child {
-      border: 1px solid #fff;
-      background-color: #111;
-      color: #fff;
-    }
-
-    &:nth-child(2) {
-      background-color: #fff;
-      color: #111;
-      border: 1px solid #fff;
-    }
-  }
-
-  div {
+  &:first-child {
+    border: 1px solid #fff;
+    background-color: #111;
+    color: #fff;
   }
 }
+
+  &:nth-child(2) {
+    background-color: #fff;
+    color: #111;
+    border: 1px solid #fff;
+  }
+}
+
 
 .detail--description {
   padding: 30px 20px 0 40px;

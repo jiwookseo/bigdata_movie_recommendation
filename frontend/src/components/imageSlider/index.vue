@@ -9,10 +9,10 @@
       type : String 으로, imageSlider의 타이틀로 사용됩니다.
       
       <ImageSlider :sliderList="sliderList" :expnad="true"/>
-     -->
-    <ImageSliderList 
-      v-for="slider in sliderList" 
-      :key="slider.type" 
+    -->
+    <ImageSliderList
+      v-for="slider in sliderList"
+      :key="slider.type"
       :data="slider"
       :sliderType="sliderType"
       :expand="expand"
