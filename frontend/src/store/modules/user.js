@@ -122,7 +122,6 @@ const actions = {
     const username = params.username;
     const id = params.movieId;
     const res = await api.getRating(username, id);
-    console.log(res)
     if (res.status === 202) {
       commit("userRating", res.data[0].rating)
     }
