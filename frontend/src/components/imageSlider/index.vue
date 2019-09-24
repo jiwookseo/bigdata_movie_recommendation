@@ -16,7 +16,9 @@
       :data="slider"
       :sliderType="sliderType"
       :expand="expand"
-      :related="related" />
+      :related="related"
+      :change-related="reRelated"
+    />
   </section>
 </template>
 
@@ -32,11 +34,19 @@ export default {
   props: {
     sliderList: {type: Array, default: () => []},
     expand: {type: Boolean, default: true},
-    related: {type: Boolean, default: false},
+    related: {type: String, default: ""},
+    change: {type: Function, default: () => {}}
   },
   computed: {
     ...mapGetters("mvUi", ["sliderType"])
   },
+  methods: {
+    reRelated(check) {
+      if (check === true) {
+        this.change(true);
+      }
+    }
+  }
 };
 </script>
 

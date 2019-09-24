@@ -43,7 +43,7 @@
 
     <div class="profile--detail">
       <div>
-        <ImageSlider v-if="ratings.length" :sliderList="sliderList" :expand="true" :related="getSubscribe" />
+        <ImageSlider v-if="ratings.length" :sliderList="sliderList" :expand="true" :related="related" :change="newSub" />
         <div v-else class="profile--rating--empty">
           <h2>아직 평가한 영화가 없습니다.</h2>
         </div>
@@ -63,11 +63,12 @@ export default {
   components: {ImageSlider, SimilarUserList, editUserInfo },
   data: () => ({
     editInfo: false,
-    loginUsername: ""
+    loginUsername: "",
+    related: ""
   }),
   computed: {
     ...mapGetters("user", ["user", "ratings"]),
-    ...mapState({getSubscribe: state => Boolean(state.user.subscribe)}),
+    ...mapState({getSubscribe: state => state.user.subscribe}),
     sliderList() {
       return [
         {
@@ -79,22 +80,22 @@ export default {
   },
   watch: {
     "$route.params.username": function(username) {
-      this.$store.commit("user/setUsername", username);
       this.$store.dispatch("user/getUserByUsername", username);
       this.$store.dispatch("mvUi/setSimilarUser", username);
-    }
+    },
   },
   created() {
     this.$store.commit("mvUi/setSliderType", "profile");
+
   },
   mounted() {
     const username = this.$route.params.username;
-    this.$store.commit("user/setUsername", username);
     this.$store.dispatch("user/getUserByUsername", username);
     this.$store.dispatch("mvUi/setSimilarUser", username);
     if (this.$store.state.user.username) {
       this.loginUsername = this.$store.state.user.username;
     }
+    this.subchk();
   },
   methods: {
     editChange() {
@@ -115,6 +116,18 @@ export default {
         username: this.user.username,
         data
       });
+    },
+    subchk() {
+      if (this.getSubscribe === true) {
+        this.related = "profile";
+      } else {
+        this.related = "none";
+      }
+    },
+    newSub(check) {
+      if (this.getSubscribe === true && check === true) {
+        this.related = "profile"
+      }
     }
   }
 };

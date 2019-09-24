@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8000/api";
+const BASE_URL = "/api";
 
 export default {
   searchMovies(params) {
@@ -49,6 +49,9 @@ export default {
   },
   editUserInfo(username, params) {
     return axios.put(`${BASE_URL}/users/${username}/`, params);
+  },
+  subscribe(params) {
+    return axios.post(`${BASE_URL}/subscribe/`, params);
   },
 
   // Clustering 결과
