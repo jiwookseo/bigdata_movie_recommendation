@@ -5,6 +5,7 @@ const state = {
   movieSearchList: [],
   movie: {},
   audience: [],
+  recommendations: [],
   recAge: { value: "", data: [] },
   selectedAge: "25",
   recOccupation: { value: "", data: [] },
@@ -30,6 +31,7 @@ const getters = {
   movieSearchList: state => state.movieSearchList,
   movie: state => state.movie,
   audience: state => state.audience,
+  recommendations: state => state.recommendations,
   recAge: state => state.recAge.data,
   selectedAge: state => state.selectedAge,
   recOccupation: state => state.recOccupation.data,
@@ -47,11 +49,13 @@ const actions = {
     commit("setMovieSearchList", movies);
   },
   async getMovieById({ commit }, id) {
-    const resp = await api.getMovie(id);
-    const movie = getMovieStucture(resp.data);
+    const res1 = await api.getMovie(id);
+    const movie = getMovieStucture(res1.data);
     commit("setMovie", movie);
-    const res = await api.getAudience(id);
-    commit("setAudience", res.data);
+    const res2 = await api.getAudience(id);
+    commit("setAudience", res2.data);
+    const res3 = await api.getRecommendations(id);
+    commit("setRecommendations", res3.data);
   },
   setEmptyMovieList({ commit }) {
     commit("setMovieSearchList", []);
@@ -59,10 +63,9 @@ const actions = {
 
   // Recommendation
   async getRecByAge({ commit }) {
-    console.log(state.recAge.value, state.selectedAge);
     const age = state.selectedAge;
     if (age == state.recAge.value) {
-      const resp = await api.searchMovies({
+      const res = await api.searchMovies({
         age,
         start: state.recAge.data.length
       });
@@ -70,15 +73,15 @@ const actions = {
         value: age,
         data: [
           ...state.recAge.data,
-          ...resp.data.data.map(item => getMovieStucture(item))
+          ...res.data.data.map(item => getMovieStucture(item))
         ]
       };
       commit("setRecAge", movies);
     } else {
-      const resp = await api.searchMovies({ age });
+      const res = await api.searchMovies({ age });
       const movies = {
         value: age,
-        data: resp.data.data.map(item => getMovieStucture(item))
+        data: res.data.data.map(item => getMovieStucture(item))
       };
       commit("setRecAge", movies);
     }
@@ -141,6 +144,7 @@ const mutations = {
   setMovieSearchList: (state, payload) => (state.movieSearchList = payload),
   setMovie: (state, payload) => (state.movie = payload),
   setAudience: (state, payload) => (state.audience = payload),
+  setRecommendations: (state, payload) => (state.recommendations = payload),
   setRecAge: (state, payload) => (state.recAge = payload),
   setSelectedAge: (state, payload) => (state.selectedAge = payload),
   setRecOccupation: (state, payload) => (state.recOccupation = payload),
