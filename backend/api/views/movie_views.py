@@ -466,8 +466,6 @@ def related_movies(request):
         auth_logout(request)
         return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
-
-
     # 메인 페이지의 영화 별 유사한 영화 추천
     genres = movie.genres_array
     query = Q()
