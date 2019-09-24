@@ -21,7 +21,7 @@ from accounts.models import User
 
 # Serializers
 from accounts.serializers import UserSerializer
-from api.serializers import MovieSerializer, RatingSerializer
+from api.serializers import MovieSerializer, RatingSerializer, RecommendationSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -355,6 +355,13 @@ def movie_followers(request, movie_id):
             return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(['GET'])
+def movie_recommendations(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    serializer = RecommendationSerializer(movie.recommendations, many=True)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])

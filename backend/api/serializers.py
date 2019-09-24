@@ -50,4 +50,4 @@ class RatingSerializer(serializers.ModelSerializer):
 class RecommendationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recommendation
-        fields = ('type', 'value')
+        fields = ('id', 'type', 'value')
