@@ -47,7 +47,7 @@ export default {
     },
     type: { type: String, default: "Age" },
     expand: { type: Boolean, default: true },
-    related: {type: Boolean, default: false}
+    related: {type: String, default: ""}
   },
   data() {
     return {
@@ -70,12 +70,14 @@ export default {
       if (this.detailType === this.type && this.activateMovie !== this.movie) {
         this.$store.commit("mvUi/setActivateMovie", this.movie);
         const data = {"movieId": this.movie.id};
-        if (this.related) {
+        if (this.related === "profile") {
           data["username"] = this.getname;
           data["token"] = this.getToken;
           data["name"] = this.$route.params.username
         }
-        this.$store.dispatch("mvUi/setRelatedMovies", data);
+        if (this.related === "board" || this.related === "profile") {
+          this.$store.dispatch("mvUi/setRelatedMovies", data);
+        }
       }
     },
     handleMouseLeave: function() {
@@ -88,12 +90,14 @@ export default {
       const data = {
         "movieId": this.movie.id,
       };
-      if (this.related) {
+      if (this.related === "profile") {
         data["username"] = this.getname;
         data["token"] = this.getToken;
         data["name"] = this.$route.params.username
       }
-      this.$store.dispatch("mvUi/setRelatedMovies", data);
+      if (this.related === "board" || this.related === "profile") {
+        this.$store.dispatch("mvUi/setRelatedMovies", data);
+      }
     },
     handleToggleClose: function() {
       this.$store.dispatch("mvUi/setDetailToggler", this.type);

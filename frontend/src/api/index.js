@@ -58,6 +58,9 @@ export default {
   editUserInfo(username, params) {
     return axios.put(`${BASE_URL}/users/${username}/`, params);
   },
+  subscribe(params) {
+    return axios.post(`${BASE_URL}/subscribe/`, params);
+  },
 
   // Clustering 결과
   getRelatedMovies(params) {
