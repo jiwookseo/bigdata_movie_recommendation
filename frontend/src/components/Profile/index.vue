@@ -71,17 +71,13 @@ export default {
   components: {ImageSlider, SimilarUserList, editUserInfo },
   data: () => ({
     editInfo: false,
+    toggleCover: false,
     related: ""
   }),
   computed: {
     ...mapGetters("user", ["user", "ratings"]),
-    ...mapState({getSubscribe: state => state.user.subscribe}),
-    toggleCover: false
-  }),
-  computed: {
-    ...mapGetters("user", ["user", "ratings"]),
     ...mapState({
-      getSubscribe: state => Boolean(state.user.subscribe),
+      getSubscribe: state => state.user.subscribe,
       loginUsername: state => state.user.username
     }),
     sliderList() {
@@ -105,19 +101,12 @@ export default {
   },
   mounted() {
     const username = this.$route.params.username;
-<<<<<<< frontend/src/components/Profile/index.vue
     this.$store.dispatch("user/getUserByUsername", username);
     this.$store.dispatch("mvUi/setSimilarUser", username);
     if (this.$store.state.user.username) {
       this.loginUsername = this.$store.state.user.username;
     }
     this.subchk();
-=======
-    // this.$store.commit("user/setUsername", username);
-    this.$store.dispatch("user/getUserByUsername", username);
-    this.$store.dispatch("mvUi/setSimilarUser", username);
-    console.log(this.$route.params.username, this.loginUsername)
->>>>>>> frontend/src/components/Profile/index.vue
   },
   methods: {
     editChange() {
