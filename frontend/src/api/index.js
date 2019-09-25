@@ -19,8 +19,8 @@ export default {
   getRecommendations(id) {
     return axios.get(`${BASE_URL}/movies/${id}/recommendations/`);
   },
-  follow(id) {
-    return axios.post(`${BASE_URL}/movies/${id}/followers/`);
+  follow(id, params) {
+    return axios.post(`${BASE_URL}/movies/${id}/followers/`, params);
   },
 
   // Users
