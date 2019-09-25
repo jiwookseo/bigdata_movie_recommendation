@@ -30,6 +30,7 @@ const getters = {
   register: state => state.register,
   logErrors: state => state.logErrors,
   token: state => state.token,
+  followings: state => state.followings
 };
 
 // actions

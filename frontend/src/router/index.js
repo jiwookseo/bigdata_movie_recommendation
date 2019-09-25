@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import BoardingPage from '../components/pages/BoardingPage.vue'
 import ProfilePage from '../components/pages/ProfilePage'
 import DetailPage from '../components/pages/DetailPage'
+import SearchPage from '../components/pages/SearchPage.vue'
 
 Vue.use(VueRouter)
 
@@ -10,8 +11,9 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     { path: '/', component: BoardingPage, name: 'home' },
-    { path: '/profile/:username', component: ProfilePage, name: 'profile', },
+    { path: '/profile/:username', component: ProfilePage, name: 'profile' },
     { path: '/movie/:id', component: DetailPage, name: 'detail'},
+    { path: '/search', component: SearchPage, name: 'search' },
   ],
   scrollBehavior() {
     return { x: 0, y: 0 }

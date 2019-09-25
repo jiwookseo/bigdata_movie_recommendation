@@ -7,7 +7,9 @@
     </div>
     <div class="nav__icon-bar">
       <span>
-        <font-awesome-icon icon="search" size="2x" />
+        <router-link to="/search">
+          <font-awesome-icon icon="search" size="2x" />
+        </router-link>
       </span>
 
       <span v-if="!isLogin">
@@ -115,10 +117,11 @@ export default {
 
   span {
     cursor: pointer;
-    color: rgba(255, 177, 1, 0.7);
-
-    &:hover {
-      color: rgb(255, 177, 1);
+    svg {
+      color: rgba(255, 177, 1, 0.7);
+      &:hover {
+        color: rgb(255, 177, 1);
+      }
     }
   }
 }
