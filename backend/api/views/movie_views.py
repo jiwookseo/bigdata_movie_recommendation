@@ -331,7 +331,7 @@ def movie_ratings(request, movie_id):
     if request.method == 'GET':
         total = len(movie.ratings.all())
         start = request.data.get('start', 0)
-        limit = request.data.get('limit', 10)
+        limit = request.data.get('limit', 8)
         raitings = movie.ratings.all()[start: start + limit]
         serializer = RatingSerializer(raitings, many=True)
         return Response(data={"total": total, "start": start, "limit": limit, "data": serializer.data}, status=status.HTTP_200_OK)
