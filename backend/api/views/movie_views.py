@@ -329,9 +329,12 @@ def rating_detail(request, rating_id):
 def movie_ratings(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
     if request.method == 'GET':
-        raitings = movie.ratings.all()
+        total = len(movie.ratings.all())
+        start = request.data.get('start', 0)
+        limit = request.data.get('limit', 10)
+        raitings = movie.ratings.all()[start: start + limit]
         serializer = RatingSerializer(raitings, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data={"total": total, "start": start, "limit": limit, "data": serializer.data}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'POST'])

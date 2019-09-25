@@ -49,13 +49,22 @@ const actions = {
     commit("setMovieSearchList", movies);
   },
   async getMovieById({ commit }, id) {
-    const res1 = await api.getMovie(id);
-    const movie = getMovieStucture(res1.data);
+    const res = await api.getMovie(id);
+    const movie = getMovieStucture(res.data);
     commit("setMovie", movie);
-    const res2 = await api.getAudience(id);
-    commit("setAudience", res2.data);
-    const res3 = await api.getRecommendations(id);
-    commit("setRecommendations", res3.data);
+    actions.getAudienceById({ commit }, id);
+    actions.getRecommendatinosById({ commit }, id);
+  },
+  async getAudienceById({ commit }, id) {
+    let start = 0;
+    if (state.audience.length)
+      if (state.audience[0].movie_id === id) start = state.audience.length;
+    const res = await api.getAudience(id, { start });
+    commit("setAudience", res.data.data);
+  },
+  async getRecommendatinosById({ commit }, id) {
+    const res = await api.getRecommendations(id);
+    commit("setRecommendations", res.data);
   },
   setEmptyMovieList({ commit }) {
     commit("setMovieSearchList", []);
