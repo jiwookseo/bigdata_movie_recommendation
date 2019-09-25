@@ -259,23 +259,22 @@ export default {
   font-family: "Jua";
 }
 
-.detail--recommendations-subtitle {
-  padding: 10px 30px;
-  color: #fff;
-  font-size: 28px;
-  font-weight: 500;
-  font-family: "Jua";
-}
-
-.detail--user-list,
-.detail--recommendations-list {
+.detail--user-list{
   display: flex;
   width: 250vw;
   overflow-x: hidden;
 }
 
+.detail--recommendataion-list {
+  width: 100vw;
+}
+
+.detail--recommendations-subtitle {
+  margin-left: 25px;
+}
+
 .detail--user-list {
-  margin-left: 6vw;
+  margin-left: 25px;
 }
 .detail--recommendations-a {
   padding: 25px 15px;
@@ -291,7 +290,7 @@ export default {
   align-items: center;
   flex-direction: column;
 
-  width: 25vh;
+  width: 20vh;
   height: 25vh;
   margin-bottom: 100px;
 
