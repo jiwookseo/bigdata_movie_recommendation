@@ -5,15 +5,13 @@ const BASE_URL = "/api";
 export default {
   // Movies
   searchMovies(params) {
-    return axios.get(`${BASE_URL}/movies/`, {
-      params
-    });
+    return axios.get(`${BASE_URL}/movies/`, { params });
   },
   getMovie(id) {
     return axios.get(`${BASE_URL}/movies/${id}/`);
   },
-  getAudience(id) {
-    return axios.get(`${BASE_URL}/movies/${id}/ratings/`);
+  getAudience(id, params) {
+    return axios.get(`${BASE_URL}/movies/${id}/ratings/`, { params });
   },
   getFollowers(id) {
     return axios.get(`${BASE_URL}/movies/${id}/followers/`);
