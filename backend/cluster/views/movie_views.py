@@ -11,8 +11,8 @@ from accounts.models import User
 from api.models import Movie
 
 # Variables and Functions For Data Processing : data_views.py
-from .data_views import data_preprocessing, update_clustering_data, kmeans_custom_clustering_movies
-from .data_views import cos_sim
+from .data_views import create_rating_matrix, update_clustering_data, kmeans_custom_clustering_movies
+from .data_views import cosine_similarity
 
 # Data Processing & Clustering Libs 
 import numpy as np
@@ -24,10 +24,11 @@ from sklearn.exceptions import ConvergenceWarning
 
 
 
+# 영화 페이지의 유사한 영화 데이터 생성
 # Movie Clustering
 @api_view(['POST'])
 def movie_clustering(request):
-    movies_data = data_preprocessing('m')
+    movies_data = create_rating_matrix('m')
     print("data preprocessing is completed")
     method = request.data.get('method')
     k = request.data.get('k', 7)
