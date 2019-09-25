@@ -24,21 +24,60 @@
         <p>{{ movie.story }}</p>
       </div>
     </div>
-    <div v-if="recommendations.length" class="detail--recommendations">
-      <p class="detail--recommendations-title">이런 분들께 추천합니다</p>
-      <div class="detail--recommendations-list">
-        <v-chip
-          v-for="recommendation in recommendations"
-          :key="recommendation.id"
-          class="detail--recommendations-a"
-          color="indigo"
-          text-color="white"
-        >
-          <v-avatar left>
-            <v-icon>mdi-account-circle</v-icon>
-          </v-avatar>
-          {{ recText(recommendation) }}
-        </v-chip>
+    <div v-if="recommendations.length">
+      <div class="detail--recommendations">
+        <p class="detail--recommendations-title">이런 분들께 추천합니다</p>
+        <div v-if="recAge.length">
+          <p class="detail--recommendations-subtitle">연령대</p>
+          <div class="detail--recommendations-list">
+            <v-chip
+              v-for="recommendation in recAge"
+              :key="recommendation"
+              class="detail--recommendations-a"
+              color="indigo"
+              text-color="white"
+            >
+              <v-avatar left>
+                <v-icon>mdi-account-circle</v-icon>
+              </v-avatar>
+              {{ recommendation }}
+            </v-chip>
+          </div>
+        </div>
+        <div v-if="recOccupation.length">
+          <p class="detail--recommendations-subtitle">직업</p>
+          <div class="detail--recommendations-list">
+            <v-chip
+              v-for="recommendation in recOccupation"
+              :key="recommendation"
+              class="detail--recommendations-a"
+              color="indigo"
+              text-color="white"
+            >
+              <v-avatar left>
+                <v-icon>mdi-account-circle</v-icon>
+              </v-avatar>
+              {{ recommendation }}
+            </v-chip>
+          </div>
+        </div>
+        <div v-if="recGender.length">
+          <p class="detail--recommendations-subtitle">성별</p>
+          <div class="detail--recommendations-list">
+            <v-chip
+              v-for="recommendation in recGender"
+              :key="recommendation"
+              class="detail--recommendations-a"
+              color="indigo"
+              text-color="white"
+            >
+              <v-avatar left>
+                <v-icon>mdi-account-circle</v-icon>
+              </v-avatar>
+              {{ recommendation }}
+            </v-chip>
+          </div>
+        </div>
       </div>
     </div>
     <div class="detail--user">
@@ -81,6 +120,24 @@ export default {
     },
     audience() {
       return this.$store.getters["movie/audience"].slice(0, 6);
+    },
+    recAge() {
+      const rec = this.recommendations.filter(r => r.type === "age");
+      return rec.map(r =>
+        this.recommendationData[0].selectObject[r.value].slice(0, -1)
+      );
+    },
+    recOccupation() {
+      const rec = this.recommendations.filter(r => r.type === "occupation");
+      return rec.map(r =>
+        this.recommendationData[1].selectObject[r.value].slice(0, -1)
+      );
+    },
+    recGender() {
+      const rec = this.recommendations.filter(r => r.type === "gender");
+      return rec.map(r =>
+        this.recommendationData[2].selectObject[r.value].slice(0, -1)
+      );
     }
   },
   watch: {
@@ -94,19 +151,7 @@ export default {
   mounted() {
     this.$store.dispatch("movie/getMovieById", this.$route.params.id);
   },
-  methods: {
-    recText(recommendation) {
-      let result = "";
-      if (recommendation.type === "age") {
-        result = this.recommendationData[0].selectObject[recommendation.value];
-      } else if (recommendation.type === "occupation") {
-        result = this.recommendationData[1].selectObject[recommendation.value];
-      } else {
-        result = this.recommendationData[2].selectObject[recommendation.value];
-      }
-      return result.slice(0, -1);
-    }
-  }
+  methods: {}
 };
 </script>
 <style lang="scss" scoped>
@@ -219,12 +264,16 @@ export default {
   width: 100vw;
 }
 
+.detail--recommendations-subtitle {
+  margin-left: 25px;
+}
+
 .detail--user-list {
   margin-left: 25px;
 }
 .detail--recommendations-a {
-  padding: 30px 15px;
-  margin: 10px 20px 30px 25px;
+  padding: 25px 15px;
+  margin: 10px 0px 30px 25px;
   font-size: 20px !important;
   font-weight: 500;
   font-family: "Jua";
