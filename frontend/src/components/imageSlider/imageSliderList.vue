@@ -27,7 +27,7 @@
       <subscribe />
     </div>
     <transition name="bounce">
-      <ImageItemDetail v-if="expand && toggleDetail" :related="related" />
+      <ImageItemDetail v-if="expand && toggleDetail" :related="related" :reload="checkRelated" />
     </transition>
   </div>
 </template>
@@ -46,7 +46,8 @@ export default {
     data: { type: Object, default: () => ({ type: "연령대" }) },
     sliderType: { type: String, default: () => ""},
     expand: { type: Boolean, default: () => true},
-    related: {type: Boolean, default: false}
+    related: {type: String, default: ""},
+    changeRelated: {type: Function, default: () => {}}
   },
   data() {
     return {
@@ -83,7 +84,7 @@ export default {
             movie.poster ||
             "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
         }));
-      } else if (this.$store.state.mvUi.sliderType === "profile") {
+      } else if (this.$store.state.mvUi.sliderType === "profile" && this.related !== "") {
         return this.$store.getters["user/ratings"].map(movie => ({
           ...movie,
           description: movie.story.slice(0, 500),
@@ -121,6 +122,11 @@ export default {
     load: function() {
       this.$store.dispatch(`movie/getRecBy${this.type}`, this.selected);
     },
+    checkRelated(check) {
+      if (check === true) {
+        this.changeRelated(true);
+      }
+    }
   }
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Jumbotron />
-    <ImageSlider :sliderList="sliderList" :expnad="true" :related="true" />
+    <ImageSlider :sliderList="sliderList" :expnad="true" :related="'board'" />
   </div>
 </template>
 

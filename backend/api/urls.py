@@ -22,6 +22,7 @@ urlpatterns = [
 
     path("login/", account_views.login, name="login"),
     path("logout/", account_views.logout, name="logout"),
+    path("subscribe/", account_views.subscribe, name="subscribe"),
 
 
     # jwt

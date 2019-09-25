@@ -134,6 +134,27 @@ async follow({ commit }, id) {
     const res = await api.getFollowings(state.username);
     commit("setUserFollowings", res.data);
   }
+},
+
+// subscribe
+async subscribe({ commit }, params) {
+  const res = await api.subscribe(params);
+  if (res.status === 202) {
+    commit("setSubscribe", true);
+    sessionStorage.setItem("subscribe", true);
+  } else if (res.status === 400) {
+    commit("setIsLogin", false);
+    commit("setUsername", "");
+    commit("setStaff", false);
+    commit("setToken", "");
+    commit("setSubscribe", false);
+    sessionStorage.clear();
+    const req = {
+      "username": params.username
+    };
+    await api.logout(req);
+  }
+
 }
 };
 
