@@ -31,7 +31,7 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
-import { mapGetters, mapState } from "vuex";
+import { mapGetters, mapState, mapActions } from "vuex";
 
 library.add(faSortDown, faSortUp);
 
@@ -57,7 +57,8 @@ export default {
   computed: {
     ...mapGetters("mvUi", ["detailToggler", "detailType", "activateMovie"]),
     ...mapState({
-      getname: state => state.user.username,
+      getSubscribe: state => state.user.subscribe,
+      username: state => state.user.username,
       getToken: state => state.user.token
     }),
     toggle() {
@@ -65,13 +66,15 @@ export default {
     }
   },
   methods: {
+    ...mapActions("user", ["setUserRating"]),
     handleMouseOver: function() {
+      this.getRating();
       this.showDescription = !this.showDescription;
       if (this.detailType === this.type && this.activateMovie !== this.movie) {
         this.$store.commit("mvUi/setActivateMovie", this.movie);
         const data = {"movieId": this.movie.id};
         if (this.related === "profile") {
-          data["username"] = this.getname;
+          data["username"] = this.username;
           data["token"] = this.getToken;
           data["name"] = this.$route.params.username
         }
@@ -81,17 +84,19 @@ export default {
       }
     },
     handleMouseLeave: function() {
+      this.getRating();
       this.showDescription = !this.showDescription;
     },
 
     handleToggleOpen: function() {
+      this.getRating();
       this.$store.dispatch("mvUi/setDetailToggler", this.type);
       this.$store.commit("mvUi/setActivateMovie", this.movie);
       const data = {
         "movieId": this.movie.id,
       };
       if (this.related === "profile") {
-        data["username"] = this.getname;
+        data["username"] = this.username;
         data["token"] = this.getToken;
         data["name"] = this.$route.params.username
       }
@@ -107,7 +112,16 @@ export default {
         const popup = document.getElementById(`detail${this.movie.id}`);
         popup.style.display = "flex";
       }
-    }
+    },
+    async getRating() {
+      if (this.username) {
+        const data = {
+          "username": this.username,
+          "movieId": this.movie.id
+        };
+        await this.setUserRating(data);
+      }
+    },
   }
 };
 </script>

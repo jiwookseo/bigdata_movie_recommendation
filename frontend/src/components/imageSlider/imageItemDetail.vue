@@ -8,12 +8,12 @@
         <span @click="handleToggle">&times;</span>
       </div>
       <h2 class="detail--title">
-        <router-link :to="{name: 'detail', params: { id: movie.movie_id } }">{{ movie.title }}</router-link>
+        <router-link :to="{name: 'detail', params: { id: movie.id } }">{{ movie.title }}</router-link>
       </h2>
       <div class="detail--score">
         <span>평균별점</span>
         <span>{{ movie.rating }}</span>
-        <rating-user v-if="username" :movie-id="movie.movie_id" :username="username" />
+        <rating-user v-if="isLogin" :movie-id="movie.id" />
       </div>
       <div v-if="active.base" class="detail--description">
         <p>{{ ellipsisDescription }}</p>
@@ -21,7 +21,7 @@
       <div class="detail--info">
         <div class="detail--info-genre">
           <span>개요</span>
-          <span v-for="(name, idx) in movie.genres" :key="movie.movie_id+idx">{{ name }}</span>
+          <span v-for="(name, idx) in movie.genres" :key="movie.id+idx">{{ name }}</span>
         </div>
       </div>
       <div v-if="active.cluster" class="detail--related-movie">
@@ -73,10 +73,12 @@ export default {
         subscribe: false
       },
       slideIndex: 0,
-      relatedCheck: false
+      relatedCheck: false,
+      rating: 0
     };
   },
   computed: {
+    ...mapState({isLogin: state => state.user.isLogin,}),
     movie: function() {
       return this.$store.state.mvUi.activateMovie;
     },

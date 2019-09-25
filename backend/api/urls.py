@@ -43,6 +43,7 @@ urlpatterns = [
     path('ratings/', movie_views.rating_list, name='rating_list'),
     path('ratings/<int:rating_id>/',
          movie_views.rating_detail, name='rating_detail'),
+    path("ratings/<str:username>/<int:movie_id>/", movie_views.add_rating, name="add_rating"),
 
     path('movies/related_movies/',
          movie_views.related_movies, name="related_movies"),
