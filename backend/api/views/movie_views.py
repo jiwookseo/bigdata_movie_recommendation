@@ -353,13 +353,29 @@ def movie_followers(request, movie_id):
         serializer = UserSerializer(movie.followers, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
-        if request.user.is_authenticated:
-            movie.followers.add(request.user)
-            movie.save()
-            serializer = UserSerializer(movie.followers, many=True)
-            return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        token = request.data.get("token", None)
+        req_name = request.data.get("username", None)
+        if req_name:
+            req_user = get_object_or_404(User, username=req_name)
+            if token == req_user.refresh_token:
+                response = verify_token(token)
+                if response.status_code != 200:
+                    response = refresh_token(token)
+                    if response.status_code == 200:
+                        new_token = json.loads(response.text)["token"]
+                        req_user.refresh_token = new_token
+                if response and response.status_code == 200:
+                    if req_user in movie.followers.all():
+                        movie.followers.remove(req_user)
+                    else:
+                        movie.followers.add(req_user)
+                    movie.save()
+                    return Response(status=status.HTTP_202_ACCEPTED)
+            req_user.refresh_token = ""
+            req_user.save()
+            auth_logout(request)
+            return Response(status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET'])

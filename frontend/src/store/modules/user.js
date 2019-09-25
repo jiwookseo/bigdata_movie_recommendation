@@ -74,7 +74,7 @@ const actions = {
     }
   },
 
-// User
+  // User
   async searchUsers({ commit }, params) {
     const resp = await api.searchUsers(params);
     const users = resp.data;
@@ -112,7 +112,7 @@ const actions = {
       commit("setSubscribe", false);
       sessionStorage.clear();
       const req = {
-        "username": username
+        username: username
       };
       await api.logout(req);
     } else {
@@ -123,41 +123,40 @@ const actions = {
     const username = params.username;
     const id = params.movieId;
     const res = await api.getRating(username, id);
-    console.log(res)
+    console.log(res);
     if (res.status === 202) {
-      commit("userRating", res.data[0].rating)
+      commit("userRating", res.data[0].rating);
     }
   },
 
-// Follow
-async follow({ commit }, id) {
-  if (state.isLogin) {
-    await api.follow(id);
-    const res = await api.getFollowings(state.username);
-    commit("setUserFollowings", res.data);
-  }
-},
+  // Follow
+  async follow({ commit }, id) {
+    if (state.isLogin) {
+      await api.follow(id, { username: state.username, token: state.token });
+      const res = await api.getFollowings(state.username);
+      commit("setUserFollowings", res.data);
+    }
+  },
 
-// subscribe
-async subscribe({ commit }, params) {
-  const res = await api.subscribe(params);
-  if (res.status === 202) {
-    commit("setSubscribe", true);
-    sessionStorage.setItem("subscribe", true);
-  } else if (res.status === 400) {
-    commit("setIsLogin", false);
-    commit("setUsername", "");
-    commit("setStaff", false);
-    commit("setToken", "");
-    commit("setSubscribe", false);
-    sessionStorage.clear();
-    const req = {
-      "username": params.username
-    };
-    await api.logout(req);
+  // subscribe
+  async subscribe({ commit }, params) {
+    const res = await api.subscribe(params);
+    if (res.status === 202) {
+      commit("setSubscribe", true);
+      sessionStorage.setItem("subscribe", true);
+    } else if (res.status === 400) {
+      commit("setIsLogin", false);
+      commit("setUsername", "");
+      commit("setStaff", false);
+      commit("setToken", "");
+      commit("setSubscribe", false);
+      sessionStorage.clear();
+      const req = {
+        username: params.username
+      };
+      await api.logout(req);
+    }
   }
-
-}
 };
 
 // mutations
