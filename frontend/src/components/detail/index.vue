@@ -7,7 +7,7 @@
       <h1>{{movie.title}}</h1>
       <p class="detail--info-genre">
         <span>장르</span>
-        <span v-for="genre in movie.genres" :key="genre + movie.id">{{genre}}</span>
+        <span class="detail--info-genre-span" v-for="genre in movie.genres" :key="genre + movie.id">{{genre}}</span>
       </p>
       <p class="detail--info-rating">
         <span>평가자수</span>
@@ -215,6 +215,10 @@ export default {
   }
 }
 
+.detail--info-genre-span {
+  margin-left: 15px;
+}
+
 .detail--story {
   width: 70%;
   padding: 40px 20px;
@@ -299,17 +303,19 @@ export default {
 }
 
 .detail--user-a-img {
-  width: 90%;
+  width: 100%;
   height: 60%;
   color: #111;
   img {
-    width: 100%;
     height: 100%;
-    object-fit: contain;
+    width: 100%;
+    object-fit: cover;
   }
 }
 
 .detail--user-info {
+  margin-top: 15px;
+  justify-content: center;
   a {
     text-decoration: none;
     color: #111;

@@ -38,7 +38,16 @@ def movie_list(request):
         gender = request.GET.get("gender", None)
         limit = int(request.GET.get("limit", 10))
         start = int(request.GET.get("start", 0))
+        regex = request.GET.get("regex", None)
 
+        if regex:
+            movies = []
+            filter_movie = Movie.objects.filter(title__contains=regex)[:5]
+            for item in filter_movie:
+                movies.append(item)
+            serializer = MovieSerializer(movies, many=True)
+            data = {"data": serializer. data}
+            return Response(data=data, status=status.HTTP_200_OK)
         if username:
             movies = []
             user = get_object_or_404(User, username=username)

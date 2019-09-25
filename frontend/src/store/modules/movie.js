@@ -11,7 +11,7 @@ const state = {
   recOccupation: { value: "", data: [] },
   selectedOccupation: "programmer",
   recGender: { value: "", data: [] },
-  selectedGender: "M"
+  selectedGender: "M",
 };
 
 // movie shape
@@ -37,7 +37,7 @@ const getters = {
   recOccupation: state => state.recOccupation.data,
   selectedOccupation: state => state.selectedOccupation,
   recGender: state => state.recGender.data,
-  selectedGender: state => state.selectedGender
+  selectedGender: state => state.selectedGender,
 };
 
 // actions
@@ -145,7 +145,7 @@ const actions = {
       commit("setRecGender", movies);
     }
     commit("setSelectedGender", gender);
-  }
+  },
 };
 
 // mutations
