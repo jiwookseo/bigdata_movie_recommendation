@@ -209,15 +209,18 @@ export default {
   font-family: "Jua";
 }
 
-.detail--user-list,
-.detail--recommendations-list {
+.detail--user-list{
   display: flex;
   width: 250vw;
   overflow-x: hidden;
 }
 
+.detail--recommendataion-list {
+  width: 100vw;
+}
+
 .detail--user-list {
-  margin-left: 6vw;
+  margin-left: 25px;
 }
 .detail--recommendations-a {
   padding: 30px 15px;
@@ -233,7 +236,7 @@ export default {
   align-items: center;
   flex-direction: column;
 
-  width: 25vh;
+  width: 20vh;
   height: 25vh;
   margin-bottom: 100px;
 

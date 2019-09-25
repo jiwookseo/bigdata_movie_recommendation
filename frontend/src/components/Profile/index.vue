@@ -33,13 +33,11 @@
       <div class="profile--info-data">
         <div class="profile--info-data-bar">
           <div class="profile-info-data-num">
-            <span>22</span>
-            <span>33</span>
+            <span>{{ followings.length }}</span>
             <span>{{ user.rating_cnt }}</span>
           </div>
           <div class="profile-info-data-text">
             <span>보고 싶어요</span>
-            <span>시청한 영화</span>
             <span>평가한 영화</span>
           </div>
           <div v-if="editInfo">
@@ -72,10 +70,10 @@ export default {
   data: () => ({
     editInfo: false,
     toggleCover: false,
-    related: ""
+    related: "",
   }),
   computed: {
-    ...mapGetters("user", ["user", "ratings"]),
+    ...mapGetters("user", ["user", "ratings", "followings"]),
     ...mapState({
       getSubscribe: state => state.user.subscribe,
       loginUsername: state => state.user.username
@@ -103,9 +101,6 @@ export default {
     const username = this.$route.params.username;
     this.$store.dispatch("user/getUserByUsername", username);
     this.$store.dispatch("mvUi/setSimilarUser", username);
-    if (this.$store.state.user.username) {
-      this.loginUsername = this.$store.state.user.username;
-    }
     this.subchk();
   },
   methods: {
@@ -231,8 +226,8 @@ export default {
   background-color: rgba(11, 11, 11, 0.9);
   margin-left: 11px;
   top: 83px;
-  width: 13.7vw !important;
-  height: 13.7vw;
+  width: 13.9vw !important;
+  height: 13.9vw;
   border-radius: 50%;
   position: absolute;
   display: inline-block;
