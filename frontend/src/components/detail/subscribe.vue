@@ -1,7 +1,7 @@
 <template>
   <div class="subscribe_div">
     <span class="subscribe_text"><span class="sub_title">HONEY BEE</span>를 구독하시면 다양한 영화를 추천해드려요!</span>
-    <button class="subscribe_button" @click="sub">구독(2$/1month)</button>
+    <button class="subscribe_button" @click="sub">구독(5$/1month)</button>
   </div>
 </template>
 
