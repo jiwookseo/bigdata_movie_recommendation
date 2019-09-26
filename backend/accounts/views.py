@@ -131,7 +131,6 @@ def user_ratings(request, username):
     if id:
         movie = get_object_or_404(Movie, id=id)
         rating = user.ratings.filter(movie=movie)
-
         serializer = RatingSerializer(rating, many=True)
         return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
 
@@ -216,9 +215,6 @@ def login(request):
         if user.subscribe:
             if datetime.datetime.now() - user.subscribe_at > datetime.timedelta(30):
                 user.subscribe = False
-        elif not user.subscribe_at:
-            user.subscribe_at = datetime.datetime(2019, 1, 1, 0, 0, 0, 0)
-            user.subscribe = False
 
         user.save()
 
