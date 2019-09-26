@@ -5,7 +5,7 @@ API_URL = 'http://localhost:8000/api/'
 headers = {'content-type': 'application/json'}
 
 
-def create_users(num_users):
+def create_users():
     user_data = open('./users.dat', 'r', encoding='ISO-8859-1')
     request_data = {'profiles': []}
     occupation_map = {
@@ -31,10 +31,12 @@ def create_users(num_users):
             'occupation': occupation
         })
 
-        if len(request_data['profiles']) >= num_users:
-            break
-
-    response = requests.post(API_URL + 'signup/', data=json.dumps(request_data), headers=headers)
+        if len(request_data['profiles']) == 1000:
+            response = requests.post(
+                API_URL + 'signup/', data=json.dumps(request_data), headers=headers)
+            request_data = {'profiles': []}
+    response = requests.post(
+        API_URL + 'signup/', data=json.dumps(request_data), headers=headers)
     print(response.text)
 
 
@@ -54,26 +56,26 @@ def create_movies():
         API_URL + 'movies/', data=json.dumps(request_data), headers=headers)
 
 
-def create_ratings(num_users):
+def create_ratings():
     rating_data = open("./ratings.dat", "r", encoding="ISO-8859-1")
     request_data = {"ratings": []}
     for line in rating_data.readlines():
         [user_id, movie_id, rating, timestamp] = line.split("::")
-        if int(user_id) > num_users:
-            break
         request_data["ratings"].append({
             "username": 'user' + user_id,
             "movie_id": movie_id,
             "rating": rating,
             "timestamp": timestamp
         })
-    requests.post(API_URL + "ratings/", data=json.dumps(request_data), headers=headers)
-    request_data = {"ratings": []}
+        if len(request_data['ratings']) == 1000:
+            requests.post(API_URL + "ratings/",
+                          data=json.dumps(request_data), headers=headers)
+            request_data = {"ratings": []}
+    requests.post(API_URL + "ratings/",
+                  data=json.dumps(request_data), headers=headers)
 
-    
 
-
-def create_story(num_movies):
+def create_story():
     story_data = open("./ml_plot.dat", "r", encoding="ISO-8859-1")
     request_data = {"story": []}
     for line in story_data.readlines():
@@ -84,8 +86,10 @@ def create_story(num_movies):
         while "|\n" in story:
             story = story.replace("|\n", "")
 
-        if len(request_data["story"]) > 0 and int(movie_id) > num_movies:
-            break
+        if len(request_data['story']) == 1000:
+            requests.post(
+                API_URL + "movies/", data=json.dumps(request_data), headers=headers)
+            request_data = {"story": []}
 
         request_data["story"].append({
             "movie_id": movie_id,
@@ -96,10 +100,8 @@ def create_story(num_movies):
 
 
 if __name__ == '__main__':
-    num_users = 200
-    num_movies = 3952
-    create_movies()
-    create_users(num_users)
-    create_ratings(num_users)
-    create_story(num_movies)
+    # create_movies()
+    # create_users()
+    create_ratings()
+    create_story()
     print('finish')
