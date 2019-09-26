@@ -38,6 +38,9 @@ export default {
   getRatings(username) {
     return axios.get(`${BASE_URL}/users/${username}/ratings/`);
   },
+  setRating(username, id, params) {
+    return axios.post(`${BASE_URL}/ratings/${username}/${id}/`, params);
+  },
   getFollowings(username) {
     return axios.get(`${BASE_URL}/users/${username}/followings/`);
   },

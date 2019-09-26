@@ -13,7 +13,7 @@
       <div class="detail--score">
         <span>평균별점</span>
         <span>{{ movie.rating }}</span>
-        <rating-user v-if="username" :movie-id="movie.id" :username="username" />
+        <rating-user v-if="isLogin" :movie-id="movie.id" />
       </div>
       <div v-if="active.base" class="detail--description">
         <p>{{ ellipsisDescription }}</p>
@@ -73,10 +73,12 @@ export default {
         subscribe: false
       },
       slideIndex: 0,
-      relatedCheck: false
+      relatedCheck: false,
+      rating: 0
     };
   },
   computed: {
+    ...mapState({isLogin: state => state.user.isLogin,}),
     movie: function() {
       return this.$store.state.mvUi.activateMovie;
     },
