@@ -148,7 +148,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 
-  height: 55px;
+  max-height: 55px;
   padding: 10px;
   margin-bottom: -20px;
   background-color: rgba(33, 33, 33, 0.7);

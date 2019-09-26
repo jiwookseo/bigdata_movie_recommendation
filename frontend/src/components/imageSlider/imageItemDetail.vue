@@ -243,20 +243,23 @@ export default {
   span {
     font-weight: 700;
     font-size: 18px;
-    padding: 5px;
+    padding: 5px 10px;
+    letter-spacing: 1.8px;
 
   &:first-child {
     border: 1px solid #fff;
     background-color: #111;
     color: #fff;
   }
-}
 
   &:nth-child(2) {
     background-color: #fff;
     color: #111;
     border: 1px solid #fff;
   }
+}
+
+  
 }
 
 
@@ -290,7 +293,7 @@ export default {
 
 .detail--related-movie {
   position: relative;
-  margin-top: 80px;
+  margin-top: 40px;
   max-width: 100%;
 }
 
