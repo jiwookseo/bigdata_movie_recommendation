@@ -194,6 +194,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 8px 15px;
 
     &:first-child {
       background-color: #111;
@@ -215,7 +216,7 @@ export default {
   width: 40%;
   p {
     color: #fff;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
     line-height: 1.6;
     font-family: 'Ubuntu', sans-serif;

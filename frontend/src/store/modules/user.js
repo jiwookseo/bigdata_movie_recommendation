@@ -17,7 +17,7 @@ const state = {
   subscribe: false,
   edit: false,
   editCom: "",
-  rating: 0
+  rating: [0, 0]
 };
 
 // getters
@@ -112,7 +112,7 @@ const actions = {
       commit("setSubscribe", false);
       sessionStorage.clear();
       const req = {
-        username: username
+        "username": username
       };
       await api.logout(req);
     } else {
@@ -123,9 +123,29 @@ const actions = {
     const username = params.username;
     const id = params.movieId;
     const res = await api.getRating(username, id);
-    // console.log(res);
+    if (res.status === 202 && res.data.length > 0) {
+      commit("userRating", [res.data[0].rating, id])
+    } else {
+      commit("userRating", [0, id])
+    }
+  },
+  async setRating({ commit }, params) {
+    const username = params.username;
+    const id = params.movieId;
+    const res = await api.setRating(username, id, params);
     if (res.status === 202) {
-      commit("userRating", res.data[0].rating);
+      commit("userRating", [params.rating, id]);
+    } else {
+      commit("setIsLogin", false);
+      commit("setUsername", "");
+      commit("setStaff", false);
+      commit("setToken", "");
+      commit("setSubscribe", false);
+      sessionStorage.clear();
+      const req = {
+        "username": username
+      };
+      await api.logout(req);
     }
   },
 

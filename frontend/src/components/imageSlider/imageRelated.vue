@@ -8,7 +8,6 @@
         <h4>
           <router-link :to="{name: 'detail', params: { id: movie.id } }">{{ movie.title }}</router-link>
         </h4>
-        <p>{{ movie.description }}</p>
       </div>
       <div class="cluster--movie-info-description" />
     </div>
@@ -48,6 +47,9 @@ export default {
 
 .cluster--movie-info-basic {
   padding: 15px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   h4 {
     padding-left: 12px;
     font-size: 18px;
