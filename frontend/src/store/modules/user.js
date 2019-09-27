@@ -101,7 +101,7 @@ const actions = {
   async editUserInfo({ commit }, params) {
     const username = params.username;
     const res = await api.editUserInfo(username, params);
-    // console.log(res)
+    // // console.log(res)
     if (res.status === 202) {
       commit("edited", true);
     } else if (res.status === 203) {

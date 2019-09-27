@@ -33,7 +33,7 @@ export default {
   methods: {
     async handleClick(){
       if (this.input_text.length >= 3){
-        console.log(this.input_text)
+        // console.log(this.input_text)
         const data = await api.searchMovies({regex: this.input_text})
         this.movieList = data.data.data
       } else {
