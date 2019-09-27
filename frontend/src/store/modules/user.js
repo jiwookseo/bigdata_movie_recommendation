@@ -101,7 +101,7 @@ const actions = {
   async editUserInfo({ commit }, params) {
     const username = params.username;
     const res = await api.editUserInfo(username, params);
-    // console.log(res)
+    // // console.log(res)
     if (res.status === 202) {
       commit("edited", true);
     } else if (res.status === 203) {
@@ -123,7 +123,7 @@ const actions = {
     const username = params.username;
     const id = params.movieId;
     const res = await api.getRating(username, id);
-    console.log(res);
+    // console.log(res);
     if (res.status === 202) {
       commit("userRating", res.data[0].rating);
     }

@@ -24,7 +24,7 @@ export default {
     rating: 0,
   }),
   mounted() {
-    console.log(this.movieId)
+    // console.log(this.movieId)
   },
   computed: {
     ...mapState({
@@ -43,7 +43,7 @@ export default {
           "username": this.username,
           "movieId": this.movieId
         };
-        console.log(this.movieId)
+        // console.log(this.movieId)
         await this.setUserRating(data);
         this.rating = this.getRating
       }
