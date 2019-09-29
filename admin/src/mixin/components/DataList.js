@@ -3,15 +3,15 @@ export default {
     return {
       index: 1,
       currentPage: 1
-    }
+    };
   },
   computed: {
     pageArray() {
-      const pages = []
+      const pages = [];
       for (let i = this.index; i < this.index + 10; i++) {
-        pages.push(i)
+        pages.push(i);
       }
-      return pages
+      return pages;
     },
     numberOfData() {
       return this.dataList.length;
@@ -21,20 +21,20 @@ export default {
       if (this.numberOfData % 10) {
         lastPageNumber += 1;
       }
-      return lastPageNumber
+      return lastPageNumber;
     },
     lastIndex() {
-      let lastIndexNumber = parseInt(this.numberOfData / 100)*10;
+      let lastIndexNumber = parseInt(this.numberOfData / 100) * 10;
       if (this.numberOfData % 100) {
         lastIndexNumber += 1;
       } else {
         lastIndexNumber -= 9;
       }
-      return lastIndexNumber
+      return lastIndexNumber;
     }
   },
   methods: {
-    // Test Log : console.log(this.numberOfData, this.index, this.currentPage, this.lastPage, this.lastIndex);
+    // Test Log : // console.log(this.numberOfData, this.index, this.currentPage, this.lastPage, this.lastIndex);
     showFirstPageList() {
       if (this.index > 1) {
         this.index = 1;
@@ -63,4 +63,4 @@ export default {
       this.currentPage = this.index + (pageNumber - this.index);
     }
   }
-}
+};
