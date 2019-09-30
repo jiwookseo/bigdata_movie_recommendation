@@ -134,6 +134,7 @@ export default {
   flex-direction: column;
   justify-content: flex-end;
   min-width: 20%;
+  max-width: 20%;
   height: 140px;
   background-size: cover;
   cursor: pointer;
