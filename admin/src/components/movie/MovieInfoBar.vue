@@ -125,7 +125,6 @@ export default {
         }
       };
       await this.editMovie(params);
-      // console.log(this.getEdit);
       if (this.getEdit === "영화 정보가 수정되었습니다.") {
         this.edited(this.idx, params["movie"]);
         this.checkEdit();
@@ -142,7 +141,6 @@ export default {
         username: this.getUsername
       };
       await this.deleteMovie(params);
-      // console.log(this.getDel);
       if (this.getDel === "영화가 삭제되었습니다.") {
         this.getMovieList();
       } else if (this.getDel === "token") {

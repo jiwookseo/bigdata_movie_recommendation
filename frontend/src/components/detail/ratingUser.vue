@@ -1,7 +1,15 @@
 <template>
-  <div>
-    <span v-for="i in 5" v-on:mouseenter="paint(i - 1)" :id="'star' + (i - 1)" class="star" @click="editRating">{{ stars[i - 1] }}</span>
-    <button class="rating_button" @click="editRating">{{ buttonMessage }}</button>
+  <div class="rating-user">
+    <span 
+      class="star"
+      v-for="i in 5"
+      :id="'star' + (i - 1)"
+      :key="'star' + i"
+      @mouseover="paint(i - 1)" 
+      @click="editRating"
+    >
+      {{ stars[i - 1] }}
+    </span>
   </div>
 </template>
 
@@ -17,13 +25,11 @@
     },
     data: () => ({
       stars: ["☆", "☆", "☆", "☆", "☆"],
-      stop: true,
       buttonMessage: "수정",
       rating: 0,
     }),
     watch: {
       getRating: function() {
-        this.stop = true;
         this.buttonMessage = "수정";
         const stars = ["☆", "☆", "☆", "☆", "☆"];
         for (let i = 0; i < this.getRating[0]; ++i) {
@@ -63,25 +69,22 @@
         this.stars = stars;
       },
       paint(idx) {
-        if (!this.stop) {
-          const stars = ["☆", "☆", "☆", "☆", "☆"];
-          for (let i = 0; i <= idx; ++i) {
-            stars[i] = "★";
-            let star = document.getElementById("star" + i);
-            star.style.color = "rgb(255, 177, 1)";
-            this.rating = i + 1;
-          }
-          for (let i = idx + 1; i < 5; ++i) {
-            stars[i] = "☆";
-            let star = document.getElementById("star" + i);
-            star.style.color = "white";
-          }
-          this.stars = stars
+        const stars = ["☆", "☆", "☆", "☆", "☆"];
+        for (let i = 0; i <= idx; ++i) {
+          stars[i] = "★";
+          let star = document.getElementById("star" + i);
+          star.style.color = "rgb(255, 177, 1)";
+          this.rating = i + 1;
         }
+        for (let i = idx + 1; i < 5; ++i) {
+          stars[i] = "☆";
+          let star = document.getElementById("star" + i);
+          star.style.color = "white";
+        }
+        this.stars = stars
       },
       async editRating() {
         if (this.buttonMessage === "수정") {
-          this.stop = false;
           this.stars = ["☆", "☆", "☆", "☆", "☆"];
           for (let i = 0; i < 5; ++i) {
             let star = document.getElementById("star" + i);
@@ -90,7 +93,6 @@
           }
           this.buttonMessage = "완료";
         } else {
-          this.stop = true;
           if (this.getRating !== this.rating) {
             const data = {
               "username": this.username,
@@ -108,6 +110,9 @@
 </script>
 
 <style lang="scss">
+  .rating-user {
+    margin-top: 20px;
+  }
   .rating-user-div {
     display: inline-flex;
   }
@@ -121,6 +126,7 @@
     -ms-user-select: none;
     user-select: none;
     color: rgb(255, 177, 1);
+    cursor: pointer;
   }
   .rating_button {
     margin-left: 30px;

@@ -268,11 +268,13 @@ def add_rating(request, username, movie_id):
         score = request.data.get("rating", None)
         if score:
             movie = get_object_or_404(Movie, id=movie_id)
-            rating = Rating.objects.filter(movie=movie, user=user)[0]
+            rating = Rating.objects.filter(movie=movie, user=user)
             if not rating:
                 rating = Rating()
                 rating.user = user
                 rating.movie = movie
+            else:
+                rating = rating[0]
             rating.rating = score
             rating.save()
             return Response(status=status.HTTP_202_ACCEPTED)

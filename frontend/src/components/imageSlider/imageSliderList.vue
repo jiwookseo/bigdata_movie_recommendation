@@ -12,7 +12,6 @@
           :type="type"
           :expand="expand"
           :related="related"
-          class="image-slider__item"
         />
       </div>
       <div v-if="slideNum != 0" class="image-slider__arrow-left" @click="handleClick(1)">
