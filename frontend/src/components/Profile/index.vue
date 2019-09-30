@@ -9,7 +9,6 @@
           />
         </div>
         <div class="profile--info--cover" 
-          :class="{ out: animationToggle}"
           v-if="toggleCover"
           @click="pickFile"
           @mouseout="handleToggleOut" 

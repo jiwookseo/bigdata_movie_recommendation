@@ -36,7 +36,6 @@ export default {
   watch: {
     select() {
       if (this.select) {
-        console.log(this.select);
         if (this.type === "Age")
           this.$store.commit("movie/setSelectedAge", this.select);
         else if (this.type === "Occupation")

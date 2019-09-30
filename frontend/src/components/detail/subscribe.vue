@@ -9,7 +9,7 @@
 import { mapState, mapActions } from "vuex";
 
 export default {
-  name: "subscribe",
+  name: "Subscribe",
   props: {
     newSub: {
       type: Function,
