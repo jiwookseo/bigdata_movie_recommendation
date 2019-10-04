@@ -27,6 +27,7 @@ from sklearn.exceptions import ConvergenceWarning
 
 
 # User Clustering
+# Algorithms : K-Means, Hierarchy, EM
 @api_view(['POST'])
 def user_clustering(request):
     users_data = create_rating_matrix('u')

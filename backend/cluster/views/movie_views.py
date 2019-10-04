@@ -26,6 +26,7 @@ from sklearn.exceptions import ConvergenceWarning
 
 # 영화 페이지의 유사한 영화 데이터 생성
 # Movie Clustering
+# Algorithms : K-Means, Hierarchy, EM
 @api_view(['POST'])
 def movie_clustering(request):
     movies_data = create_rating_matrix('m')
