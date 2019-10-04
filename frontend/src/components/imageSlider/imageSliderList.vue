@@ -1,11 +1,7 @@
 <template>
   <div class="image-slider__list">
     <div class="image-slider__title">
-      <ImageSliderTitle
-        :data="data"
-        :sliderType="sliderType"
-        :type="type"
-      />
+      <ImageSliderTitle :data="data" :sliderType="sliderType" :type="type" />
     </div>
     <div class="image-slider__wrapper">
       <div class="image-slider__box" :style="{ transform: 'translateX(' + slideNum * 16 +'vw)' }">
@@ -16,7 +12,6 @@
           :type="type"
           :expand="expand"
           :related="related"
-          class="image-slider__item"
         />
       </div>
       <div v-if="slideNum != 0" class="image-slider__arrow-left" @click="handleClick(1)">
@@ -31,7 +26,7 @@
       <subscribe />
     </div>
     <transition name="bounce">
-      <ImageItemDetail v-if="expand && toggleDetail" :related="related" />
+      <ImageItemDetail v-if="expand && toggleDetail" :related="related" :reload="checkRelated" />
     </transition>
   </div>
 </template>
@@ -50,18 +45,24 @@ export default {
     data: { type: Object, default: () => ({ type: "연령대" }) },
     sliderType: { type: String, default: () => ""},
     expand: { type: Boolean, default: () => true},
-    related: {type: Boolean, default: false}
+    related: {type: String, default: ""},
+    changeRelated: {type: Function, default: () => {}}
   },
   data() {
     return {
       slideNum: 0,
       detailToggle: false,
-      selected: 18,
       loadAble: true
     };
   },
   computed: {
     ...mapGetters("mvUi", ["detailToggler", "detailType"]),
+    selected() {
+      if (this.type === "Age") return this.$store.getters["movie/selectedAge"];
+      else if (this.type === "Occupation")
+        return this.$store.getters["movie/selectedOccupation"];
+      else return this.$store.getters["movie/selectedGender"];
+    },
     type() {
       if (this.data.type === "연령대") {
         return "Age";
@@ -82,7 +83,7 @@ export default {
             movie.poster ||
             "https://files.slack.com/files-pri/TMJ2GPC23-FMF2L2DQA/599637c326f7d273826d.jpg"
         }));
-      } else if (this.$store.state.mvUi.sliderType === "profile") {
+      } else if (this.$store.state.mvUi.sliderType === "profile" && this.related !== "") {
         return this.$store.getters["user/ratings"].map(movie => ({
           ...movie,
           description: movie.story.slice(0, 500),
@@ -100,6 +101,9 @@ export default {
   },
   watch: {
     movieList() {
+      if (this.movieList.length === 10) {
+        this.slideNum = 0;
+      }
       this.loadAble = true;
     }
   },
@@ -117,6 +121,11 @@ export default {
     load: function() {
       this.$store.dispatch(`movie/getRecBy${this.type}`, this.selected);
     },
+    checkRelated(check) {
+      if (check === true) {
+        this.changeRelated(true);
+      }
+    }
   }
 };
 </script>
@@ -183,15 +192,31 @@ export default {
   animation: bounce-out 0.4s;
 }
 @keyframes bounce-in {
-  0% { transform: scale(0); }
-  50% { transform: scale(1.3); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 @keyframes bounce-out {
-  0% { transform: scaleY(0.8); }
-  25% { transform: scaleY(0.6); }
-  50% { transform: scaleY(0.4); }
-  75% { transform: scaleY(0.2); }
-  100% { transform: scaleY(0); }
+  0% {
+    transform: scaleY(0.8);
+  }
+  25% {
+    transform: scaleY(0.6);
+  }
+  50% {
+    transform: scaleY(0.4);
+  }
+  75% {
+    transform: scaleY(0.2);
+  }
+  100% {
+    transform: scaleY(0);
+  }
 }
 </style>

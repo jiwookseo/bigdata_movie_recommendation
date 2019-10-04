@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from imagekit.models import ProcessedImageField, ImageSpecField
 from imagekit.processors import ResizeToFill
+import datetime
 
 
 def image_path(instance, filename):
@@ -16,7 +17,7 @@ class User(AbstractUser):
     cluster = models.IntegerField(default=-1)
     refresh_token = models.TextField(default="")
     subscribe = models.BooleanField(default=False)
-    subscribe_at = models.DateTimeField(null=True, blank=True)
+    subscribe_at = models.DateTimeField(default=datetime.datetime(2019, 1, 1, 0, 0, 0, 0))
     image = ProcessedImageField(
         upload_to=image_path,
         processors=[ResizeToFill(width=150, height=150, upscale=True)],

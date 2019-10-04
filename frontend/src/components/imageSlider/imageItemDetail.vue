@@ -13,7 +13,7 @@
       <div class="detail--score">
         <span>평균별점</span>
         <span>{{ movie.rating }}</span>
-        <rating-user v-if="username" :id="movie.id" :username="username" />
+        <rating-user v-if="isLogin" :movie-id="movie.id" />
       </div>
       <div v-if="active.base" class="detail--description">
         <p>{{ ellipsisDescription }}</p>
@@ -39,10 +39,14 @@
           </span>
         </div>
       </div>
+      <div v-if="active.subscribe" class="detail--subscribe">
+        <subscribe :new-sub="checkSubscribe" />
+      </div>
     </div>
     <div class="detail--movie-menu">
       <span :class="{ active: active.base }" @click="handleActive('base')">기본 정보</span>
-      <span v-if="related" :class="{ active: active.cluster }" @click="handleActive('cluster')">비슷한 작품</span>
+      <span v-if="relatedCheck" :class="{ active: active.cluster }" @click="handleActive('cluster')">비슷한 작품</span>
+      <span v-else :class="{ active: active.subscribe }" @click="handleActive('subscribe')">비슷한 작품</span>
     </div>
   </div>
 </template>
@@ -55,28 +59,33 @@ import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 library.add(faArrowLeft, faArrowRight);
 
 import ImageRelated from "./imageRelated";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
+import Subscribe from "../detail/subscribe";
 export default {
   name: "ImageItemDetail",
-  components: { ImageRelated, FontAwesomeIcon, ratingUser },
-  props: {related: {type: Boolean, default: false}},
+  components: {Subscribe, ImageRelated, FontAwesomeIcon, ratingUser },
+  props: {related: {type: String, default: ""}, reload: {type: Function, default: () => {}}},
   data() {
     return {
       active: {
         base: true,
-        cluster: false
+        cluster: false,
+        subscribe: false
       },
-      slideIndex: 0
+      slideIndex: 0,
+      relatedCheck: false,
+      rating: 0
     };
   },
   computed: {
+    ...mapState({isLogin: state => state.user.isLogin,}),
     movie: function() {
       return this.$store.state.mvUi.activateMovie;
     },
     classChanger: function() {
       return {
         base: this.active.base,
-        cluster: this.active.cluster
+        cluster: this.active.cluster || this.active.subscribe
       };
     },
     ellipsisDescription() {
@@ -85,7 +94,7 @@ export default {
       return temp.join(" ") + "...";
     },
     relativeMovie() {
-      if (this.related) {
+      if (this.related !== "") {
         return this.$store.getters[`mvUi/relatedMovie`].map(movie => ({
           ...movie,
           description: movie.story.slice(0, 100),
@@ -97,22 +106,11 @@ export default {
       }
     },
     ...mapGetters("user", ["username"]),
+    ...mapState({getSubscribe: state => Boolean(state.user.subscribe)})
   },
-  methods: {
-    handleToggle: function() {
-      this.$store.dispatch("mvUi/setDetailToggler");
-    },
-    handleActive: function(state) {
-      if (state === "base") {
-        this.active.base = true;
-        this.active.cluster = false;
-      } else {
-        this.active.cluster = true;
-        this.active.base = false;
-      }
-    },
-    handleClick: function(n) {
-      this.slideIndex = this.slideIndex + n;
+  watch: {
+    getSubscribe: function () {
+      this.chk();
     }
   },
   mounted() {
@@ -128,6 +126,43 @@ export default {
         left: 0,
         top: this.$refs.detailView.clientHeight - 400
       });
+    }
+    this.chk();
+  },
+  methods: {
+    handleToggle: function() {
+      this.$store.dispatch("mvUi/setDetailToggler");
+    },
+    handleActive: function(state) {
+      if (state === "base") {
+        this.active.base = true;
+        this.active.cluster = false;
+        this.active.subscribe = false;
+      } else if (state === "cluster") {
+        this.active.cluster = true;
+        this.active.base = false;
+        this.active.subscribe = false;
+      } else {
+        this.active.subscribe = true;
+        this.active.cluster = false;
+        this.active.base = false;
+      }
+    },
+    handleClick: function(n) {
+      this.slideIndex = this.slideIndex + n;
+    },
+    chk() {
+      if (this.related === "board" || this.related === "profile") {
+        this.relatedCheck = true;
+      } else {
+        this.relatedCheck = false;
+      }
+    },
+    checkSubscribe(check) {
+      if (check === true) {
+        this.handleToggle();
+        this.reload(true);
+      }
     }
   }
 };
@@ -210,24 +245,25 @@ export default {
   span {
     font-weight: 700;
     font-size: 18px;
-    padding: 5px;
+    padding: 5px 10px;
+    letter-spacing: 1.8px;
 
-    &:first-child {
-      border: 1px solid #fff;
-      background-color: #111;
-      color: #fff;
-    }
-
-    &:nth-child(2) {
-      background-color: #fff;
-      color: #111;
-      border: 1px solid #fff;
-    }
+  &:first-child {
+    border: 1px solid #fff;
+    background-color: #111;
+    color: #fff;
   }
 
-  div {
+  &:nth-child(2) {
+    background-color: #fff;
+    color: #111;
+    border: 1px solid #fff;
   }
 }
+
+  
+}
+
 
 .detail--description {
   padding: 30px 20px 0 40px;
@@ -259,7 +295,7 @@ export default {
 
 .detail--related-movie {
   position: relative;
-  margin-top: 80px;
+  margin-top: 40px;
   max-width: 100%;
 }
 
@@ -328,5 +364,11 @@ export default {
   span + span {
     margin-left: 50px;
   }
+}
+.detail--subscribe {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 </style>

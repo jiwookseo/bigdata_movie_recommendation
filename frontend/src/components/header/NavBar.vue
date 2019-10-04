@@ -7,7 +7,9 @@
     </div>
     <div class="nav__icon-bar">
       <span>
-        <font-awesome-icon icon="search" size="2x" />
+        <router-link to="/search">
+          <font-awesome-icon icon="search" size="2x" />
+        </router-link>
       </span>
 
       <span v-if="!isLogin">
@@ -47,6 +49,13 @@ export default {
   components: {
     FontAwesomeIcon
   },
+  watch: {
+    isLogin: function() {
+      if (this.isLogin === false) {
+        this.redirectHome();
+      }
+    }
+  },
   data: () => ({
     userState: false,
     profile: "profile",
@@ -65,7 +74,6 @@ export default {
         username: this.username
       };
       await this.logout(params);
-      this.redirectHome();
     },
     redirectHome() {
       this.$router.push("/");
@@ -109,10 +117,11 @@ export default {
 
   span {
     cursor: pointer;
-    color: rgba(255, 177, 1, 0.7);
-
-    &:hover {
-      color: rgb(255, 177, 1);
+    svg {
+      color: rgba(255, 177, 1, 0.7);
+      &:hover {
+        color: rgb(255, 177, 1);
+      }
     }
   }
 }

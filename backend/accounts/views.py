@@ -49,50 +49,45 @@ def user_detail(request, username):
     if request.method == "PUT":
         token = request.data.get("token", None)
         req_name = request.data.get("username", None)
-        if req_name != None:
+        if req_name:
             req_user = get_object_or_404(User, username=req_name)
 
-            if token != req_user.refresh_token:
-                user.refresh_token = ""
-                user.save()
-                auth_logout(request)
-                return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+            if token == req_user.refresh_token:
+                if username != req_name:
+                    if not req_user.is_staff:
+                        return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
-            if username != req_name:
-                if not req_user.is_staff:
-                    return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+                response = verify_token(token)
+                if response.status_code != 200:
+                    response = refresh_token(token)
+                    if response.status_code == 200:
+                        new_token = json.loads(response.text)["token"]
+                        req_user.refresh_token = new_token
 
-            response = verify_token(token)
-            if response.status_code != 200:
-                response = refresh_token(token)
-                if response.status_code == 200:
-                    new_token = json.loads(response.text)["token"]
-                    req_user.refresh_token = new_token
-
-            if response and response.status_code == 200:
-                change = request.data.get("changeInfo", None)
-                pw = request.data.get("pw", None)
-                if change:
-                    form = CustomUserChangeForm(instance=user, data=change)
-                    if form.is_valid():
-                        form.save()
-                    else:
-                        error = form.errors.get_json_data()
-                        return Response(data=error, status=status.HTTP_200_OK)
-                elif pw:
-                    original = pw["original"]
-                    if check_password(original, req_user.password):
-                        if pw["new1"] == pw["new2"]:
-                            req_user.set_password(pw["new1"])
-                            req_user.save()
-                            auth_login(request, req_user)
+                if response and response.status_code == 200:
+                    change = request.data.get("changeInfo", None)
+                    pw = request.data.get("pw", None)
+                    if change:
+                        form = CustomUserChangeForm(instance=user, data=change)
+                        if form.is_valid():
+                            form.save()
                         else:
-                            return Response(data={"error": "새 비밀번호가 틀렸습니다."}, status=status.HTTP_200_OK)
+                            error = form.errors.get_json_data()
+                            return Response(data=error, status=status.HTTP_200_OK)
+                    elif pw:
+                        original = pw["original"]
+                        if check_password(original, req_user.password):
+                            if pw["new1"] == pw["new2"]:
+                                req_user.set_password(pw["new1"])
+                                req_user.save()
+                                auth_login(request, req_user)
+                            else:
+                                return Response(data={"error": "새 비밀번호가 틀렸습니다."}, status=status.HTTP_200_OK)
+                        else:
+                            return Response(data={"error": "현재 비밀번호가 틀렸습니다."}, status=status.HTTP_200_OK)
                     else:
-                        return Response(data={"error": "현재 비밀번호가 틀렸습니다."}, status=status.HTTP_200_OK)
-                else:
-                    return Response(data={"error": "입력된 값이 없습니다."}, status=status.HTTP_204_NO_CONTENT)
-                return Response(status=status.HTTP_202_ACCEPTED)
+                        return Response(data={"error": "입력된 값이 없습니다."}, status=status.HTTP_204_NO_CONTENT)
+                    return Response(status=status.HTTP_202_ACCEPTED)
             req_user.refresh_token = ""
             req_user.save()
             auth_logout(request)
@@ -103,29 +98,24 @@ def user_detail(request, username):
         token = request.data.get("token", None)
         req_name = request.data.get("username", None)
 
-        if req_name != None:
+        if req_name:
             req_user = get_object_or_404(User, username=req_name)
 
-            if token != req_user.refresh_token:
-                user.refresh_token = ""
-                user.save()
-                auth_logout(request)
-                return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+            if token == req_user.refresh_token:
+                if username != req_name:
+                    if not req_user.is_staff:
+                        return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
-            if username != req_name:
-                if not req_user.is_staff:
-                    return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+                response = verify_token(token)
+                if response.status_code != 200:
+                    response = refresh_token(token)
+                    if response.status_code == 200:
+                        new_token = json.loads(response.text)["token"]
+                        req_user.refresh_token = new_token
 
-            response = verify_token(token)
-            if response.status_code != 200:
-                response = refresh_token(token)
-                if response.status_code == 200:
-                    new_token = json.loads(response.text)["token"]
-                    req_user.refresh_token = new_token
-
-            if response and response.status_code == 200:
-                user.delete()
-                return Response(status=status.HTTP_202_ACCEPTED)
+                if response and response.status_code == 200:
+                    user.delete()
+                    return Response(status=status.HTTP_202_ACCEPTED)
 
             user.refresh_token = ""
             user.save()
@@ -141,7 +131,6 @@ def user_ratings(request, username):
     if id:
         movie = get_object_or_404(Movie, id=id)
         rating = user.ratings.filter(movie=movie)
-
         serializer = RatingSerializer(rating, many=True)
         return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
 
@@ -177,12 +166,39 @@ def related_users(request, username):
     serializer = UserSerializer(related_users, many=True)
     return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
 
+@api_view(["POST"])
+def subscribe(request):
+    username = request.data.get("username", None)
+    token = request.data.get("token", None)
+
+    user = get_object_or_404(User, username=username)
+
+    if token == user.refresh_token:
+        response = verify_token(token)
+        if response.status_code != 200:
+            response = refresh_token(token)
+            if response.status_code == 200:
+                new_token = json.loads(response.text)["token"]
+                user.refresh_token = new_token
+
+        if response and response.status_code == 200:
+            if user.subscribe:
+                if datetime.datetime.now() - user.subscribe_at < datetime.timedelta(30):
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+            user.subscribe = True
+            user.subscribe_at = datetime.datetime.now()
+            user.save()
+            return Response(status=status.HTTP_202_ACCEPTED)
+    user.refresh_token = ""
+    user.save()
+    auth_logout(request)
+    return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 @api_view(["POST"])
 def login(request):
     user = request.data.get("login", None)
     admin = request.data.get("admin", None)
-    print(request.data)
     form = CustomUserAuthenticationForm(request, data=user)
     if form.is_valid():
 
@@ -196,9 +212,9 @@ def login(request):
         user = form.get_user()
         user.refresh_token = token
 
-        # if user.subscribe:
-        #     if datetime.datetime.now() - user.subscribe_at > datetime.timedelta(30):
-        #         user.subscribe = False
+        if user.subscribe:
+            if datetime.datetime.now() - user.subscribe_at > datetime.timedelta(30):
+                user.subscribe = False
 
         user.save()
 
@@ -214,14 +230,12 @@ def login(request):
         return Response(data=response, status=status.HTTP_202_ACCEPTED)
     else:
         error = form.errors.get_json_data()
-        print(error)
         return Response(data=error, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
 @login_required
 @api_view(["POST"])
 def logout(request):
-    print(request.data)
     username = request.data.get("username", None)
     user = get_object_or_404(User, username=username)
     user.refresh_token = ""
