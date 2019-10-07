@@ -9,6 +9,7 @@ venv/
 .ipynb_checkpoints/
 migrations/
 media/
+.static_root/
 
 # local env files
 .env.local
