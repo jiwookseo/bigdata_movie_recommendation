@@ -21,11 +21,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*gj75=l@zkh1!c5(@-17gfex5$aq1j_bwqgbbzm-n2faj)*m6v'
+SECRET_KEY = os.environ.get('DJANGO_SECRET', '*gj75=l@zkh1!c5(@-17gfex5$aq1j_bwqgbbzm-n2faj)*m6v')
 SECRET = "honeybee"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -103,13 +103,10 @@ DATABASES = {
 }
 
 # cors
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 # 배포시
-# CORS_ORIGIN_WHITELIST = [
-#     "localhost:8080",
-#     "127.0.0.1:8080"
-# ]
+CORS_ORIGIN_WHITELIST = ["http://52.78.81.59"]
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -149,6 +146,11 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '.static_root')
+
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+            STATIC_DIR,
+            ]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
