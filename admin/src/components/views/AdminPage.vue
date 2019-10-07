@@ -1,5 +1,8 @@
 <template>
   <div class="content-container">
+    <div v-if="isLoading" class="loader-container">
+      <loader />
+    </div>
     <div class="data-controller-container">
       <!-- Collaborative Filtering -->
       <collaborative-filtering-form />
@@ -37,6 +40,7 @@ import SearchForm from "../module/SearchForm";
 import ClusteringForm from "../module/ClusteringForm";
 import RefreshRecommendations from "../module/RefreshRecommendations";
 import CollaborativeFilteringForm from '../module/CollaborativeFilteringForm';
+import Loader from '../module/Loader';
 
 export default {
   components: {
@@ -44,11 +48,15 @@ export default {
     ClusteringForm,
     RefreshRecommendations,
     CollaborativeFilteringForm,
+    Loader,
   },
   data() {
     return {
       data: "movie"
     };
+  },
+  computed: {
+    ...mapState("loader", ["isLoading"]),
   },
   methods: {
     ...mapActions("movie", ["searchMovies", "clusteringMovies"]),
@@ -78,6 +86,16 @@ export default {
 <style scoped lang="scss">
 .content-container {
   padding: 30px;
+}
+
+.loader-container {
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .clustering_button {

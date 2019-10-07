@@ -15,18 +15,21 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 
 export default {
   methods: {
     ...mapActions('user', ['collaborativeFiltering']),
+    ...mapMutations('loader', ['toggleLoader']),
 
-    filtering() {
+    async filtering() {
       const params = {
         method: this.$refs.method.value
       }
-      if (params) {
-        this.collaborativeFiltering(params);
+      if (params.method) {
+        this.toggleLoader()
+        await this.collaborativeFiltering(params);
+        this.toggleLoader()
       } else {
         alert('메소드를 선택해주세요')
       }

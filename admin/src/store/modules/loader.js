@@ -1,10 +1,10 @@
 const state = {
-  isActive: false
+  isLoading: false
 };
 
 const mutations = {
   toggleLoader(state) {
-    state.isActive = !state.isActive
+    state.isLoading = !state.isLoading
   }
 }
 

@@ -73,6 +73,13 @@ def user_clustering(request):
 # Algorithms : KNN(Movie Based, User Based), MF
 @api_view(['POST'])
 def recommended_movies(request):
+    # 기존 추천 영화 데이터 삭제하기
+    recm_movies = RecommendedMovie.objects.all()
+    for movie in recm_movies:
+        movie.delete()
+    print("기존 추천 데이터 삭제 완료")
+
+
     # method : 사용할 알고리즘
     # nm : 영화 수, number of movies
     # nu : 유저 수, number of users

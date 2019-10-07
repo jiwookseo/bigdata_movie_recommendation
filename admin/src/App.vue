@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="[ isLoading? 'is-loading' : '' ]">
     <!-- NavBar -->
     <div class="navbar">
       <div class="navbar-title"><i class="fas fa-user-shield"></i> ADMIN PAGE</div>
@@ -32,6 +32,7 @@ export default {
     ...mapState({getStaff: state => state.user.checkStaff}),
     ...mapState({getError: state => state.user.logErrors}),
     ...mapState({getUsername: state => state.user.username}),
+    ...mapState('loader', ['isLoading']),
   },
   watch: {
     getStaff: function() {
@@ -100,6 +101,10 @@ export default {
 
 ul {
   list-style-type: none;
+}
+
+.is-loading {
+  opacity: 0.5;
 }
 
 .navbar {
