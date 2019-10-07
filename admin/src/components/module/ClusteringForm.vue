@@ -12,35 +12,37 @@
     <div class="clustering-form-k">
       <input ref="k" type="number" step="1" min="2" max="10">
     </div>
-    <div class="clustering-form-button">
-      <v-btn class="clustering_button" @click="clustering">clustering</v-btn>
+    <div>
+      <v-btn @click="clustering">clustering</v-btn>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 
 export default {
   props: ['data'],
   methods: {
     ...mapActions('movie', ['clusteringMovies']),
     ...mapActions('user', ['clusteringUsers']),
+    ...mapMutations('loader', ['toggleLoader']),
 
-    clustering() {
+    async clustering() {
       const params = {
         method: this.$refs.method.value,
         k: parseInt(this.$refs.k.value)
       }
 
       if (params.method && params.k) {
+        this.toggleLoader();
         if (this.data === 'movie') {
-          this.clusteringMovies(params)
+          await this.clusteringMovies(params)
         }
         if (this.data === 'user') {
-          this.clusteringUsers(params)
+          await this.clusteringUsers(params)
         } 
-
+        this.toggleLoader();
       } else {
         alert("인자를 설정해주세요. (Method / K)")
       }

@@ -72,14 +72,22 @@ def user_clustering(request):
 # 사용자 별 맞춤 영화 데이터 생성
 # Algorithms : KNN(Movie Based, User Based), MF
 @api_view(['POST'])
-def recommended_movies(request, method):
-    
+def recommended_movies(request):
+    # 기존 추천 영화 데이터 삭제하기
+    recm_movies = RecommendedMovie.objects.all()
+    for movie in recm_movies:
+        movie.delete()
+    print("기존 추천 데이터 삭제 완료")
+
+
+    # method : 사용할 알고리즘
     # nm : 영화 수, number of movies
     # nu : 유저 수, number of users
     # K : 유사한 데이터를 의미하는 Neighbor의 수
     # R : 사용자 별 영화에 대한 평점 행렬, user-rating matrix
     # R_trans : 영화 별 사용자에 대한 평점 행렬, movie-rating matrix
     # R_pred : 사용자 별 영화에 대한 예상 평점(선호도) 행렬
+    method = request.data.get('method')
     nm = Movie.objects.last().id
     nu = User.objects.last().id
     k = 10
