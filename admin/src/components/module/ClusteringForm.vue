@@ -12,8 +12,8 @@
     <div class="clustering-form-k">
       <input ref="k" type="number" step="1" min="2" max="10">
     </div>
-    <div class="clustering-form-button">
-      <v-btn class="clustering_button" @click="clustering">clustering</v-btn>
+    <div>
+      <v-btn @click="clustering">clustering</v-btn>
     </div>
   </div>
 </template>

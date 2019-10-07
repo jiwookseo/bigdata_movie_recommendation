@@ -55,13 +55,21 @@ export default {
   // Clustering
   clusteringMovies(params) {
     return axios.post(`${clusterUrl}/movies/`,
-        params,
+      params,
     )
   },
 
   clusteringUsers(params) {
     return axios.post(`${clusterUrl}/users/`,
-        params,
+      params,
     )
   },
+
+  // Collaborative Filtering
+  collaborativeFiltering(params) {
+    // console.log("check")
+    return axios.post(`${clusterUrl}/users/recommended_movies/`, 
+      params,
+    )
+  }
 }

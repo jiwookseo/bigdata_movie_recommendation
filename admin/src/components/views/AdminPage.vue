@@ -1,12 +1,14 @@
 <template>
   <div class="content-container">
     <div class="data-controller-container">
-      <!-- Search Form -->
-      <search-form :submit="searchMovies" />
+      <!-- Collaborative Filtering -->
+      <collaborative-filtering-form />
       <!-- Recommendations -->
       <refresh-recommendations />
       <!-- Clustering -->
       <clustering-form :data="data" />
+      <!-- Search Form -->
+      <!-- <search-form :submit="searchMovies" /> -->
     </div>
 
     <div class="data-list-container">
@@ -34,12 +36,14 @@ import { mapState, mapActions } from "vuex";
 import SearchForm from "../module/SearchForm";
 import ClusteringForm from "../module/ClusteringForm";
 import RefreshRecommendations from "../module/RefreshRecommendations";
+import CollaborativeFilteringForm from '../module/CollaborativeFilteringForm';
 
 export default {
   components: {
     SearchForm,
     ClusteringForm,
-    RefreshRecommendations
+    RefreshRecommendations,
+    CollaborativeFilteringForm,
   },
   data() {
     return {

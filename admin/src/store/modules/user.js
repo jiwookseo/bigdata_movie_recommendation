@@ -45,12 +45,22 @@ const actions = {
     }
   },
 
+  // Clustering User
   async clusteringUsers({ commit }, params) {
     try {
       const response = await api.clusteringUsers(params);
-      // console.log(response.status);
+      console.log(response.status);
     } catch (error) {
-      // console.log(error);
+      console.log(error);
+    }
+  },
+
+  async collaborativeFiltering({ commit }, params) {
+    try {
+      const response = await api.collaborativeFiltering(params);
+      console.log(response.status);
+    } catch(error) {
+      console.log(error);
     }
   },
 
@@ -63,6 +73,8 @@ const actions = {
     }
   },
 
+
+  // Edit, Delete User Infomation
   async editUserInfo({ commit }, params) {
     const username = params.name;
     const res = await api.editUser(username, params);
@@ -91,7 +103,8 @@ const actions = {
     }
   },
 
-  // login
+
+  // Authentication
   async setLogin({ commit }, params) {
     const res = await api.login(params);
     if (res.status === 202 && res.data.is_staff) {
