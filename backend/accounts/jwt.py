@@ -1,6 +1,7 @@
-import requests, json
+import requests
+import json
 
-BASE_URL = "http://localhost:8000/api/token/"
+BASE_URL = "http://52.78.81.59:8000/api/token/"
 headers = {'content-type': 'application/json'}
 
 

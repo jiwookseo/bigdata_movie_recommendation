@@ -59,7 +59,7 @@ export default {
   data: () => ({
     userState: false,
     profile: "profile",
-    admin: "http://localhost:8081/admin"
+    admin: "http://52.78.81.59:8081/admin"
   }),
   computed: {
     ...mapGetters("user", ["isLogin", "username"])
