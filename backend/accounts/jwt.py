@@ -1,4 +1,5 @@
-import requests, json
+import requests
+import json
 
 BASE_URL = "http://localhost:8000/api/token/"
 headers = {'content-type': 'application/json'}

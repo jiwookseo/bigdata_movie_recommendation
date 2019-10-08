@@ -12,25 +12,25 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import datetime
+import json
+
+production = os.environ.get("NODE_ENV", False)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*gj75=l@zkh1!c5(@-17gfex5$aq1j_bwqgbbzm-n2faj)*m6v'
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET", '*gj75=l@zkh1!c5(@-17gfex5$aq1j_bwqgbbzm-n2faj)*m6v')
 SECRET = "honeybee"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False if production else True
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '52.78.81.59'
-]
+ALLOWED_HOSTS = ['52.78.81.59'] if production else ['localhost']
 
 
 # Application definition
@@ -103,13 +103,12 @@ DATABASES = {
 }
 
 # cors
-CORS_ORIGIN_ALLOW_ALL = True
+
+# CORS_ORIGIN_ALLOW_ALL = True
+
 CORS_ALLOW_CREDENTIALS = True
-# 배포시
-# CORS_ORIGIN_WHITELIST = [
-#     "localhost:8080",
-#     "127.0.0.1:8080"
-# ]
+CORS_ORIGIN_WHITELIST = ['http://52.78.81.59:8080', 'http://52.78.81.59:8081'] if production else [
+    'http://localhost:8080', 'http://localhost:8081']
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -149,6 +148,11 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '.static_root')
+
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

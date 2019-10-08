@@ -1,0 +1,15 @@
+[Unit]
+Description=uWSGI service
+After=syslog.target
+
+[Service]
+ExecStart=/home/ubuntu/.pyenv/versions/bigdata-env/bin/uwsgi -i /srv/bigdata-sub3/backend/.config/uwsgi/bigdata-sub3.ini
+
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
