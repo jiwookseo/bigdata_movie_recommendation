@@ -107,9 +107,11 @@ DATABASES = {
 }
 
 # cors
+
 # CORS_ORIGIN_ALLOW_ALL = True
+
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = config_secret_deploy.get('cors_origin_whitelist', ["localhost:8080"])
+CORS_ORIGIN_WHITELIST = config_secret_deploy.get('cors_origin_whitelist', ["localhost"])
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
