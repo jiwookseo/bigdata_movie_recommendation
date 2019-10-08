@@ -52,7 +52,7 @@
 <script>
   import { mapState } from "vuex";
   import UserInfoBar from './UserInfoBar'
-  import DataList from '../../mixin/components/DataList'
+  import Pagenation from '../../mixin/components/Pagenation'
 
 export default {
   components: {
@@ -82,10 +82,10 @@ export default {
       this.dataList[idx]["is_staff"] = info["is_staff"];
     }
   },
-  mixins: [ DataList ]
+  mixins: [ Pagenation ]
 };
 </script>
 
 <style scoped lang="scss">
-  @import "@/mixin/style/_datalist";
+  @import "@/mixin/style/_pagenation";
 </style>
