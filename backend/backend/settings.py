@@ -12,25 +12,29 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import datetime
+import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+CONFIG_SECRET_DIR = os.path.join(BASE_DIR, '.secret')
+CONFIG_SECRET_DEPLOY_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings.json')
+config_secret_deploy = json.loads(open(CONFIG_SECRET_DEPLOY_FILE).read())
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET', '*gj75=l@zkh1!c5(@-17gfex5$aq1j_bwqgbbzm-n2faj)*m6v')
+SECRET_KEY = config_secret_deploy.get('secret_key', '*gj75=l@zkh1!c5(@-17gfex5$aq1j_bwqgbbzm-n2faj)*m6v')
 SECRET = "honeybee"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+DEBUG = bool(config_secret_deploy.get('debug', True))
 
-ALLOWED_HOSTS = [
+ALLOWED_HOSTS = config_secret_deploy.get('allowed_hosts',[
     'localhost',
     '52.78.81.59'
-]
+])
 
 
 # Application definition
@@ -105,8 +109,7 @@ DATABASES = {
 # cors
 # CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-# 배포시
-CORS_ORIGIN_WHITELIST = ["http://52.78.81.59"]
+CORS_ORIGIN_WHITELIST = config_secret_deploy.get('cors_origin_whitelist', ["localhost:8080"])
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -149,8 +152,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, '.static_root')
 
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-            STATIC_DIR,
-            ]
+        STATIC_DIR,
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
