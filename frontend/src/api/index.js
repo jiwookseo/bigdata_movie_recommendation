@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "/api";
+const BASE_URL = "http://52.78.81.59:8000/api";
 
 export default {
   // Movies
