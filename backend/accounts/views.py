@@ -1,18 +1,31 @@
+# python, django libraries
+import json, datetime
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
+
+# authentication
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
+from .jwt import create_token, verify_token, refresh_token
+
+# rest_framework
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from api.serializers import MovieSerializer, RatingSerializer
-from .jwt import create_token, verify_token, refresh_token
-from .serializers import UserSerializer
+
+# Model
 from .models import User
 from api.models import Movie
+from cluster.models import RecommendedMovie
+
+# Form, Serializer
 from .forms import CustomUserAuthenticationForm, CustomUserCreateForm, CustomUserChangeForm
-from django.db.models import Q
-import json, datetime
+from api.serializers import MovieSerializer, RatingSerializer
+from .serializers import UserSerializer
+
+
+
 
 
 # 회원가입
@@ -243,3 +256,22 @@ def logout(request):
 
     auth_logout(request)
     return Response(status=status.HTTP_202_ACCEPTED)
+
+
+
+# 사용자 별 맞춤 추천영화
+# @login_required
+@api_view(['GET'])
+def recommended_movies(request, username):
+    query = Q()
+
+    user = get_object_or_404(User, username=username)
+    recommended_movies_data = RecommendedMovie.objects.filter(user=user).values('movie')[:3]
+
+    for data in recommended_movies_data:
+        query.add(Q(pk__exact=data['movie']), query.OR)
+
+    recommended_movies = Movie.objects.filter(query)
+    serializer = MovieSerializer(recommended_movies, many=True)
+    return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
+        
