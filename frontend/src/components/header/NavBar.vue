@@ -59,7 +59,10 @@ export default {
   data: () => ({
     userState: false,
     profile: "profile",
-    admin: "http://52.78.81.59:8081/admin"
+    admin:
+      process.env.NODE_ENV === "production"
+        ? "http://52.78.81.59:8001/admin"
+        : "http://localhost:8001/admin"
   }),
   computed: {
     ...mapGetters("user", ["isLogin", "username"])

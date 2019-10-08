@@ -1,7 +1,10 @@
 import axios from "axios";
 
-const apiUrl = "http://52.78.81.59:8000/api";
-const clusterUrl = "http://52.78.81.59:8000/cluster";
+const apiUrl =
+  process.env.NODE_ENV === "production"
+    ? "http://52.78.81.59:8000/api"
+    : "http://localhost:8000/api";
+const clusterUrl = "/cluster";
 
 export default {
   // Movies

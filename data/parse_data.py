@@ -1,7 +1,9 @@
 import requests
 import json
+import os
 
-API_URL = 'http://52.78.81.59:8000/api/'
+production = os.environ.get("NODE_ENV", False)
+API_URL = 'http://52.78.81.59:8000/api/' if production else 'http://localhost:8000/api/'
 headers = {'content-type': 'application/json'}
 
 
