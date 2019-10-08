@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = "/api";
+const apiUrl = "http://52.78.81.59:8000/api";
 const clusterUrl = "http://52.78.81.59:8000/cluster";
 
 export default {
