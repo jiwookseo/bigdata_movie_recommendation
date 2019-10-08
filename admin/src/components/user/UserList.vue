@@ -87,5 +87,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  @import "@/mixin/style/_pagenation";
+@import "@/mixin/style/_pagenation";
 </style>
