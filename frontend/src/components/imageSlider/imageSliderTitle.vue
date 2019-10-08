@@ -1,7 +1,7 @@
 <template>
   <div class="image-slider__title">
     <h2 v-if="sliderType==='board'">
-      <select v-model="selected" name="target">
+      <select v-model="select" name="target">
         <option class="movie-option" value>{{ data.type }} 선택</option>
         <option
           class="movie-option"
@@ -11,7 +11,7 @@
         >{{ key }}</option>
       </select> 좋아하는 영화
     </h2>
-      <h2 v-if="sliderType==='profile'">{{ data.type }}</h2>
+    <h2 v-if="sliderType==='profile'">{{ data.type }}</h2>
   </div>
 </template>
 
@@ -19,17 +19,30 @@
 export default {
   name: "ImageSliderTitle",
   props: ["data", "sliderType", "type"],
-  data() { return { selected: 18, }; },
-  watch: {
+  data() {
+    return { select: "" };
+  },
+  computed: {
     selected() {
-      if (this.selected !== "") this.load();
-    },
+      if (this.type === "Age") return this.$store.getters["movie/selectedAge"];
+      else if (this.type === "Occupation")
+        return this.$store.getters["movie/selectedOccupation"];
+      else return this.$store.getters["movie/selectedGender"];
+    }
   },
   mounted() {
-    if (this.type === "Age") {
-      this.selected = "1";
-    } else {
-      this.selected = this.type === "Occupation" ? "programmer" : "M";
+    this.select = this.selected;
+  },
+  watch: {
+    select() {
+      if (this.select) {
+        if (this.type === "Age")
+          this.$store.commit("movie/setSelectedAge", this.select);
+        else if (this.type === "Occupation")
+          this.$store.commit("movie/setSelectedOccupation", this.select);
+        else this.$store.commit("movie/setSelectedGender", this.select);
+        this.load();
+      }
     }
   },
   methods: {
@@ -37,8 +50,7 @@ export default {
       this.$store.dispatch(`movie/getRecBy${this.type}`, this.selected);
     }
   }
-
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -90,5 +102,4 @@ export default {
     }
   }
 }
-
 </style>

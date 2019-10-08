@@ -3,34 +3,43 @@ import axios from "axios";
 const BASE_URL = "/api";
 
 export default {
+  // Movies
   searchMovies(params) {
-    return axios.get(`${BASE_URL}/movies/`, {
-      params
-    });
+    return axios.get(`${BASE_URL}/movies/`, { params });
   },
   getMovie(id) {
     return axios.get(`${BASE_URL}/movies/${id}/`);
   },
-  getAudience(id) {
-    return axios.get(`${BASE_URL}/movies/${id}/ratings/`);
+  getAudience(id, params) {
+    return axios.get(`${BASE_URL}/movies/${id}/ratings/`, { params });
   },
   getFollowers(id) {
     return axios.get(`${BASE_URL}/movies/${id}/followers/`);
   },
-  follow(id) {
-    return axios.post(`${BASE_URL}/movies/${id}/followers/`);
+  getRecommendations(id) {
+    return axios.get(`${BASE_URL}/movies/${id}/recommendations/`);
   },
+  follow(id, params) {
+    return axios.post(`${BASE_URL}/movies/${id}/followers/`, params);
+  },
+
+  // Users
   searchUsers(params) {
     return axios.get(`${BASE_URL}/users/`, {
       params
     });
   },
-
   getUser(username) {
     return axios.get(`${BASE_URL}/users/${username}`);
   },
+  getRating(username, id) {
+    return axios.get(`${BASE_URL}/users/${username}/ratings/?movieId=${id}`);
+  },
   getRatings(username) {
     return axios.get(`${BASE_URL}/users/${username}/ratings/`);
+  },
+  setRating(username, id, params) {
+    return axios.post(`${BASE_URL}/ratings/${username}/${id}/`, params);
   },
   getFollowings(username) {
     return axios.get(`${BASE_URL}/users/${username}/followings/`);
@@ -49,6 +58,9 @@ export default {
   },
   editUserInfo(username, params) {
     return axios.put(`${BASE_URL}/users/${username}/`, params);
+  },
+  subscribe(params) {
+    return axios.post(`${BASE_URL}/subscribe/`, params);
   },
 
   // Clustering 결과

@@ -16,7 +16,8 @@ const state = {
   token: "",
   subscribe: false,
   edit: false,
-  editCom: ""
+  editCom: "",
+  rating: [0, 0]
 };
 
 // getters
@@ -28,7 +29,8 @@ const getters = {
   isLogin: state => state.isLogin,
   register: state => state.register,
   logErrors: state => state.logErrors,
-  token: state => state.token
+  token: state => state.token,
+  followings: state => state.followings
 };
 
 // actions
@@ -36,7 +38,6 @@ const actions = {
   // Login, Register
   async setLogin({ commit }, params) {
     const res = await api.login(params);
-    console.log(res)
     if (res.status === 202) {
       commit("setIsLogin", true);
       commit("setUsername", res.data.username);
@@ -56,15 +57,13 @@ const actions = {
     }
   },
   async logout({ commit }, params) {
-    const res = await api.logout(params);
-    if (res.status === 202) {
-      commit("setIsLogin", false);
-      commit("setUsername", "");
-      commit("setStaff", false);
-      commit("setToken", "");
-      commit("setSubscribe", false);
-      sessionStorage.clear();
-    }
+    commit("setIsLogin", false);
+    commit("setUsername", "");
+    commit("setStaff", false);
+    commit("setToken", "");
+    commit("setSubscribe", false);
+    sessionStorage.clear();
+    await api.logout(params);
   },
   async setRegister({ commit }, params) {
     const res = await api.register(params);
@@ -105,6 +104,12 @@ const actions = {
     if (res.status === 202) {
       commit("edited", true);
     } else if (res.status === 203) {
+      commit("setIsLogin", false);
+      commit("setUsername", "");
+      commit("setStaff", false);
+      commit("setToken", "");
+      commit("setSubscribe", false);
+      sessionStorage.clear();
       const req = {
         "username": username
       };
@@ -113,15 +118,64 @@ const actions = {
       commit("editComment", "정보 수정을 실패했습니다.");
     }
   },
+  async setUserRating({ commit }, params) {
+    const username = params.username;
+    const id = params.movieId;
+    const res = await api.getRating(username, id);
+    if (res.status === 202 && res.data.length > 0) {
+      commit("userRating", [res.data[0].rating, id])
+    } else {
+      commit("userRating", [0, id])
+    }
+  },
+  async setRating({ commit }, params) {
+    const username = params.username;
+    const id = params.movieId;
+    const res = await api.setRating(username, id, params);
+    if (res.status === 202) {
+      commit("userRating", [params.rating, id]);
+    } else {
+      commit("setIsLogin", false);
+      commit("setUsername", "");
+      commit("setStaff", false);
+      commit("setToken", "");
+      commit("setSubscribe", false);
+      sessionStorage.clear();
+      const req = {
+        "username": username
+      };
+      await api.logout(req);
+    }
+  },
 
-// Follow
-async follow({ commit }, id) {
-  if (state.isLogin) {
-    await api.follow(id);
-    const res = await api.getFollowings(state.username);
-    commit("setUserFollowings", res.data);
+  // Follow
+  async follow({ commit }, id) {
+    if (state.isLogin) {
+      await api.follow(id, { username: state.username, token: state.token });
+      const res = await api.getFollowings(state.username);
+      commit("setUserFollowings", res.data);
+    }
+  },
+
+  // subscribe
+  async subscribe({ commit }, params) {
+    const res = await api.subscribe(params);
+    if (res.status === 202) {
+      commit("setSubscribe", true);
+      sessionStorage.setItem("subscribe", true);
+    } else if (res.status === 400) {
+      commit("setIsLogin", false);
+      commit("setUsername", "");
+      commit("setStaff", false);
+      commit("setToken", "");
+      commit("setSubscribe", false);
+      sessionStorage.clear();
+      const req = {
+        username: params.username
+      };
+      await api.logout(req);
+    }
   }
-}
 };
 
 // mutations
@@ -141,7 +195,8 @@ const mutations = {
   setRegError: (state, payload) => (state.regErrors = payload),
   setLogError: (state, payload) => (state.logErrors = payload),
   editComment: (state, payload) => (state.editCom = payload),
-  edited: (state, payload) => (state.edit = payload)
+  edited: (state, payload) => (state.edit = payload),
+  userRating: (state, payload) => (state.rating = payload)
 };
 
 export default {

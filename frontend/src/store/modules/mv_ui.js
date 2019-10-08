@@ -2,9 +2,10 @@ import api from "../../api";
 import User from "./user";
 
 const state = {
+  relatedStatus: false,
   detailToggler: false,
   detailType: "",
-  activateMovie: {},
+  activateMovie: { id: 0 },
   relatedMovies: {},
   sliderType: "",
   similarUser: [],
@@ -68,7 +69,8 @@ const getters = {
   sliderType: state => state.sliderType,
   sliderBoardData: state => state.sliderBoardData,
   sliderProfileData: state => state.sliderProfileData,
-  similarUser: state => state.similarUser
+  similarUser: state => state.similarUser,
+  activateMovie: state => state.activateMovie
 };
 
 const actions = {
@@ -80,19 +82,23 @@ const actions = {
       commit("setDetailToggler");
     }
   },
+
   async setRelatedMovies({ commit }, param) {
     const data = await api.getRelatedMovies(param);
-    console.log(data)
-    console.log(1)
-    if (data.status === 203 && data.data.error === "token") {
-      const req = {
-        "username": param.username
-      }
-      await api.logout(req)
+    if (data.status === 202) {
+      commit("setRelatedMovie", data.data);
+      commit("setRelatedStatus", true);
+    } else if (data.status === 203 && data.data.error === "token") {
+      User.state.isLogin = false;
+      User.state.username = "";
+      User.state.is_staff = false;
+      User.state.token = "";
+      User.state.subscribe = false;
+      sessionStorage.clear();
+      this.$router.push("/");
     }
-
-    commit("setRelatedMovie", data.data);
   },
+
   async setSimilarUser({ commit }, param) {
     const data = await api.getRelatedUsers(param);
     commit("setSimilarUser", data.data);
@@ -104,6 +110,7 @@ const mutations = {
   setActivateMovie: (state, payload) => (state.activateMovie = payload),
   setDetailType: (state, payload) => (state.detailType = payload),
   setRelatedMovie: (state, payload) => (state.relatedMovies = payload),
+  setRelatedStatus: (state, payload) => (state.relatedStatus = payload),
   setSliderType: (state, payload) => (state.sliderType = payload),
   setSimilarUser: (state, payload) => (state.similarUser = payload)
 };

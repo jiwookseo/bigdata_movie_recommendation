@@ -121,7 +121,6 @@
           }
         };
         await this.editUserInfo(params);
-        console.log(this.getEdit);
         if (this.getEdit === "유저 정보가 변경되었습니다.") {
           const data = {
             "age": this.checkAge,
@@ -145,7 +144,6 @@
           "username": this.getUsername
         };
         await this.deleteUser(params);
-        console.log(this.getDel);
         if (this.getDel === "유저가 삭제되었습니다.") {
           this.getUserList();
         } else if (this.getDel === "token") {
