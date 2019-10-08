@@ -9,6 +9,7 @@ const state = {
   isLogin: false,
   username: "",
   userFollowings: [],
+  recommendedMovies: [],
   register: "register",
   regErrors: {},
   logErrors: {},
@@ -30,7 +31,8 @@ const getters = {
   register: state => state.register,
   logErrors: state => state.logErrors,
   token: state => state.token,
-  followings: state => state.followings
+  followings: state => state.followings,
+  recommendedMovies: state => state.recommendedMovies,
 };
 
 // actions
@@ -157,6 +159,17 @@ const actions = {
     }
   },
 
+  // RecommendedMovies for User
+  async getRecommendedMovies({ commit }, username) {
+    try {
+      const res = await api.getRecommendedMovies(username);
+      commit("setRecommendedMovies", res.data);
+      console.log(res.data);
+    } catch(error) {
+      console.log(error);
+    }
+  },
+
   // subscribe
   async subscribe({ commit }, params) {
     const res = await api.subscribe(params);
@@ -186,6 +199,7 @@ const mutations = {
   setUserImage: (state, payload) => (state.user.image = payload),
   setFollowings: (state, payload) => (state.followings = payload),
   setUserFollowings: (state, payload) => (state.userFollowings = payload),
+  setRecommendedMovies: (state, payload) => (state.recommendedMovies = payload),
   setIsLogin: (state, payload) => (state.isLogin = payload),
   setUsername: (state, payload) => (state.username = payload),
   setStaff: (state, payload) => (state.checkStaff = payload),
