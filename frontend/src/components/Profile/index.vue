@@ -53,7 +53,12 @@
           <h2>아직 평가한 영화가 없습니다.</h2>
         </div>
       </div>
+
+      <div class="profile--recommended-movies">
+        <recommendedMovies :username="$route.params.username"/>
+      </div>
     </div>
+    
   </div>
 </template>
 
@@ -61,11 +66,12 @@
 import ImageSlider from "../imageSlider";
 import SimilarUserList from "./similarUserList";
 import editUserInfo from "./editUserInfo";
+import RecommendedMovies from "./recommendedMovies";
 import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "Profile",
-  components: {ImageSlider, SimilarUserList, editUserInfo },
+  components: {ImageSlider, SimilarUserList, editUserInfo, RecommendedMovies },
   data: () => ({
     editInfo: false,
     toggleCover: false,
@@ -289,5 +295,10 @@ export default {
       font-weight: 700;
     }
   }
+}
+
+.profile--recommended-movies {
+  height: 100%;
+  width: 100%;
 }
 </style>

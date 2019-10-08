@@ -3,6 +3,7 @@ import requests
 import json
 
 
+
 # Variables
 API_URL = 'http://localhost:8000/cluster/'
 headers = {'content-type': 'application/json'}

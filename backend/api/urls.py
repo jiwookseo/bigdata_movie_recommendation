@@ -18,6 +18,8 @@ urlpatterns = [
          account_views.profile_image, name="profile_image"),
     path('users/related_users/<str:username>/',
          account_views.related_users, name="related_users"),
+    path('users/<str:username>/recm_movies/',
+         account_views.recommended_movies, name="recommended_movies"),
 
 
     path("login/", account_views.login, name="login"),
