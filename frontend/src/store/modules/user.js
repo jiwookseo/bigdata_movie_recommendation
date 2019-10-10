@@ -162,11 +162,21 @@ const actions = {
   // RecommendedMovies for User
   async getRecommendedMovies({ commit }, username) {
     try {
-      const res = await api.getRecommendedMovies(username);
+      const res = await api.getRecommendedMovies(username, {token: state.token});
       commit("setRecommendedMovies", res.data);
       // console.log(res.data);
     } catch (error) {
       // console.log(error);
+      commit("setIsLogin", false);
+      commit("setUsername", "");
+      commit("setStaff", false);
+      commit("setToken", "");
+      commit("setSubscribe", false);
+      sessionStorage.clear();
+      const req = {
+        username: username
+      };
+      await api.logout(req);
     }
   },
 
@@ -176,7 +186,7 @@ const actions = {
     if (res.status === 202) {
       commit("setSubscribe", true);
       sessionStorage.setItem("subscribe", true);
-    } else if (res.status === 400) {
+    } else if (res.status === 400 || res.status === 203) {
       commit("setIsLogin", false);
       commit("setUsername", "");
       commit("setStaff", false);

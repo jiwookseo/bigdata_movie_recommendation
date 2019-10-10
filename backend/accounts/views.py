@@ -104,7 +104,6 @@ def user_detail(request, username):
                     return Response(status=status.HTTP_202_ACCEPTED)
             req_user.refresh_token = ""
             req_user.save()
-            auth_logout(request)
             return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
         return Response(data={"error": "입력된 값이 없습니다."}, status=status.HTTP_204_NO_CONTENT)
 
@@ -133,7 +132,6 @@ def user_detail(request, username):
 
             user.refresh_token = ""
             user.save()
-            auth_logout(request)
             return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
         return Response(data={"error": "입력값이 없습니다."}, status=status.HTTP_204_NO_CONTENT)
 
@@ -208,7 +206,6 @@ def subscribe(request):
             return Response(status=status.HTTP_202_ACCEPTED)
     user.refresh_token = ""
     user.save()
-    auth_logout(request)
     return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
@@ -236,8 +233,6 @@ def login(request):
 
         user.save()
 
-        auth_login(request, user)
-
         response = {
             "token": token,
             "username": user.username,
@@ -255,21 +250,37 @@ def login(request):
 @api_view(["POST"])
 def logout(request):
     username = request.data.get("username", None)
+    token = request.data.get("token", None)
     user = get_object_or_404(User, username=username)
-    user.refresh_token = ""
-    user.save()
-
-    auth_logout(request)
-    return Response(status=status.HTTP_202_ACCEPTED)
+    if token == user.refresh_token:
+        user.refresh_token = ""
+        user.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 # 사용자 별 맞춤 추천영화
 # @login_required
-@api_view(['GET'])
+@api_view(['POST'])
 def recommended_movies(request, username):
     user = get_object_or_404(User, username=username)
-    recommended_movies = user.rcmd_movies.all()[:3]
-    movies = [Movie.objects.get(id=data.movie_id)
-              for data in recommended_movies]
-    serializer = MovieSerializer(movies, many=True)
-    return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
+    token = request.data.get("token", None)
+    print(token)
+    print(user.refresh_token)
+    if token == user.refresh_token:
+        response = verify_token(token)
+        if response.status_code != 200:
+            response = refresh_token(token)
+            if response.status_code == 200:
+                new_token = json.loads(response.text)["token"]
+                user.refresh_token = new_token
+
+        if response and response.status_code == 200:
+            recommended_movies = user.rcmd_movies.all()[:3]
+            movies = [Movie.objects.get(id=data.movie_id)
+                      for data in recommended_movies]
+            serializer = MovieSerializer(movies, many=True)
+            return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
+    user.refresh_token = ""
+    user.save()
+    return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)

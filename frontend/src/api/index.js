@@ -50,8 +50,8 @@ export default {
   setProfile(username, formData) {
     return axios.post(`${BASE_URL}/users/${username}/profile/`, formData);
   },
-  getRecommendedMovies(username) {
-    return axios.get(`${BASE_URL}/users/${username}/recm_movies/`);
+  getRecommendedMovies(username, param) {
+    return axios.post(`${BASE_URL}/users/${username}/recm_movies/`, param);
   },
   login(params) {
     return axios.post(`${BASE_URL}/login/`, params);

@@ -65,7 +65,7 @@ export default {
         : "http://localhost:8001/admin"
   }),
   computed: {
-    ...mapGetters("user", ["isLogin", "username"])
+    ...mapGetters("user", ["isLogin", "username", "token"])
   },
   methods: {
     sign() {
@@ -74,7 +74,8 @@ export default {
     },
     async signout() {
       const params = {
-        username: this.username
+        username: this.username,
+        token: this.token
       };
       await this.logout(params);
     },
