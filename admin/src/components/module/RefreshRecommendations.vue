@@ -61,7 +61,7 @@ export default {
       this.toggleLoader();
       try {
         this.isProceeding = !this.isProceeding;
-        await this.recommendation;
+        await this.recommendation();
         this.isProceeding = !this.isProceeding;
       } catch (error) {
         // console.log(error);

@@ -69,7 +69,6 @@ const actions = {
   },
 
   async recommendation({ commit }) {
-    // console.log("check")
     await api.recommendation();
   }
 };
