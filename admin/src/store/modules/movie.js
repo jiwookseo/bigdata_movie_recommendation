@@ -34,9 +34,9 @@ const actions = {
   async clusteringMovies({ commit }, params) {
     try {
       const response = await api.clusteringMovies(params);
-      console.log(response.status);
+      // console.log(response.status);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   },
 
@@ -69,7 +69,7 @@ const actions = {
   },
 
   async recommendation({ commit }) {
-    console.log("check")
+    // console.log("check")
     await api.recommendation();
   }
 };

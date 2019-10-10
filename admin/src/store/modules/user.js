@@ -41,7 +41,7 @@ const actions = {
       }));
       commit("setUserList", users);
     } catch (error) {
-      console.log(error)
+      // console.log(error)
     }
   },
 
@@ -49,30 +49,29 @@ const actions = {
   async clusteringUsers({ commit }, params) {
     try {
       const response = await api.clusteringUsers(params);
-      console.log(response.status);
+      // console.log(response.status);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   },
 
   async collaborativeFiltering({ commit }, params) {
     try {
       const response = await api.collaborativeFiltering(params);
-      console.log(response.status);
-    } catch(error) {
-      console.log(error);
+      // console.log(response.status);
+    } catch (error) {
+      // console.log(error);
     }
   },
 
   async getRelatedUsers({ commit }, params) {
     try {
       const response = await api.getRelatedUsers(params);
-      // console.log(response.data);
+      // // console.log(response.data);
     } catch (error) {
-      // console.log(error);
+      // // console.log(error);
     }
   },
-
 
   // Edit, Delete User Infomation
   async editUserInfo({ commit }, params) {
@@ -102,7 +101,6 @@ const actions = {
       }
     }
   },
-
 
   // Authentication
   async setLogin({ commit }, params) {
