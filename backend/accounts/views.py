@@ -283,4 +283,4 @@ def recommended_movies(request, username):
             return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
     user.refresh_token = ""
     user.save()
-    return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+    return Response(data={"error": "token"}, status=status.HTTP_401_UNAUTHORIZED)
