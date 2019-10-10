@@ -264,15 +264,10 @@ def logout(request):
 # @login_required
 @api_view(['GET'])
 def recommended_movies(request, username):
-    query = Q()
-
     user = get_object_or_404(User, username=username)
-    recommended_movies_data = RecommendedMovie.objects.filter(
-        user=user).values('movie')[:3]
-
+    recommended_movies_data = user.rcmd_movies.all()[:3]
+    movies = Movie.objects.none()
     for data in recommended_movies_data:
-        query.add(Q(pk__exact=data['movie']), query.OR)
-
-    recommended_movies = Movie.objects.filter(query)
-    serializer = MovieSerializer(recommended_movies, many=True)
+        movies |= Movie.objects.get(id=data.movie_id)
+    serializer = MovieSerializer(movies, many=True)
     return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
