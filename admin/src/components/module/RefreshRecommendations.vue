@@ -11,7 +11,7 @@
 
 <script>
 import axios from "axios";
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 
 export default {
   data: () => ({
@@ -52,11 +52,12 @@ export default {
   }),
   methods: {
     ...mapMutations('loader', ['toggleLoader']),
+    ...mapActions('movie', ['recommendation']),
     async refresh() {
       this.toggleLoader();
       try {
         this.isProceeding = !this.isProceeding;
-        await axios.post("../api/movies/recommendations/")
+        await this.recommendation;
         this.isProceeding = !this.isProceeding;
       } catch(error) {
         console.log(error);
