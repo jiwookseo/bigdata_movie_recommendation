@@ -24,4 +24,4 @@ urlpatterns = [
     # apps
     path('api/', include('api.urls')),
     path('cluster/', include('cluster.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

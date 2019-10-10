@@ -1,6 +1,7 @@
 # python, django libraries
 import json
 import datetime
+import os
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 
@@ -25,6 +26,8 @@ from .forms import CustomUserAuthenticationForm, CustomUserCreateForm, CustomUse
 from api.serializers import MovieSerializer, RatingSerializer
 from .serializers import UserSerializer
 
+NODE_ENV = os.environ.get("NODE_ENV", "develop")
+BASE_URL = "http://52.78.81.59:8000" if NODE_ENV == "production" else "http://localhost:8000"
 
 # 회원가입
 @api_view(["POST"])
@@ -156,7 +159,7 @@ def profile_image(request, username):
     if image:
         user.image = image
         user.save()
-        return Response(data={"image": user.image.url}, status=status.HTTP_200_OK)
+        return Response(data={"image": BASE_URL + user.image.url}, status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_204_NO_CONTENT)
 
