@@ -108,8 +108,10 @@ DATABASES = {
 # CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = ['http://52.78.81.59:8080', 'http://52.78.81.59:8081'] if NODE_ENV == "production" else [
-    'http://localhost:8080', 'http://localhost:8081']
+CORS_ORIGIN_WHITELIST = ['http://52.78.81.59',
+                         'http://52.78.81.59:8081',
+                         'http://localhost:8080',
+                         'http://localhost:8081']
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -159,6 +161,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = "accounts.User"
+LOGIN_URL = "/api/login/"
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSE": (
