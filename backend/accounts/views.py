@@ -248,7 +248,7 @@ def login(request):
         return Response(data=error, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
-@login_required
+# @login_required
 @api_view(["POST"])
 def logout(request):
     username = request.data.get("username", None)
@@ -261,18 +261,12 @@ def logout(request):
 
 
 # 사용자 별 맞춤 추천영화
-@login_required
+# @login_required
 @api_view(['GET'])
 def recommended_movies(request, username):
-    query = Q()
-
     user = get_object_or_404(User, username=username)
-    recommended_movies_data = RecommendedMovie.objects.filter(
-        user=user).values('movie')[:3]
-
-    for data in recommended_movies_data:
-        query.add(Q(pk__exact=data['movie']), query.OR)
-
-    recommended_movies = Movie.objects.filter(query)
-    serializer = MovieSerializer(recommended_movies, many=True)
+    recommended_movies = user.rcmd_movies.all()[:3]
+    movies = [Movie.objects.get(id=data.movie_id)
+              for data in recommended_movies]
+    serializer = MovieSerializer(movies, many=True)
     return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
