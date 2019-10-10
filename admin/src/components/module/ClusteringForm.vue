@@ -1,20 +1,25 @@
 <template>
-  <div class="clustering-form-container">
-    <div class="clustering-form-method">
+  <div class="input-form-container">
+    <span class="input-form">
       <select ref="method">
-        <option value="" disabled selected>Method</option>
+        <option value="" disabled selected>Select Method</option>
         <option value="km">K-Means</option>
         <option value="hr">Hierarchy</option>
         <option value="em">EM</option>
         <option value="kmc">K-Means (Cutomized)</option>
       </select>
-    </div>
-    <div class="clustering-form-k">
-      <input ref="k" type="number" step="1" min="2" max="10">
-    </div>
-    <div>
-      <v-btn @click="clustering">clustering</v-btn>
-    </div>
+    </span>
+      
+    <span class="input-form">
+      <input ref="k" type="number" step="1" min="2" max="10" placeholder="k">
+    </span>
+      
+    <span class="input-form">
+      <v-btn class="refresh-button" @click="clustering">
+        <span v-if="!isProceeding"><i class="fas fa-redo"></i></span>
+        <span v-else><i class="fas fa-ellipsis-h"></i></span>
+      </v-btn>
+    </span>
   </div>
 </template>
 
@@ -23,6 +28,11 @@ import { mapMutations, mapActions } from 'vuex';
 
 export default {
   props: ['data'],
+  data() {
+    return {
+      isProceeding: false,
+    }
+  },
   methods: {
     ...mapActions('movie', ['clusteringMovies']),
     ...mapActions('user', ['clusteringUsers']),
@@ -36,12 +46,14 @@ export default {
 
       if (params.method && params.k) {
         this.toggleLoader();
+        this.isProceeding = !this.isProceeding;
         if (this.data === 'movie') {
           await this.clusteringMovies(params)
         }
         if (this.data === 'user') {
           await this.clusteringUsers(params)
         } 
+        this.isProceeding = !this.isProceeding;
         this.toggleLoader();
       } else {
         alert("인자를 설정해주세요. (Method / K)")
@@ -52,28 +64,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.clustering-form-container {
-  width: 50%;
-  display: flex;
-  padding: 0 5%;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.clustering-form-method, .clustering-form-k {
-  font-size: 20px;
-}
-
-select, input {
-  border-bottom: 1px solid grey;
-  padding: 0 0 3px 0;
-}
-
-input {
-  text-align: center;
-}
-
-select {
-  text-align-last: center;
-}
+@import "@/mixin/style/_dataControllerForm";
 </style>

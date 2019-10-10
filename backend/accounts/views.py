@@ -261,7 +261,7 @@ def logout(request):
 
 
 # 사용자 별 맞춤 추천영화
-# @login_required
+@login_required
 @api_view(['GET'])
 def recommended_movies(request, username):
     query = Q()
