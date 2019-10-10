@@ -16,6 +16,7 @@
 <script>
 import axios from "axios";
 import { mapMutations, mapActions } from "vuex";
+import api from "../../api"
 
 export default {
   data: () => ({
@@ -56,15 +57,15 @@ export default {
   }),
   methods: {
     ...mapMutations("loader", ["toggleLoader"]),
-    ...mapActions("movie", ["recommendation"]),
+    
     async refresh() {
       this.toggleLoader();
       try {
         this.isProceeding = !this.isProceeding;
-        await this.recommendation;
+        await api.recommendation();
         this.isProceeding = !this.isProceeding;
       } catch (error) {
-        // console.log(error);
+        console.log(error);
       }
       this.toggleLoader();
     }

@@ -4,7 +4,11 @@ const apiUrl =
   process.env.NODE_ENV === "production"
     ? "http://52.78.81.59:8000/api"
     : "http://localhost:8000/api";
-const clusterUrl = "http://localhost:8000/cluster";
+const clusterUrl = 
+  process.env.NODE_ENV === 'production'
+    ? "http://52.78.81.59:8000/cluster"
+    : "http://localhost:8000/cluster";
+
 
 export default {
   // Movies
@@ -67,7 +71,7 @@ export default {
   },
 
   // Recommendation Refreshing
-  recommendation() {
-    return axios.post(`${apiUrl}/movies/recommendations/`);
+  async recommendation() {
+    await axios.post(`${apiUrl}/movies/recommendations/`);
   }
 };
