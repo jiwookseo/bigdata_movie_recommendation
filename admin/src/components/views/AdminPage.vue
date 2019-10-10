@@ -4,12 +4,30 @@
       <loader />
     </div>
     <div class="data-controller-container">
+      <!-- Refresh Recommendations -->
+      <div class="data-controller-subcontainer">
+        <div>
+          <span class="data-controller-subheader">RECOMMENDATION REFRESH</span>
+        </div>
+        <refresh-recommendations />
+      </div>
+
       <!-- Collaborative Filtering -->
-      <collaborative-filtering-form />
-      <!-- Recommendations -->
-      <refresh-recommendations />
+      <div class="data-controller-subcontainer">
+        <div>
+          <span class="data-controller-subheader">COLLABORATIVE FILTERING</span>
+        </div>
+        <collaborative-filtering-form />
+      </div>
+      
       <!-- Clustering -->
-      <clustering-form :data="data" />
+      <div class="data-controller-subcontainer">
+        <div>
+          <span class="data-controller-subheader">DATA CLUSTERING</span>
+        </div>
+        <clustering-form :data="data" />
+      </div>
+      
       <!-- Search Form -->
       <!-- <search-form :submit="searchMovies" /> -->
     </div>
@@ -85,7 +103,7 @@ export default {
 
 <style scoped lang="scss">
 .content-container {
-  padding: 30px;
+  padding: 10px;
 }
 
 .loader-container {
@@ -103,14 +121,21 @@ export default {
 }
 
 .data-controller-container {
-  display: flex;
-  height: 10vh;
-  padding-bottom: 2vh;
+  width: 100%;
+
+  .data-controller-subcontainer {
+    margin-bottom: 4vh;
+  }
+}
+
+.data-controller-subheader {
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .data-list-header {
   display: flex;
-  height: 10vh;
+  height: 7vh;
   justify-content: left;
   align-items: flex-end;
 }

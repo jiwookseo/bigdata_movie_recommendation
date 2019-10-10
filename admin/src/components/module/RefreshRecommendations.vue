@@ -1,15 +1,21 @@
 <template>
-  <div class="search-form-container">
-    <v-btn class="search_form" @click="refresh">{{ text }}</v-btn>
+  <div class="input-form-container">
+    <span class="input-form">
+      <v-btn class="refresh-button" @click="refresh">
+        <span v-if="!isProceeding"><i class="fas fa-redo"></i></span>
+        <span v-else><i class="fas fa-ellipsis-h"></i></span>
+      </v-btn>
+    </span>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import { mapMutations } from 'vuex';
 
 export default {
   data: () => ({
-    text: "Recommendations refresh",
+    isProceeding: false,
     recData: [
       {
         type: "age",
@@ -45,46 +51,22 @@ export default {
     ]
   }),
   methods: {
-    refresh: function() {
-      this.text = "Proceeding...";
-      axios
-        .post("../api/movies/recommendations/")
-        .then(() => (this.text = "Recommendations refresh"));
+    ...mapMutations('loader', ['toggleLoader']),
+    async refresh() {
+      this.toggleLoader();
+      try {
+        this.isProceeding = !this.isProceeding;
+        await axios.post("../api/movies/recommendations/")
+        this.isProceeding = !this.isProceeding;
+      } catch(error) {
+        console.log(error);
+      }
+      this.toggleLoader();
     }
   }
 };
 </script>
 
-<style lang="scss">
-.search-form-container {
-  width: 50%;
-  display: flex;
-  padding: 0 5%;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.search_input {
-  padding: 0 !important;
-  width: 250px;
-  height: 60px !important;
-}
-
-.search_button {
-  color: white !important;
-  background: {
-    color: indigo !important;
-  }
-  height: 40px !important;
-  margin: {
-    left: 10px;
-    right: 10px;
-  }
-}
-
-.search_form {
-  display: flex;
-  flex-direction: row;
-  height: 40px !important;
-}
+<style lang="scss" scoped>
+@import "@/mixin/style/_dataControllerForm";
 </style>
