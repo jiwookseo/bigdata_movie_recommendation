@@ -66,6 +66,11 @@ const actions = {
         commit("deleteComment", "영화 삭제를 실패했습니다.");
       }
     }
+  },
+
+  async recommendation({ commit }) {
+    console.log("check")
+    await api.recommendation();
   }
 };
 

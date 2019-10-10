@@ -58,7 +58,7 @@
 <script>
 import { mapState } from "vuex";
 import MovieInfoBar from './MovieInfoBar'
-import DataList from '../../mixin/components/DataList'
+import Pagenation from '../../mixin/components/Pagenation'
 
 export default {
   components: {
@@ -118,12 +118,12 @@ export default {
       this.dataList[idx]["genres"] = info["genres"];
     },
   },
-  mixins: [ DataList ]
+  mixins: [ Pagenation ]
 };
 </script>
 
 <style scoped lang="scss">
-@import "@/mixin/style/_datalist";
+@import "@/mixin/style/_pagenation";
 
 .genre_buttons {
   margin: {

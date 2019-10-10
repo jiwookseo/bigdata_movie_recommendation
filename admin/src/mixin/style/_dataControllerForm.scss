@@ -1,0 +1,29 @@
+.input-form-container {
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+
+  .input-form {
+    margin: 20px 0 0 10px;
+  }
+}
+
+select, input {
+  border-bottom: 1px solid grey;
+  padding: 0 0 3px 0;
+}
+
+input {
+  text-align: center;
+}
+
+select {
+  text-align-last: center;
+}
+
+.refresh-button, select {
+  &:hover {
+    color: #1867c0;
+  }
+}
