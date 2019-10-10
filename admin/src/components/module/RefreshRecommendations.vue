@@ -2,8 +2,12 @@
   <div class="input-form-container">
     <span class="input-form">
       <v-btn class="refresh-button" @click="refresh">
-        <span v-if="!isProceeding"><i class="fas fa-redo"></i></span>
-        <span v-else><i class="fas fa-ellipsis-h"></i></span>
+        <span v-if="!isProceeding">
+          <i class="fas fa-redo"></i>
+        </span>
+        <span v-else>
+          <i class="fas fa-ellipsis-h"></i>
+        </span>
       </v-btn>
     </span>
   </div>
@@ -11,7 +15,7 @@
 
 <script>
 import axios from "axios";
-import { mapMutations, mapActions } from 'vuex';
+import { mapMutations, mapActions } from "vuex";
 
 export default {
   data: () => ({
@@ -51,16 +55,16 @@ export default {
     ]
   }),
   methods: {
-    ...mapMutations('loader', ['toggleLoader']),
-    ...mapActions('movie', ['recommendation']),
+    ...mapMutations("loader", ["toggleLoader"]),
+    ...mapActions("movie", ["recommendation"]),
     async refresh() {
       this.toggleLoader();
       try {
         this.isProceeding = !this.isProceeding;
         await this.recommendation;
         this.isProceeding = !this.isProceeding;
-      } catch(error) {
-        console.log(error);
+      } catch (error) {
+        // console.log(error);
       }
       this.toggleLoader();
     }

@@ -32,7 +32,7 @@ const getters = {
   logErrors: state => state.logErrors,
   token: state => state.token,
   followings: state => state.followings,
-  recommendedMovies: state => state.recommendedMovies,
+  recommendedMovies: state => state.recommendedMovies
 };
 
 // actions
@@ -113,7 +113,7 @@ const actions = {
       commit("setSubscribe", false);
       sessionStorage.clear();
       const req = {
-        "username": username
+        username: username
       };
       await api.logout(req);
     } else {
@@ -125,9 +125,9 @@ const actions = {
     const id = params.movieId;
     const res = await api.getRating(username, id);
     if (res.status === 202 && res.data.length > 0) {
-      commit("userRating", [res.data[0].rating, id])
+      commit("userRating", [res.data[0].rating, id]);
     } else {
-      commit("userRating", [0, id])
+      commit("userRating", [0, id]);
     }
   },
   async setRating({ commit }, params) {
@@ -144,7 +144,7 @@ const actions = {
       commit("setSubscribe", false);
       sessionStorage.clear();
       const req = {
-        "username": username
+        username: username
       };
       await api.logout(req);
     }
@@ -164,9 +164,9 @@ const actions = {
     try {
       const res = await api.getRecommendedMovies(username);
       commit("setRecommendedMovies", res.data);
-      console.log(res.data);
-    } catch(error) {
-      console.log(error);
+      // console.log(res.data);
+    } catch (error) {
+      // console.log(error);
     }
   },
 

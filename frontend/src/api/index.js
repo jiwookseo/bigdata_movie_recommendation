@@ -33,7 +33,7 @@ export default {
     });
   },
   getUser(username) {
-    return axios.get(`${BASE_URL}/users/${username}`);
+    return axios.get(`${BASE_URL}/users/${username}/`);
   },
   getRating(username, id) {
     return axios.get(`${BASE_URL}/users/${username}/ratings/?movieId=${id}`);
@@ -74,6 +74,6 @@ export default {
     return axios.post(`${BASE_URL}/movies/related_movies/`, params);
   },
   getRelatedUsers(params) {
-    return axios.get(`${BASE_URL}/users/related_users/${params}`);
+    return axios.get(`${BASE_URL}/users/related_users/${params}/`);
   }
 };
