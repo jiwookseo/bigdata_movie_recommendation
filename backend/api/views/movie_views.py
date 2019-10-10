@@ -38,6 +38,13 @@ def movie_list(request):
         gender = request.GET.get("gender", None)
         limit = int(request.GET.get("limit", 10))
         start = int(request.GET.get("start", 0))
+        regex = request.GET.get("regex", None)
+
+        if regex:
+            movies = Movie.objects.filter(title__contains=regex)[:5]
+            serializer = MovieSerializer(movies, many=True)
+            data = {"data": serializer. data}
+            return Response(data=data, status=status.HTTP_200_OK)
 
         if username:
             movies = []
@@ -347,9 +354,12 @@ def rating_detail(request, rating_id):
 def movie_ratings(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
     if request.method == 'GET':
-        raitings = movie.ratings.all()
+        total = len(movie.ratings.all())
+        start = request.data.get('start', 0)
+        limit = request.data.get('limit', 8)
+        raitings = movie.ratings.all()[start: start + limit]
         serializer = RatingSerializer(raitings, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data={"total": total, "start": start, "limit": limit, "data": serializer.data}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'POST'])
