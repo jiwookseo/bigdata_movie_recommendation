@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
                   'age', 'occupation', 'rating_cnt', 'image', 'thumbnail', 'subscribe', 'subscribe_at')
 
     def get_image(self, obj):
-        return 'http://localhost:8000' + obj.image.url if obj.image else None
+        return obj.image.url if obj.image else None
 
     def get_thumbnail(self, obj):
-        return 'http://localhost:8000' + obj.thumbnail.url if obj.image else None
+        return obj.thumbnail.url if obj.image else None

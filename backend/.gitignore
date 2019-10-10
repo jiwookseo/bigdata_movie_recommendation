@@ -9,10 +9,13 @@ venv/
 .ipynb_checkpoints/
 migrations/
 media/
+.static_root/
 
 # local env files
 .env.local
 .env.*.local
+
+.secret/
 
 # Log files
 npm-debug.log*

@@ -1,5 +1,6 @@
 # python, django libraries
-import json, datetime
+import json
+import datetime
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 
@@ -23,9 +24,6 @@ from cluster.models import RecommendedMovie
 from .forms import CustomUserAuthenticationForm, CustomUserCreateForm, CustomUserChangeForm
 from api.serializers import MovieSerializer, RatingSerializer
 from .serializers import UserSerializer
-
-
-
 
 
 # 회원가입
@@ -150,6 +148,7 @@ def user_ratings(request, username):
     serializer = RatingSerializer(user.ratings.all(), many=True)
     return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
 
+
 @api_view(['POST'])
 def profile_image(request, username):
     user = get_object_or_404(User, username=username)
@@ -157,10 +156,10 @@ def profile_image(request, username):
     if image:
         user.image = image
         user.save()
-        print('http://localhost:8000' + user.image.url)
-        return Response(data={"image": 'http://localhost:8000' + user.image.url}, status=status.HTTP_200_OK)
+        return Response(data={"image": user.image.url}, status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 @api_view(['GET'])
 def user_followings(request, username):
@@ -178,6 +177,7 @@ def related_users(request, username):
     related_users = User.objects.filter(query)[:10]
     serializer = UserSerializer(related_users, many=True)
     return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
+
 
 @api_view(["POST"])
 def subscribe(request):
@@ -208,6 +208,7 @@ def subscribe(request):
     auth_logout(request)
     return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
+
 @api_view(["POST"])
 def login(request):
     user = request.data.get("login", None)
@@ -221,6 +222,7 @@ def login(request):
                 return Response(data={"error": "권한 없음"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
         token = create_token(user)
+        print(token)
         token = token.json()["token"]
         user = form.get_user()
         user.refresh_token = token
@@ -258,7 +260,6 @@ def logout(request):
     return Response(status=status.HTTP_202_ACCEPTED)
 
 
-
 # 사용자 별 맞춤 추천영화
 @login_required
 @api_view(['GET'])
@@ -266,7 +267,8 @@ def recommended_movies(request, username):
     query = Q()
 
     user = get_object_or_404(User, username=username)
-    recommended_movies_data = RecommendedMovie.objects.filter(user=user).values('movie')[:3]
+    recommended_movies_data = RecommendedMovie.objects.filter(
+        user=user).values('movie')[:3]
 
     for data in recommended_movies_data:
         query.add(Q(pk__exact=data['movie']), query.OR)
@@ -274,4 +276,3 @@ def recommended_movies(request, username):
     recommended_movies = Movie.objects.filter(query)
     serializer = MovieSerializer(recommended_movies, many=True)
     return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
-        

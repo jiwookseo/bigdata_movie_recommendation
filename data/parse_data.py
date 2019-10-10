@@ -1,7 +1,9 @@
 import requests
 import json
+import os
 
-API_URL = 'http://localhost:8000/api/'
+NODE_ENV = os.environ.get("NODE_ENV", "develop")
+API_URL = 'http://52.78.81.59:8000/api/' if NODE_ENV == "production" else 'http://localhost:8000/api/'
 headers = {'content-type': 'application/json'}
 
 
@@ -15,7 +17,7 @@ def create_users():
         15: "scientist", 16:  "self-employed", 17: "technician/engineer", 18: "tradesman/craftsman",
         19: "unemployed", 20: "writer"
     }
-
+    count = 0
     for line in user_data.readlines():
         [user_id, gender, age, occupation, zipcode] = line.split('::')
         username = 'user' + user_id
@@ -32,17 +34,21 @@ def create_users():
         })
 
         if len(request_data['profiles']) == 1000:
-            response = requests.post(
+            requests.post(
                 API_URL + 'signup/', data=json.dumps(request_data), headers=headers)
             request_data = {'profiles': []}
-    response = requests.post(
+            count += 1
+            print("Finish creating {} users".format(count * 1000))
+    requests.post(
         API_URL + 'signup/', data=json.dumps(request_data), headers=headers)
-    print(response.text)
+    print("Finish creating {} users".format(
+        count * 1000 + len(request_data['profiles'])))
 
 
 def create_movies():
     movie_data = open('./movies.dat', 'r', encoding='ISO-8859-1')
     request_data = {'movies': []}
+    count = 0
     for line in movie_data.readlines():
         [id, title, genres] = line.split('::')
         genres = genres[:-1].split('|')
@@ -51,14 +57,22 @@ def create_movies():
             'title': title,
             'genres': genres
         })
-
+        if len(request_data['movies']) == 1000:
+            requests.post(
+                API_URL + 'movies/', data=json.dumps(request_data), headers=headers)
+            request_data = {'movies': []}
+            count += 1
+            print("Finish creating {} movies".format(count * 1000))
     requests.post(
         API_URL + 'movies/', data=json.dumps(request_data), headers=headers)
+    print("Finish creating {} movies".format(
+        count * 1000 + len(request_data['movies'])))
 
 
 def create_ratings():
     rating_data = open("./ratings.dat", "r", encoding="ISO-8859-1")
     request_data = {"ratings": []}
+    count = 0
     for line in rating_data.readlines():
         [user_id, movie_id, rating, timestamp] = line.split("::")
         request_data["ratings"].append({
@@ -70,14 +84,19 @@ def create_ratings():
         if len(request_data['ratings']) == 1000:
             requests.post(API_URL + "ratings/",
                           data=json.dumps(request_data), headers=headers)
-            request_data = {"ratings": []}
+            request_data = {'ratings': []}
+            count += 1
+            print("Finish creating {} ratings".format(count * 1000))
     requests.post(API_URL + "ratings/",
                   data=json.dumps(request_data), headers=headers)
+    print("Finish creating {} ratings".format(
+        count * 1000 + len(request_data['ratings'])))
 
 
 def create_story():
     story_data = open("./ml_plot.dat", "r", encoding="ISO-8859-1")
     request_data = {"story": []}
+    count = 0
     for line in story_data.readlines():
         [movie_id, story] = line.split("::")
 
@@ -86,17 +105,20 @@ def create_story():
         while "|\n" in story:
             story = story.replace("|\n", "")
 
-        if len(request_data['story']) == 1000:
-            requests.post(
-                API_URL + "movies/", data=json.dumps(request_data), headers=headers)
-            request_data = {"story": []}
-
         request_data["story"].append({
             "movie_id": movie_id,
             "story": story
         })
+        if len(request_data['story']) == 1000:
+            requests.post(API_URL + "movies/",
+                          data=json.dumps(request_data), headers=headers)
+            request_data = {'story': []}
+            count += 1
+            print("Finish creating {} stories".format(count * 1000))
     requests.post(
         API_URL + "movies/", data=json.dumps(request_data), headers=headers)
+    print("Finish creating {} stories".format(
+        count * 1000 + len(request_data['story'])))
 
 
 if __name__ == '__main__':
@@ -104,4 +126,3 @@ if __name__ == '__main__':
     # create_users()
     create_ratings()
     create_story()
-    print('finish')

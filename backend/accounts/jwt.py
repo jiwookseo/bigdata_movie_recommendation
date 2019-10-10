@@ -1,6 +1,9 @@
-import requests, json
+import requests
+import json
+import os
 
-BASE_URL = "http://localhost:8000/api/token/"
+NODE_ENV = os.environ.get("NODE_ENV", "develop")
+BASE_URL = "http://52.78.81.59:8000/api/token/" if NODE_ENV == "production" else "http://localhost:8000/api/token/"
 headers = {'content-type': 'application/json'}
 
 
