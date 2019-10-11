@@ -167,16 +167,6 @@ const actions = {
       // console.log(res.data);
     } catch (error) {
       // console.log(error);
-      commit("setIsLogin", false);
-      commit("setUsername", "");
-      commit("setStaff", false);
-      commit("setToken", "");
-      commit("setSubscribe", false);
-      sessionStorage.clear();
-      const req = {
-        username: username
-      };
-      await api.logout(req);
     }
   },
 

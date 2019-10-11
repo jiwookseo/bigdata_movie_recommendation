@@ -265,8 +265,6 @@ def logout(request):
 def recommended_movies(request, username):
     user = get_object_or_404(User, username=username)
     token = request.data.get("token", None)
-    print(token)
-    print(user.refresh_token)
     if token == user.refresh_token:
         response = verify_token(token)
         if response.status_code != 200:
@@ -281,6 +279,4 @@ def recommended_movies(request, username):
                       for data in recommended_movies]
             serializer = MovieSerializer(movies, many=True)
             return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
-    user.refresh_token = ""
-    user.save()
-    return Response(data={"error": "token"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+    return Response(data={"error": "token"}, status=status.HTTP_401_UNAUTHORIZED)
