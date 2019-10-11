@@ -67,10 +67,6 @@ const actions = {
       }
     }
   },
-
-  async recommendation({ commit }) {
-    await api.recommendation();
-  }
 };
 
 export default {
