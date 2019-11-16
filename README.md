@@ -2,7 +2,7 @@
 
 ### Service
 
-- Movie Lens 1,000,000 데이터를 이용한  KNN algorithm, collaboration filtering 을 통한 개인화 영화 추천 서비스
+- Movie Lens 1,000,000 데이터를 이용한 KNN algorithm, collaboration filtering 을 통한 개인화 영화 추천 서비스
 - Netflix 를 Cloning 한 클라이언트 디자인
 
 #### Architecture
@@ -35,7 +35,7 @@
 - 영화의 줄거리와 장르, 평균 평점 등 정보 제공
 
   ![movie detail](assets/movie_detail.png)
-  
+
 * KNN algorithm 을 통한 유사 영화를 비슷한 작품으로 제공합니다.
 
   ![similar movies](assets/similar_list.png)
@@ -48,18 +48,17 @@
 
 Deploying separated Server & Client & DB
 
-* AWS EC2
-* Nginx
-* uWSGI
+- AWS EC2
+- Nginx
+- uWSGI
 
 &nbsp;
 
 #### Frontend
 
-SPA with Vue.js and Webpack
+SPA with Vue CLI
 
-- Vue.js
-- Webpack
+- Vue CLI
 - Vuex
 - Sass
 
@@ -67,7 +66,7 @@ SPA with Vue.js and Webpack
 
 #### Backend
 
- REST API with Django REST framework 
+REST API with Django REST framework
 
 - Django
 - Django REST framework
@@ -90,14 +89,14 @@ SPA with Vue.js and Webpack
 
    - Git Clone
 
-       ```bash
-        git clone https://github.com/jiwookseo/bigdata_movie_recommendation.git
-       ```
+     ```bash
+      git clone https://github.com/jiwookseo/bigdata_movie_recommendation.git
+     ```
 
    - or [Download ZIP](https://github.com/jiwookseo/bigdata_movie_recommendation/archive/develop.zip)
 
    &nbsp;
-   
+
 2. Settings
 
    coming soon...
@@ -106,9 +105,8 @@ SPA with Vue.js and Webpack
 
 ## 4. Authors
 
-* Frontend part [Dowoo Kim](https://github.com/dowookims)
-* API & Deploy part [Jiwook Seo](https://github.com/jiwookseo)
-* JWT Authentication part [Jisun Lee](https://github.com/jisun1002)
-* JWT Authentication & admin part [Wonjin Lee](https://github.com/Terpe66)
-* Algorithm & admin part [Sungjik Cho](https://github.com/sungjik6875)
-
+- Frontend part [Dowoo Kim](https://github.com/dowookims)
+- API & Deploy part [Jiwook Seo](https://github.com/jiwookseo)
+- JWT Authentication part [Jisun Lee](https://github.com/jisun1002)
+- JWT Authentication & admin part [Wonjin Lee](https://github.com/Terpe66)
+- Algorithm & admin part [Sungjik Cho](https://github.com/sungjik6875)
