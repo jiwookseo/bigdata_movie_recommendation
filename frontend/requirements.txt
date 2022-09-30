@@ -9,7 +9,7 @@ django-extensions==2.2.1
 djangorestframework==3.10.2
 djangorestframework-jwt==1.11.0
 idna==2.8
-joblib==0.13.2
+joblib==1.2.0
 kiwisolver==1.1.0
 matplotlib==3.0.3
 numpy==1.17.0
